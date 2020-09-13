@@ -16,5 +16,6 @@ $ ./xyes a b c
 ```
 **How to run tests**
 ```
+# from the B/Other directory
 sh test_xyes.sh
 ```
