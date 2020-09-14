@@ -1,7 +1,7 @@
 import unittest
 from io import StringIO
 from unittest.mock import patch, Mock
-import xyes
+from Other import xyes
 import signal
 import builtins
 
@@ -19,18 +19,29 @@ class xyesTestCase(unittest.TestCase):
         str = "a b c d\n"
         expected_output = str*20
 
-        with patch('sys.stdout', new = StringIO()) as producedOut:
+        with patch('sys.stdout', new = StringIO()) as produced_out:
             xyes.printSTDOUT("a b c d", 20)
-            self.assertEqual(producedOut.getvalue(), expected_output)
+            self.assertEqual(produced_out.getvalue(), expected_output)
 
-    def handler(signum, frame):
+    def handler(self, signum, frame):
         raise Exception("time out")
 
     def test_no_limit(self):
+        one_sec, two_sec = [0, 0]
         with patch('builtins.print') as mock_print:
             signal.signal(signal.SIGALRM, self.handler)
             signal.alarm(1)
             try:
                 xyes.printSTDOUT("hello")
             except Exception:
-                mock_print.assert_called_with("hello")
+                one_sec = mock_print.call_count
+
+        with patch('builtins.print') as mock_print_long:
+            signal.signal(signal.SIGALRM, self.handler)
+            signal.alarm(2)
+            try:
+                xyes.printSTDOUT("hello")
+            except Exception:
+                two_sec = mock_print_long.call_count
+        
+        self.assertTrue(two_sec > one_sec)
