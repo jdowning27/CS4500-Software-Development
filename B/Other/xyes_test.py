@@ -1,7 +1,9 @@
 import unittest
 from io import StringIO
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 import xyes
+import signal
+import builtins
 
 class xyesTestCase(unittest.TestCase):
     def test_concat(self):
@@ -21,3 +23,14 @@ class xyesTestCase(unittest.TestCase):
             xyes.printSTDOUT("a b c d", 20)
             self.assertEqual(producedOut.getvalue(), expected_output)
 
+    def handler(signum, frame):
+        raise Exception("time out")
+
+    def test_no_limit(self):
+        with patch('builtins.print') as mock_print:
+            signal.signal(signal.SIGALRM, self.handler)
+            signal.alarm(1)
+            try:
+                xyes.printSTDOUT("hello")
+            except Exception:
+                mock_print.assert_called_with("hello")
