@@ -2,5 +2,5 @@
 
 cd ..
 
-python -m unittest Other/xyes_test.py
+python3 -m unittest Other/xyes_test.py
 
