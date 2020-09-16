@@ -3,11 +3,11 @@ import sys
 import json
 
 def print_result(ordered_output):
-    print({'count': len(ordered_output), 'seq': ordered_output})
+    print(json.dumps({'count': len(ordered_output), 'seq': ordered_output}))
     reversed_list = ordered_output.copy()
     reversed_list.reverse()
     reversed_list.insert(0, len(ordered_output))
-    print(reversed_list)
+    print(json.dumps(reversed_list))
 
 
 def valid_json(str):
@@ -28,8 +28,6 @@ def main():
         if line.rstrip() == '/d':
             break
         else:
-            # decode
-            # ask about commas
             strip_line = line.strip()
             for char in strip_line:
                 curr_json = maybe_json + char
