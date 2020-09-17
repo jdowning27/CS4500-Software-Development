@@ -24,13 +24,6 @@ def valid_json(str):
         return True
     except ValueError:
         return False
-'''
-def is_number(curr_json):
-    length = len(curr_json)
-    if curr_json[length - 1] is in ['E', 'e', '+', '-', '.', '/']:
-        if curr_json[length - 2] != ' ':
-            return True
-    '''
 
 def main():
     ordered_output = []
