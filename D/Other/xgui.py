@@ -54,6 +54,3 @@ def main():
         # Print error
         print("error")
         return 1
-
-    
-main()
