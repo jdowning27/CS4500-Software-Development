@@ -35,22 +35,27 @@ def get_points(size):
     return [size, 0, size * 2, 0, 3 * size, size, 2 * size, 2 * size, size, 2 * size, 0, size]
 
 def quit(event):
-    master.destroy()    
+    master.destroy()   
+
+def draw_hex(points, canvas):
+    """
+    Draw the hexagon on the given canvas using the points
+
+    :points: array              X, Y coordinates of the hexagon's points
+    :canvas: tkinter.Canvas     Canvas to draw on
+    """
+    
+    canvas.create_polygon(points, fill='red', tags="hex")
+    canvas.tag_bind("hex", "<Button-1>", quit)
+    canvas.pack()
 
 def main():
     size = verify_input(sys.argv[1:])
-    if size:
-        # Draw Hexagon
-        
-        #master = Tk()
-        canvas = Canvas(master, width=3*size, height=2*size)
-        canvas.pack()
-        points = get_points(size)
-        hex = canvas.create_polygon(points, fill='red', tags="hex")
-        canvas.tag_bind("hex", "<Button-1>", quit)
-        canvas.pack()
-        master.mainloop()
-    else:
-        # Print error
-        print("error")
-        return 1
+
+    # construct canvas, and draw the hexagon of given size
+    canvas = Canvas(master, width=3*size, height=2*size)
+    points = get_points(size)
+    draw_hex(points, canvas)
+
+    master.mainloop()
+
