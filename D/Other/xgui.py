@@ -35,6 +35,10 @@ def get_points(size):
     return [size, 0, size * 2, 0, 3 * size, size, 2 * size, 2 * size, size, 2 * size, 0, size]
 
 def quit(event):
+    """
+    Click event callback, called when user clicks hexagon
+    Close tkinter window
+    """
     master.destroy()   
 
 def draw_hex(points, canvas):
