@@ -1,6 +1,8 @@
 import sys
 from tkinter import *
+from tkinter import ttk
 
+master = Tk()
 
 
 def verify_input(args):
@@ -31,27 +33,21 @@ def get_points(size):
     """
     return [size, 0, size * 2, 0, 3 * size, size, 2 * size, 2 * size, size, 2 * size, 0, size]
 
-def draw_hex(points, canvas):
-    """
-    Draws a hexagon to the window
-
-    :points: array    List of points on hexagon
-    :canvas: tkinter.Canvas    Canvas to draw the hexagon in
-    """
-
-    canvas.create_polygon(points, fill='red')
-
+def quit(event):
+    master.destroy()    
 
 def main():
     size = verify_input(sys.argv)
     if size:
         # Draw Hexagon
-        master = Tk()
+        
+        #master = Tk()
         canvas = Canvas(master, width=3*size, height=2*size)
         canvas.pack()
         points = get_points(size)
-        canvas.create_polygon(points, fill='red')
-        #draw_hex(points, canvas)
+        hex = canvas.create_polygon(points, fill='red', tags="hex")
+        canvas.tag_bind("hex", "<Button-1>", quit)
+        canvas.pack()
         master.mainloop()
     else:
         # Print error
@@ -59,3 +55,4 @@ def main():
         return 1
 
     
+main()
