@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+import sys
+import io
+import socketserver
+import threading
+
+from Other import xjson
+
+def verify_input(args):
+    """
+    Checks that the given list of arguments is valid
+
+    :args: array     List of command line arguments  
+    :returns:      Returns argument if input is valid and false if not
+    """
+    if len(args) < 1:
+        return 4567
+    try:
+        i = int(args[0])
+        if i > 0:
+            return i
+        else:
+            raise Exception("Input needs to be > 0")
+    except ValueError:
+        raise ValueError("Invalid input type")
+
+class MyTCPHandler(socketserver.StreamRequestHandler):
+    input_stream = ""
+
+    def handle(self):
+        while True:
+            self.data = self.rfile.readline()
+            self.input_stream += self.data.decode('utf-8')
+            if not self.data:
+                output = xjson.parser(self.input_stream)
+                self.wfile.write(output)
+                break
+        threading.Thread(target=self.shutdown()).start()
+
+    def shutdown(self):
+        GLOBAL_SERVER.shutdown()
+
+
+def main():
+    global GLOBAL_SERVER
+    HOST = "localhost"
+    PORT = verify_input(sys.argv[1:])
+    with socketserver.ThreadingTCPServer((HOST, PORT), MyTCPHandler) as GLOBAL_SERVER:
+        GLOBAL_SERVER.serve_forever()
+
+
+
+main()
