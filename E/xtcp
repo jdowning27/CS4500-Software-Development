@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 import sys
 import io
+import os
 import socketserver
 import threading
+import time
 
 from Other import xjson
 
@@ -24,10 +26,12 @@ def verify_input(args):
     except ValueError:
         raise ValueError("Invalid input type")
 
-class MyTCPHandler(socketserver.StreamRequestHandler):
+class JSONTCPHandler(socketserver.StreamRequestHandler):
     input_stream = ""
 
     def handle(self):
+        global CLIENT_CONNECTION
+        CLIENT_CONNECTION = True
         while True:
             self.data = self.rfile.readline()
             self.input_stream += self.data.decode('utf-8')
@@ -35,18 +39,27 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
                 output = xjson.parser(self.input_stream)
                 self.wfile.write(output)
                 break
-        threading.Thread(target=self.shutdown()).start()
 
-    def shutdown(self):
-        GLOBAL_SERVER.shutdown()
 
+def wait_for_connection():
+    global CLIENT_CONNECTION
+    global GLOBAL_SERVER
+    time.sleep(3)
+    if not CLIENT_CONNECTION:
+        print("No one connected in 3 seconds")
+        os._exit(os.EX_OSERR)
+ 
+    return
 
 def main():
     global GLOBAL_SERVER
+    global CLIENT_CONNECTION
     HOST = "localhost"
     PORT = verify_input(sys.argv[1:])
-    with socketserver.ThreadingTCPServer((HOST, PORT), MyTCPHandler) as GLOBAL_SERVER:
-        GLOBAL_SERVER.serve_forever()
+    with socketserver.TCPServer((HOST, PORT), JSONTCPHandler) as GLOBAL_SERVER:
+        CLIENT_CONNECTION = False
+        threading.Thread(target=wait_for_connection).start()
+        GLOBAL_SERVER.handle_request()
 
 
 
