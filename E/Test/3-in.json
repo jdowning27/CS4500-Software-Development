@@ -1,0 +1,15 @@
+null[1,2]{
+    "name": [false, true, false]
+}
+"hello \n world \b\t""\n"
+"\"\""
+
+"\"[]\""
+
+{
+    "a": {
+        "nested": {
+            "json": "test"
+        }
+    }
+}

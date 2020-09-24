@@ -1,3 +1,31 @@
-123 456
-"hello" {"a": [1, 2, 3
-    , 5]}
+123 456 78
+9.999
+{"a":3} 5{"cool":       8}"string"
+{"hi": [
+{"a": 1},
+{"b" : ["b0", "b1"]},
+{"c" : {"hello" : "world", "goodbye" : "cruel world"}},
+{"d" : true}
+]
+}
+[1,
+6,
+{"a":1}
+]
+{"a":0, "b":1, "test":{"a":2, "n":3}}
+1e-009 -901.4
+1E+04 1.234
+null
+true     false
+1
+4
+{"a": "test"}123"another"
+"\"hello\"" "true" "false" "null"
+"{"
+"]"
+"abc
+def""string"
+"{\"name\": [1, 2, {'another': { a b c}]]}}}"
+"]"
+"["
+"4e-0019"4e-0019"4E-0019"9.000
