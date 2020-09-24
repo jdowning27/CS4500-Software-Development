@@ -6,6 +6,10 @@ import io
 def print_result(ordered_output):
     """
     Print the JSON object results
+
+    :ordered_output: array      the list of JSON object the user input
+
+    :return: byte string of two JSON objects
     """
     count = {'count': len(ordered_output), 'seq': ordered_output}
   
@@ -20,6 +24,10 @@ def print_result(ordered_output):
 def valid_json(str):
     """
     Is the given string a valid JSON Object?
+
+    :str: string        a maybe JSON string
+
+    :return: boolean    whether the given string is valid JSON
     """ 
     try:
         json.loads(str)
@@ -28,7 +36,13 @@ def valid_json(str):
         return False
 
 def parser(input_stream):
+    """
+    Parse the given input string from the client.
 
+    :input_stream: string       a string representing the JSON input from client
+
+    :return: byte string of two JSON objects representing count and sequence
+    """
     ordered_output = []
     maybe_json = ''
 

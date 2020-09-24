@@ -30,6 +30,10 @@ class JSONTCPHandler(socketserver.StreamRequestHandler):
     input_stream = ""
 
     def handle(self):
+        """
+        Override the default handle function for the client handler.
+        Passes user input to xjson parser.
+        """
         global CLIENT_CONNECTION
         CLIENT_CONNECTION = True
         while True:
@@ -42,6 +46,11 @@ class JSONTCPHandler(socketserver.StreamRequestHandler):
 
 
 def wait_for_connection():
+    """
+    Wait 3 seconds for the client to connect.
+    If no one connects, print and exit the program with error code 1.
+    Runs in separate thread than the main server
+    """
     global CLIENT_CONNECTION
     global GLOBAL_SERVER
     time.sleep(3)
