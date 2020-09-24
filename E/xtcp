@@ -47,9 +47,8 @@ def wait_for_connection():
     time.sleep(3)
     if not CLIENT_CONNECTION:
         print("No one connected in 3 seconds")
-        os._exit(os.EX_OSERR)
- 
-    return
+        os._exit(1)
+
 
 def main():
     global GLOBAL_SERVER
