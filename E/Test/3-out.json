@@ -1,0 +1,2 @@
+{"count": 8, "seq": [null, [1, 2], {"name": [false, true, false]}, "hello \n world \b\t", "\n", "\"\"", "\"[]\"", {"a": {"nested": {"json": "test"}}}]}
+[8, {"a": {"nested": {"json": "test"}}}, "\"[]\"", "\"\"", "\n", "hello \n world \b\t", {"name": [false, true, false]}, [1, 2], null]

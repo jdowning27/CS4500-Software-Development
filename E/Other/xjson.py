@@ -45,21 +45,21 @@ def parser(input_stream):
     """
     ordered_output = []
     maybe_json = ''
-
-    strip_input = input_stream.strip()
-    for char in strip_input:
-        curr_json = maybe_json + char
-        # if maybe_json is valid but curr_json is
-        if valid_json(maybe_json) and not valid_json(curr_json):
-            if char in ['E', 'e', '+', '-', '.', '/'] and maybe_json[len(maybe_json) - 1] != ' ':
-                maybe_json = curr_json
+    for line in input_stream:
+        strip_input = line.strip()
+        for char in strip_input:
+            curr_json = maybe_json + char
+            # if maybe_json is valid but curr_json is
+            if valid_json(maybe_json) and not valid_json(curr_json):
+                if char in ['E', 'e', '+', '-', '.', '/'] and maybe_json[len(maybe_json) - 1] != ' ':
+                    maybe_json = curr_json
+                else:
+                    ordered_output.append(json.loads(maybe_json))
+                    maybe_json = char
             else:
-                ordered_output.append(json.loads(maybe_json))
-                maybe_json = char
-        else:
-            maybe_json = curr_json
-    if valid_json(maybe_json):
-        ordered_output.append(json.loads(maybe_json))
-        maybe_json = ''
+                maybe_json = curr_json
+        if valid_json(maybe_json):
+            ordered_output.append(json.loads(maybe_json))
+            maybe_json = ''
     
     return print_result(ordered_output)

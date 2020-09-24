@@ -27,20 +27,20 @@ def verify_input(args):
         raise ValueError("Invalid input type")
 
 class JSONTCPHandler(socketserver.StreamRequestHandler):
-    input_stream = ""
 
     def handle(self):
         """
         Override the default handle function for the client handler.
         Passes user input to xjson parser.
         """
+        input_stream = []
         global CLIENT_CONNECTION
         CLIENT_CONNECTION = True
         while True:
             self.data = self.rfile.readline()
-            self.input_stream += self.data.decode('utf-8')
+            input_stream.append(self.data.decode('utf-8'))
             if not self.data:
-                output = xjson.parser(self.input_stream)
+                output = xjson.parser(input_stream)
                 self.wfile.write(output)
                 break
 
