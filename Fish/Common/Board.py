@@ -5,6 +5,7 @@ import random
 import sys
 
 MAX = 5
+SIZE = 20
 
 class Board:
 
@@ -113,3 +114,14 @@ class Board:
             arr = [None] * self.row
             for r in range(0, self.row):
                 arr[r] = self.tiles[c][r].fish
+    
+    def draw_board(self):
+        w = (self.col * 4 + 1) * SIZE
+        h = (self.row * 3 + 1) * SIZE
+        canvas = Canvas(master, width=w, height=h)
+        for c in range(0, self.col):
+            for r in range(0, self.row):
+                # need to draw at x and y
+                self.tiles[c][r].draw_tile_fish(SIZE, canvas)
+
+        master.mainloop()

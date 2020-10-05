@@ -1,4 +1,7 @@
 from Util import is_even
+from tkinter import *
+
+master = Tk()
 
 class Tile:
 
@@ -46,5 +49,29 @@ class Tile:
             return (self.row + 1, self.col)
         else:
             return (self.row + 1, self.col + 1)
+            
+    def get_points(self, size):
+        """
+        Gets the coordinates for each point on a hexagon of a certain size
+
+        :size: int    Size of Hexagon
+        :return: array    List of points on hexagon
+        """
+        return [size, 0, size * 2, 0, 3 * size, size, 2 * size, 2 * size, size, 2 * size, 0, size]
+        
+    def draw_tile(self, points, canvas):
+        """
+        Draw the hexagon on the given canvas using the points
+
+        :points: array              X, Y coordinates of the hexagon's points
+        :canvas: tkinter.Canvas     Canvas to draw on
+        """
+        canvas.create_polygon(points, fill='red', tags="hex")
+        canvas.pack()
+
+    def draw_tile_fish(self, size, canvas):
+        points = self.get_points(size)
+        self.draw_tile(points, canvas)
+
 
 
