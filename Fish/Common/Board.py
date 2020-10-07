@@ -18,6 +18,7 @@ class Board:
         :row: int       The number of rows
         :col: int       The number of columns
         """
+        validate_pos_int(row, col)
         self.tiles = [[None for r in range(0, row)] for c in range(0, col)]
         self.col = col
         self.row = row
