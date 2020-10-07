@@ -43,13 +43,10 @@ class Board:
             print_error(
                 "usage: Invalid Input: holes + min > Total number of tiles")
         self.set_all(1)
-        self.print_board()
         for h in holes:
             r, c = h
             self.remove_tile(r, c)
-        self.print_board()
         self.set_random_tiles(self.col * self.row - (len(holes) + min))
-        self.print_board()
 
     def create_board_without_holes(self, fish):
         """

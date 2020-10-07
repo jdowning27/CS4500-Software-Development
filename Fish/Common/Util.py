@@ -15,10 +15,10 @@ def validate_non_neg_int(*args):
     Are the given arguments an non-negative integers?
     If not, exit program and print message
     """
-        for arg in args:
-            validate_int(arg)
-            if arg < 0:
-                print_error("usage: must be non negative int")
+    for arg in args:
+        validate_int(arg)
+        if arg < 0:
+            print_error("usage: must be non negative int")
 
 def validate_pos_int(*args):
     """

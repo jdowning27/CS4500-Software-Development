@@ -87,7 +87,7 @@ class Tile:
         else:
             return (self.row + 1, self.col + 1)
 
-    def get_points(self, offset):
+    def get_hex_points(self, offset):
         """
         Gets the coordinates for each point on a hexagon of a certain size
 
@@ -119,7 +119,7 @@ class Tile:
         :canvas: tkinter.Canvas     Canvas to draw on
         """
         color = 'orange' if self.is_active else 'gray'
-        canvas.create_polygon(self.get_points(offset), outline='white', fill=color)
+        canvas.create_polygon(self.get_hex_points(offset), outline='white', fill=color)
         canvas.pack()
 
     def draw_tile_fish(self, canvas):
@@ -167,6 +167,5 @@ class Tile:
         if not is_even(self.row):
             x_off += 2 * self.tile_size
 
-        y_off = (self.tile_size * self.row)
-
+        y_off = self.tile_size * self.row
         return (x_off, y_off)

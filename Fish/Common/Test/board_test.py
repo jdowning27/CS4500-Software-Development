@@ -1,9 +1,7 @@
 import unittest
 from unittest import mock
 import random
-import Board
 from Board import *
-import Tile
 from Tile import *
 
 class BoardTestCase(unittest.TestCase):
@@ -101,18 +99,6 @@ class BoardTestCase(unittest.TestCase):
         board.create_board_with_holes([(0,0)], 1)
         self.assertEqual(board.get_all_reachable_posn(1, 0), [(3, 0), (0, 1), (2, 0), (2, 1), (3, 1)])
 
-    """
-    def test_draw_board(self):
-        board = Board(4, 3)
-        board.create_board_without_holes(5)
-        board.draw_board()
-
-    def test_draw_board_holes(self):
-        board = Board(4, 3)
-        board.create_board_with_holes([(0,0)], 3)
-        board.draw_board()
-    """
-
     def test_init_board(self):
         board = Board(3, 3)
         for col in board.tiles:
@@ -165,8 +151,5 @@ class BoardTestCase(unittest.TestCase):
             for t in col:
                 self.assertEqual(t.fish, 3)
         board.set_random_tiles(2)
-        for col in board.tiles:
-            for t in col:
-                print(t.fish)
         self.assertEqual(board.tiles[1][2].fish, 2)
         self.assertEqual(board.tiles[2][1].fish, 2)
