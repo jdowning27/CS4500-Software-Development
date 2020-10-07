@@ -3,9 +3,7 @@ from Util import validate_non_neg_int, validate_pos_int
 import math
 import random
 import sys
-
-MAX = 5
-SIZE = 20
+import Constants
 
 class Board:
 
@@ -93,7 +91,7 @@ class Board:
         rand_tiles = random.sample(range(0, self.col * self.row), num_set)
         for value in rand_tiles:
             r, c = self.get_coordinates_from_num(value)
-            self.tiles[c][r].set_fish(max(1, int(random.random() * MAX)))
+            self.tiles[c][r].set_fish(max(1, int(random.random() * Constants.MAX_FISH)))
 
     def get_coordinates_from_num(self, num):
         col = math.floor(num / self.row)
@@ -106,7 +104,8 @@ class Board:
                 self.tiles[col][row].set_fish(value)
 
     def remove_tile(self, row, col):
-        self.tiles[col][row].create_hole()
+        if self.tile_exists((row,col)):
+            self.tiles[col][row].create_hole()
 
     
     def print_board(self):
@@ -116,12 +115,12 @@ class Board:
                 arr[r] = self.tiles[c][r].fish
     
     def draw_board(self):
-        w = (self.col * 4 + 1) * SIZE
-        h = (self.row * 3 + 1) * SIZE
+        w = (self.col * 4 + 1) * self.tiles[0][0].tile_size
+        h = (self.row + 1) * self.tiles[0][0].tile_size
         canvas = Canvas(master, width=w, height=h)
         for c in range(0, self.col):
             for r in range(0, self.row):
                 # need to draw at x and y
-                self.tiles[c][r].draw_tile_fish(SIZE, canvas)
+                self.tiles[c][r].draw_tile_fish(canvas)
 
         master.mainloop()

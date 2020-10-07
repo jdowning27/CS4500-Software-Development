@@ -87,11 +87,17 @@ class BoardTestCase(unittest.TestCase):
         board.create_board_with_holes([(0,0)], 1)
         self.assertEqual(board.get_all_reachable_posn(1, 0), [(3, 0), (0, 1), (2, 0), (2, 1), (3, 1)])
 
+    """
     def test_draw_board(self):
         board = Board(4, 3)
-        board.create_board_without_holes(1)
+        board.create_board_without_holes(5)
         board.draw_board()
+    """
 
+    def test_draw_board_holes(self):
+        board = Board(4, 3)
+        board.create_board_with_holes([(0,0)], 3)
+        board.draw_board()
 
     
 
