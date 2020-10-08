@@ -1,5 +1,6 @@
 # Fish
-Python3 project
+Python3 project for Fish dot com
+
 CS 4500 Project by Jennifer Der and Timothy Haas
 
 ## Project Directory
