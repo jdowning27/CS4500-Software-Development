@@ -9,29 +9,28 @@ Under each of the following elements below, indicate below where your
 TAs can find:
 
 - the data description of tiles, including an interpretation:
-[Data Description](https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/README.md)
+  - [Data Description](https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/README.md)
 
-[Data Interpretation](https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/Common/Tile.py#L8)
-
-The description of Tile and its methods is included in the Software Components section of the README
+  - [Data Interpretation](https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/Common/Tile.py#L8)
+  - The description of Tile and its methods is included in the Software Components section of the README
 
 - the data description of boards, include an interpretation:
-[Data Description](https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/README.md)
+  - [Data Description](https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/README.md)
 
-[Data Interpretation](https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/Common/Board.py#L16)
+  - [Data Interpretation](https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/Common/Board.py#L16)
 
-The description of Board and its methods is included in the Software Components section of the README
+  - The description of Board and its methods is included in the Software Components section of the README
 
-The interpretation is included in the constructor
+  - The interpretation is included in the constructor
 
 - the functionality for removing a tile:
   - purpose:
-https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/Common/Board.py#L147 
+    https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/Common/Board.py#L147 
   
   - signature:
 https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/Common/Board.py#L149 
 
-[The README file contains a diagram with the signature for remove_tile](https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/README.md)
+    - [The README file contains a diagram with the signature for remove_tile](https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/README.md)
 
 
   - unit tests:
@@ -44,7 +43,7 @@ https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee
   - signature:
 https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/Common/Board.py#L67
 
-[The README file contains a diagram with the signature for get_all_reachable_posn](https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/README.md)
+    - [The README file contains a diagram with the signature for get_all_reachable_posn](https://github.ccs.neu.edu/CS4500-F20/anton/blob/7a1b43aafc56aa4d8ee37ebe58d62ee4f1e3f100/Fish/README.md)
  
   
   - unit tests:
