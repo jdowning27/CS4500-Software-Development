@@ -7,20 +7,6 @@ sys.path.append(os_path)
 from Board import Board
 from State import State
 
-def valid_json(str):
-    """
-    Is the given string a valid JSON Object?
-
-    :str: string        a maybe JSON string
-
-    :return: boolean    whether the given string is valid JSON
-    """ 
-    try:
-        json.loads(str)
-        return True
-    except ValueError:
-        return False
-
 def parser(input_stream):
     """
     Parse the given input string from the client.
