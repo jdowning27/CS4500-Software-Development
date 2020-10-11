@@ -1,14 +1,16 @@
 import math
 import random
 import sys
-from tkinter import *
 
 from Tile import *
 from Util import validate_non_neg_int, validate_pos_int, print_error
-import Constants
+from Constants import MAX_FISH, GUI_UNIT
 
-master = Tk()
 
+
+"""
+Represents the Fish Game board.
+"""
 class Board:
 
     def __init__(self, row, col):
@@ -18,6 +20,7 @@ class Board:
         :row: int       The number of rows
         :col: int       The number of columns
         """
+        
         validate_pos_int(row, col)
         self.tiles = [[None for r in range(0, row)] for c in range(0, col)]
         self.col = col
@@ -117,7 +120,7 @@ class Board:
         for value in rand_tiles:
             r, c = self.get_coordinates_from_num(value)
             self.tiles[c][r].set_fish(
-                max(1, int(random.random() * Constants.MAX_FISH)))
+                max(1, int(random.random() * MAX_FISH)))
 
     def get_coordinates_from_num(self, num):
         """
@@ -152,17 +155,65 @@ class Board:
         if self.tile_exists((row, col)):
             self.tiles[col][row].create_hole()
 
-    def draw_board(self):
+    def get_offset(self, row, col):
+        """
+        Get the (x, y) offset to draw an image on tkinter.Canvas. Image could be
+        Tile, a penguin, or fish.
+
+        :row: int           The row of the image
+        :col: int           The column of the image
+
+        :returns: tuple     The (x, y) pixel offset to draw at
+        """
+        size = GUI_UNIT * MAX_FISH
+        x_off = 4 * size * col
+        if not is_even(row):
+            x_off += 2 * size
+        y_off = size * row
+        return (x_off, y_off)
+
+    def get_dimensions(self):
+        """
+        Get dimensions for this board to be able to create tkinter.Canvas
+
+        :returns: tuple     Representing the (width, height) of the canvas
+        """
+        size = GUI_UNIT * MAX_FISH
+        w = (self.col * 4 + 1) * size
+        h = (self.row + 1) * size
+        return (w, h)
+
+    def draw_board(self, canvas):
         """
         Draw the current game board using tkinter canvas.
         Pass functionality of drawing each tile to the Tile class.
+
+        :canvas: tkinter.Canvas     The canvas to draw on
+        :returns: tkinter.Canvas    The canvas with tiles, fish, holes
         """
-        w = (self.col * 4 + 1) * self.tiles[0][0].tile_size
-        h = (self.row + 1) * self.tiles[0][0].tile_size
-        canvas = Canvas(master, width=w, height=h)
         for c in range(0, self.col):
             for r in range(0, self.row):
                 # need to draw at x and y
-                self.tiles[c][r].draw_tile_fish(canvas)
+                offset = self.get_offset(r, c)
+                self.tiles[c][r].draw_tile_fish(canvas, offset)
+        return canvas
 
-        master.mainloop()
+
+    def draw_penguin(self, canvas, color, posn):
+        """
+        Draw the penguin at on the canvas at given positions with given color.
+
+        :canvas: tkinter.Canvas     The canvas to draw on
+        :returns: tkinter.Canvas    The canvas with penguins
+        """
+        size = GUI_UNIT * MAX_FISH
+        offset_x, offset_y = self.get_offset(*posn)
+        # Penguins are rectangles, center them on the tiles
+        x0 = offset_x + 1.5 * size - GUI_UNIT
+        x1 = offset_x + 1.5 * size + GUI_UNIT
+        y0 = offset_y + size - GUI_UNIT
+        y1 = offset_y + size + GUI_UNIT
+        canvas.create_rectangle(x0, y0, x1, y1, fill=color)
+        return canvas
+
+        

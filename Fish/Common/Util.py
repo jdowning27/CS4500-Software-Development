@@ -1,4 +1,5 @@
 import sys
+import Color
 
 def validate_int(arg):
     """

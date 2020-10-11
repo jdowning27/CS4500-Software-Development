@@ -122,11 +122,13 @@ class Tile:
         canvas.create_polygon(self.get_hex_points(offset), outline='white', fill=color)
         canvas.pack()
 
-    def draw_tile_fish(self, canvas):
+    def draw_tile_fish(self, canvas, offset):
         """
         Draw the tile on given canvas at offset with all the fish.
+
+        :canvas: tkinter.Canvas         The canvas to draw on
+        :offset: tuple                  The (x, y) pixel offset to draw this tile
         """
-        offset = self.get_offset()
         self.draw_tile(canvas, offset)
         self.draw_fish(canvas, offset)
 
@@ -158,14 +160,3 @@ class Tile:
                   x1 + (.25 * GUI_UNIT), y0,
                   x1 + (.25 * GUI_UNIT), y1]
         canvas.create_polygon(points, fill='blue')
-
-    def get_offset(self):
-        """
-        Get the (x, y) offset for this Tile in order to draw on tkinter.Canvas
-        """
-        x_off = 4 * self.tile_size * self.col
-        if not is_even(self.row):
-            x_off += 2 * self.tile_size
-
-        y_off = self.tile_size * self.row
-        return (x_off, y_off)
