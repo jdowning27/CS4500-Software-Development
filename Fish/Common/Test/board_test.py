@@ -33,6 +33,18 @@ class BoardTestCase(unittest.TestCase):
             board.create_board_without_holes(0)
         self.assertEqual(err.exception.code, 1)
 
+    def test_create_board_holes(self):
+        tiles = [
+            [1,     2,      3,      0],
+                [4,     0,      0,      5],
+            [1,     1,      0,      1]
+        ]
+        board = Board(3, 4)
+        board.create_board_from_json(tiles)
+        for r in range(0, len(tiles)):
+            for c in range(0, len(tiles[r])):
+                self.assertEqual(board.tiles[c][r].fish, tiles[r][c])
+
     def test_remove_tile(self):
         board = Board(2, 2)
         num_fish = 3
@@ -153,3 +165,14 @@ class BoardTestCase(unittest.TestCase):
         board.set_random_tiles(2)
         self.assertEqual(board.tiles[1][2].fish, 2)
         self.assertEqual(board.tiles[2][1].fish, 2)
+
+    def test_get_offset(self):
+        size = GUI_UNIT * MAX_FISH
+        board = Board(4, 3)
+        self.assertEqual(board.get_offset(0,0), (0, 0))
+        tile2_off_x = 16 * size 
+        tile2_off_y = size * 4
+        self.assertEqual(board.get_offset(4, 4), (tile2_off_x, tile2_off_y))
+        tile3_off_x = 12 * size + (2 * size)
+        tile3_off_y = size * 3
+        self.assertEqual(board.get_offset(3, 3), (tile3_off_x, tile3_off_y))

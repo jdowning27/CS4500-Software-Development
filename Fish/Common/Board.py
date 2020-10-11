@@ -63,6 +63,26 @@ class Board:
         validate_pos_int(fish)
         self.set_all(fish)
 
+    def create_board_from_json(self, board_array):
+        """
+        Create a board with fish and holes at specific places.
+        The given 2d-array is structed as follows, where each int represents
+        the number of fish:
+        [
+            [   1,     2,      3       ],
+            [       4,     0,      5   ]
+        ]
+        """
+        for r in range(0, len(board_array)):
+            for c in range(0, len(board_array[r])):
+                fish = board_array[r][c]
+                self.tiles[c][r] = Tile(r, c)
+                if fish == 0:
+                    self.remove_tile(r, c)
+                else:
+                    self.tiles[c][r].set_fish(fish)
+
+
     def get_all_reachable_posn(self, row, col):
         """
         Get all reachable board positions from (row, col)
@@ -70,11 +90,9 @@ class Board:
         :returns: array     List of (row, col) representing all possible reachable positions
         """
         result = []
-        # get reachable positions in every direction
         result.extend(self.get_reachable_posn_dir(
             row, col, Tile.get_north_coord))
-        result.extend(self.get_reachable_posn_dir(
-            row, col, Tile.get_south_coord))
+        result.extend(self.get_reachable_posn_dir(row, col, Tile.get_south_coord))
         result.extend(self.get_reachable_posn_dir(row, col, Tile.get_nw_coord))
         result.extend(self.get_reachable_posn_dir(row, col, Tile.get_ne_coord))
         result.extend(self.get_reachable_posn_dir(row, col, Tile.get_sw_coord))
@@ -94,8 +112,7 @@ class Board:
         next_tile = get_dir_coord(self.tiles[col][row])
         if self.tile_exists(next_tile):
             result = [next_tile]
-            result.extend(self.get_reachable_posn_dir(
-                next_tile[0], next_tile[1], get_dir_coord))
+            result.extend(self.get_reachable_posn_dir(*next_tile, get_dir_coord))
             return result
         else:
             return []
@@ -215,5 +232,3 @@ class Board:
         y1 = offset_y + size + GUI_UNIT
         canvas.create_rectangle(x0, y0, x1, y1, fill=color)
         return canvas
-
-        

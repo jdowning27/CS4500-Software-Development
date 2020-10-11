@@ -64,15 +64,3 @@ class TileTestCase(unittest.TestCase):
         self.assertEqual(tile2.get_hex_points((100, 100)), [
                          200, 100, 300, 100, 400, 200, 300, 300, 200, 300, 100, 200])
 
-    def test_get_offset(self):
-        size = GUI_UNIT * MAX_FISH
-        tile = Tile(0, 0)
-        self.assertEqual(tile.get_offset(), (0, 0))
-        tile2 = Tile(4, 4)
-        tile2_off_x = 4 * size * tile2.col
-        tile2_off_y = size * tile2.row
-        self.assertEqual(tile2.get_offset(), (tile2_off_x, tile2_off_y))
-        tile3 = Tile(3, 3)
-        tile3_off_x = 4 * size * tile3.col + (2 * size)
-        tile3_off_y = size * tile3.row
-        self.assertEqual(tile3.get_offset(), (tile3_off_x, tile3_off_y))
