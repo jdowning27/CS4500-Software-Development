@@ -23,23 +23,23 @@ class StateTestCase(unittest.TestCase):
 
     def test_place_penguin_for_player_success(self):
         self.assertEqual(self.state_full.get_all_penguins(), [])
-        self.state_full.place_penguin_for_player(Color.RED, (1, 2))
-        self.assertEqual(self.state_full.get_all_penguins(), [(1, 2)])
+        new_state = self.state_full.place_penguin_for_player(Color.RED, (1, 2))
+        self.assertEqual(new_state.get_all_penguins(), [(1, 2)])
 
     def test_place_penguin_for_player_out_of_bounds(self):
         self.assertEqual(self.state_full.get_all_penguins(), [])
-        self.state_full.place_penguin_for_player(Color.RED, (4, 3))
-        self.assertEqual(self.state_full.get_all_penguins(), [])
+        new_state = self.state_full.place_penguin_for_player(Color.RED, (4, 3))
+        self.assertEqual(new_state.get_all_penguins(), [])
     
     def test_place_penguin_for_player_hole(self):
         self.assertEqual(self.state_holes.get_all_penguins(), [])
-        self.state_holes.place_penguin_for_player(Color.RED, (0, 0))
-        self.assertEqual(self.state_holes.get_all_penguins(), [])
+        new_state = self.state_holes.place_penguin_for_player(Color.RED, (0, 0))
+        self.assertEqual(new_state.get_all_penguins(), [])
     
     def test_place_penguin_for_player_no_player(self):
         self.assertEqual(self.state_full.get_all_penguins(), [])
-        self.state_full.place_penguin_for_player(Color.BROWN, (1, 2))
-        self.assertEqual(self.state_full.get_all_penguins(), [])
+        new_state = self.state_full.place_penguin_for_player(Color.BROWN, (1, 2))
+        self.assertEqual(new_state.get_all_penguins(), [])
 
     def test_get_all_penguins(self):
         self.assertEqual(self.state_full.get_all_penguins(), [])
@@ -67,8 +67,8 @@ class StateTestCase(unittest.TestCase):
         self.assertFalse(self.state_full.is_tile_available((-2, 3)))
 
     def test_is_tile_available_occupied(self):
-        self.state_full.place_penguin_for_player(Color.RED, (1, 2))
-        self.assertFalse(self.state_full.is_tile_available((1, 2)))
+        new_state = self.state_full.place_penguin_for_player(Color.RED, (1, 2))
+        self.assertFalse(new_state.is_tile_available((1, 2)))
     
     def test_valid_move_success(self):
         self.state_full.get_all_penguins = MagicMock(return_value=[(0,0), (1, 0), (3, 2)])
@@ -105,19 +105,19 @@ class StateTestCase(unittest.TestCase):
         self.assertTrue((0, 0) in self.state_full.get_all_penguins())
         self.assertFalse((2, 0) in self.state_full.get_all_penguins())
 
-        self.state_full.move_penguin((0, 0), (2, 0))
-        self.assertTrue((2, 0) in self.state_full.get_all_penguins())
-        self.assertFalse((0, 0) in self.state_full.get_all_penguins())
+        new_state = self.state_full.move_penguin((0, 0), (2, 0))
+        self.assertTrue((2, 0) in new_state.get_all_penguins())
+        self.assertFalse((0, 0) in new_state.get_all_penguins())
 
     def test_move_penguin_occupied(self):
         self.player1.add_penguin((0,0))
         self.player2.add_penguin((2,0))
         self.assertEqual(self.state_full.get_all_penguins(), [(0, 0), (2, 0)])
-        self.state_full.move_penguin((0, 0), (2, 0))
-        self.assertEqual(self.state_full.get_all_penguins(), [(0, 0), (2, 0)])
+        new_state = self.state_full.move_penguin((0, 0), (2, 0))
+        self.assertEqual(new_state.get_all_penguins(), [(0, 0), (2, 0)])
         # check that the penguins for each player did not trade places
-        self.assertEqual(self.player1.get_penguins(), [(0,0)])
-        self.assertEqual(self.player2.get_penguins(), [(2,0)])
+        self.assertEqual(new_state.get_player(Color.RED).get_penguins(), [(0,0)])
+        self.assertEqual(new_state.get_player(Color.WHITE).get_penguins(), [(2,0)])
 
     def test_any_remaining_moves_true(self):
         self.player1.add_penguin((0,0))

@@ -22,7 +22,8 @@ class State:
         :board: Board           The Fish game board in this state
         :turn: int		The index of the player whose turn it is
         """
-        self.players = players.sort(key=lambda p: p.get_age())
+        players.sort(key=lambda p: p.get_age())
+        self.players = players
         self.board = board
         self.turn = turn
 
@@ -34,14 +35,16 @@ class State:
 
         :player_color: Color        The color of the Player to get
         :posn: tuple                The (row, col) position to place the penguin
-        :returns: State		    Returns a new game state with the penguin added
+        :returns: State		        Returns a game state with the penguin added if possible
         """
         new_state = self.copy()
         player = new_state.get_player(player_color)
         if not player:
             print("No player with color {} found".format(player_color))
+            return self
         elif not self.is_tile_available(posn):
             print("Cannot place penguin at {}".format(posn))
+            return self
         else:
             player.add_penguin(posn)
             return new_state
@@ -67,17 +70,18 @@ class State:
 
         :from_posn: tuple	(row, col) of tile where penguin to be moved is
         :to_posn: tuple		(row, col) of tile to move the penguin to
-        :returns: State         A new game state with the penguin moved
+        :returns: State     A game state with the penguin moved if possible
         """
         player = self.get_player_from_penguin(from_posn)
         if self.valid_move(from_posn, to_posn) and player is self.players[self.turn]:
             new_state = self.copy()
             new_state.board.remove_tile(*from_posn)
-            new_state.players[turn].move_penguin(from_posn, to_posn)
+            new_state.players[self.turn].move_penguin(from_posn, to_posn)
             new_state.turn = (self.turn + 1) % len(self.players)
             return new_state
         else:
             print("Not valid move")
+            return self
 
 
     def valid_move(self, from_posn, to_posn):

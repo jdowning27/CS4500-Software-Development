@@ -8,7 +8,7 @@ penguin color, age, and an array of penguins.
 class Player:
     def __init__(self, color, age):
         validate_pos_int(age)
-        if color not in Color.__members__:
+        if isinstance(type(color), Color):
             print_error("Invalid Color")
         self.__color = color
         self.__age = age
@@ -47,6 +47,14 @@ class Player:
         :returns: enum Color    
         """
         return self.__color
+
+    def get_age(self):
+        """
+        Getter for this Player's age
+
+        :returns: int       Positive integer representing the Player's age
+        """
+        return self.__age
 
     def move_penguin(self, from_posn, to_posn):
         """
