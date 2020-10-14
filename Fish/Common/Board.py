@@ -34,6 +34,17 @@ class Board:
             for r in range(0, self.row):
                 self.tiles[c][r] = Tile(r, c)
 
+    def copy(self):
+        """
+        Creates a deep copy of the board.
+
+        :returns:Board		Copy of this board
+        """
+        new_tiles = [[self.tiles[c][r].copy() for r in range(0, self.row)] for c in range(0, self.col)]
+        new_board = Board(self.row, self.col)
+        new_board.tiles = new_tiles
+        return new_board
+
     def create_board_with_holes(self, holes, min):
         """
         Create board with given holes and min number of tiles with 1 Fish

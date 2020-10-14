@@ -10,15 +10,20 @@ CS 4500 Project by Jennifer Der and Timothy Haas
 ├── Common/                 # Holds all files for Fish Program (includes data representation, game logic, and unit tests)
 │   ├── Test/               # Directory of all Python unit tests
 │   ├── Board.py            # Representation of Fish game board
+│   ├── Color.py            # Color Enum
+│   ├── Player.py           # Data representation of player
+│   ├── State.py            # Data representation of game state
 │   ├── Constants.py        # Constants for rendering and game constants
-│   ├── run_tests           # Executable test script to run all unit tests
 │   ├── Tile.py             # Representation of hexagonal tile on board
 │   └── Util.py             # All utility functions used throughout Project
 ├── Planning/               # Memos for Fish game planning   
 │   ├── game-state.md       # Design description for data representation of Game States and the external interface
+│   ├── games.md            # Design data representation for full games
 │   ├── milestones.pdf      # Week 1 memo task Fish milestones
 │   ├── self-1.md           # Week 1 self evaluation
+│   ├── self-2.md           # Week 2 self evaluation
 │   └── system.pdf          # Week 1 memo task for Fish software components
+├── xtest                   # Test script 
 └── README.md               # This README file
 ```
 
@@ -64,8 +69,8 @@ board.draw_board()
 ## Testing
 Run all unit tests for Fish:
 ```
-$ cd Fish/Common/
-$ ./run_tests
+$ cd Fish/
+$ ./xtest
 ```
 Run individual unit test file for Fish:
 ```

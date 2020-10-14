@@ -1,3 +1,5 @@
 #!/bin/bash
 
+cd Common/
+
 python3 -m unittest discover Test/ "*_test.py"

@@ -14,7 +14,6 @@ class Tile:
         :is_active: bool    Is the tile active? (has not been removed from board)
         :tile_size: int     Pixel size to use in drawing
         """
-        # TODO: revisit public/private of class variables
         self.fish = None
         self.is_active = True
         self.row = row
@@ -28,6 +27,17 @@ class Tile:
         """
         self.is_active = False
         self.fish = 0
+
+    def copy(self):
+        """
+        Create a deep copy of this tile
+
+        :returns: Tile		Copy of this tile
+        """
+        new_tile = Tile(self.row, self.col)
+        new_tile.fish = self.fish
+        new_tile.is_active = self.is_active
+        return new_tile
 
     def set_fish(self, fish):
         """
