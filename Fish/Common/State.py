@@ -8,8 +8,8 @@ master = Tk()
 Represents a snapshot of the state of the game, which includes:
     - the state of the board
     - the current placements of the penguins
-    - knowledge about the players
-    - the order in which the players take turns
+    - which Player's turn it is
+    - a sorted list of Player objects, from youngest to oldest
 """
 class State:
 
@@ -20,7 +20,7 @@ class State:
 
         :players: array         An array of Players in this game
         :board: Board           The Fish game board in this state
-        :turn: int		The index of the player whose turn it is
+        :turn: int		        The index of the player whose turn it is
         """
         players.sort(key=lambda p: p.get_age())
         self.players = players

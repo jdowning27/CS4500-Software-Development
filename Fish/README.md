@@ -28,9 +28,34 @@ CS 4500 Project by Jennifer Der and Timothy Haas
 ```
 
 ## Software Components
-![Class Diagram](https://i.imgur.com/RlwPXWY.png)
+![Class Diagram](https://i.imgur.com/nTRzWTd.png)
 ### Board
 The Game Board has a two-dimensional array of Tile objects, and calls functions in the Tile class such as `create_hole`, and `set_fish` during Board construction.
+### Hexagonal Board Coordinate System
+```
+  _____         _____         _____
+ /     \       /     \       /     \
+/ 0, 0  \_____/  0, 1 \_____/  0, 2 \_____
+\       /     \       /     \       /     \
+ \_____/ 1, 0  \_____/  1, 1 \_____/  1, 2 \
+ /     \       /     \       /     \       /
+/ 2, 0  \_____/  2, 1 \_____/  2, 2 \_____/
+\       /     \       /     \       /     \
+ \_____/ 3, 0  \_____/  3, 1 \_____/  3, 2 \
+       \       /     \       /     \       /
+        \_____/       \_____/       \_____/
+```
+- Reachable positions on the board from one tile are positions that can be reached by a straight line over borders (not corners) of the hexagon. If a hole is reached (Tile with no fish), the path stops. Positions are not reachable through 'jumping' over holes on the board.
+- Positions on the Board are represented throughout the project by a (row, col) tuple.
+
+### Tile
+Data representation of a hexagonal tile. A Tile object has a north, south, northeast, northwest, southeast, southwest direction. 
+
+### State
+Keeps track of the Board and the Players in the current state. State also keeps track of which Player's turn it is. The list of Players that State keeps is an ordered list from youngest to oldest.
+
+### Player
+The internal data representation of a Player. A Player has access to their penguins, where a penguin is represented by a (row, col) tuple which is their location on the Board.
 
 ### Examples of how to create boards, and render
 
