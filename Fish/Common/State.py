@@ -7,7 +7,7 @@ master = Tk()
 """
 Represents a snapshot of the state of the game, which includes:
     - the state of the board
-    - the current placements of the penguins
+    - the current coordinates of all penguins
     - which Player's turn it is
     - a sorted list of Player objects, from youngest to oldest
 """

@@ -9,7 +9,7 @@ from Constants import MAX_FISH, GUI_UNIT
 
 
 """
-Represents the Fish Game board.
+Represents the Fish Game board that is made up of hexagonal tiles.
 """
 class Board:
 

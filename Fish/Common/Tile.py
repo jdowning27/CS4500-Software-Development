@@ -1,6 +1,9 @@
 from Util import is_even
-from Constants import GUI_UNIT, MAX_FISH
+from Constants import GUI_UNIT, MAX_FISH, TILE_COLOR, TILE_OUTLINE, FISH_COLOR, HOLE_COLOR
 
+"""
+Represents a single hexagonal tile.
+"""
 class Tile:
 
     def __init__(self, row, col):
@@ -128,8 +131,8 @@ class Tile:
         :points: array              X, Y coordinates of the hexagon's points
         :canvas: tkinter.Canvas     Canvas to draw on
         """
-        color = 'orange' if self.is_active else 'gray'
-        canvas.create_polygon(self.get_hex_points(offset), outline='white', fill=color)
+        color = TILE_COLOR if self.is_active else HOLE_COLOR
+        canvas.create_polygon(self.get_hex_points(offset), outline=TILE_OUTLINE, fill=color)
         canvas.pack()
 
     def draw_tile_fish(self, canvas, offset):
@@ -164,9 +167,9 @@ class Tile:
         y0 = i * (1.5 * GUI_UNIT) + y_off + (GUI_UNIT)
         x1 = 2 * self.tile_size + x_off
         y1 = y0 + (GUI_UNIT)
-        canvas.create_oval(x0, y0, x1, y1, fill='blue')
+        canvas.create_oval(x0, y0, x1, y1, fill=FISH_COLOR)
 
         points = [x1, y0 + (.5 * GUI_UNIT),
                   x1 + (.25 * GUI_UNIT), y0,
                   x1 + (.25 * GUI_UNIT), y1]
-        canvas.create_polygon(points, fill='blue')
+        canvas.create_polygon(points, fill=FISH_COLOR)
