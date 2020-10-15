@@ -33,6 +33,7 @@ CS 4500 Project by Jennifer Der and Timothy Haas
 The Game Board has a two-dimensional array of Tile objects, and calls functions in the Tile class such as `create_hole`, and `set_fish` during Board construction.
 ### Hexagonal Board Coordinate System
 ```
+# Example of a 4 row, 3 column board
   _____         _____         _____
  /     \       /     \       /     \
 / 0, 0  \_____/  0, 1 \_____/  0, 2 \_____
