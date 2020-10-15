@@ -3,8 +3,9 @@
 ## Data Representation
 Data representation for games where both players and referees have ability to plan ahead and check validity of actions.
 The Game includes:
-- current game State
+- Current game State (including the Board, Player/penguin placements)
 - Whose turn it is
+- Stores all possible moves and the resulting States from the current game State
 
 The interactions between Referee and Game:
 - Referee tells Game whose turn it is
@@ -51,4 +52,12 @@ Input: Player, State, from(tuple), to(tuple)
 Output: maybe State
 '''
 def check_move_ahead(player, state, from, to):
+
+'''
+Creates a list of Games out of all possible moves from this
+Game.
+Input: void
+Output: List of Game
+'''
+def create_game_tree():
 ```
