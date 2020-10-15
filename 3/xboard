@@ -26,7 +26,8 @@ def main():
     board_json = parser(sys.stdin)
     # create the board from input
     board_array = board_json['board']
-    board = Board(len(board_array), len(board_array[0]))
+    row_length = max(map(len, board_array))
+    board = Board(len(board_array), max(map(len, board_array)))
     board.create_board_from_json(board_array)
     # get all reachable positions from given position
     position = board_json['position']

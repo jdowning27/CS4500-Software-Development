@@ -33,7 +33,7 @@ class BoardTestCase(unittest.TestCase):
             board.create_board_without_holes(0)
         self.assertEqual(err.exception.code, 1)
 
-    def test_create_board_holes(self):
+    def test_create_board_json(self):
         tiles = [
             [1,     2,      3,      0],
                 [4,     0,      0,      5],
@@ -44,6 +44,20 @@ class BoardTestCase(unittest.TestCase):
         for r in range(0, len(tiles)):
             for c in range(0, len(tiles[r])):
                 self.assertEqual(board.tiles[c][r].fish, tiles[r][c])
+
+    def test_create_board_json_short_row(self):
+        tiles = [
+            [1,     2],    
+                [4,     0,      0,      5],
+            [1,     1,      0,      1]
+        ]
+        board = Board(3, 4)
+        board.create_board_from_json(tiles)
+        self.assertEqual(board.tiles[2][0].fish, 0)
+        self.assertEqual(board.tiles[3][0].fish, 0)
+        self.assertFalse(board.tiles[2][0].is_active)
+        self.assertFalse(board.tiles[3][0].is_active)
+    
 
     def test_remove_tile(self):
         board = Board(2, 2)

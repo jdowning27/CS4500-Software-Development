@@ -84,14 +84,28 @@ class Board:
             [       4,     0,      5   ]
         ]
         """
-        for r in range(0, len(board_array)):
-            for c in range(0, len(board_array[r])):
-                fish = board_array[r][c]
+        for r in range(0, self.row):
+            for c in range(0, self.col):
+                # get the fish count for this tile
+                fish = self.__get_fish(board_array, r, c)
                 self.tiles[c][r] = Tile(r, c)
                 if fish == 0:
                     self.remove_tile(r, c)
                 else:
                     self.tiles[c][r].set_fish(fish)
+
+
+    def __get_fish(self, board_array, r, c):
+        """
+        Helper function for translating 2D array to board tiles.
+        :board_array: array     2D array of fish values
+        :r: int                 the row of the tile
+        :c: int                 the column of the tile
+        """
+        if c >= len(board_array[r]):
+            return 0
+        else:
+            return board_array[r][c]
 
 
     def get_all_reachable_posn(self, row, col):
