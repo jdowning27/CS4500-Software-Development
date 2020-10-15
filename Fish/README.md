@@ -49,7 +49,7 @@ The Game Board has a two-dimensional array of Tile objects, and calls functions 
 - Positions on the Board are represented throughout the project by a (row, col) tuple.
 
 ### Tile
-Data representation of a hexagonal tile. A Tile object has a north, south, northeast, northwest, southeast, southwest direction. 
+Data representation of a hexagonal tile. A hexagonal tile has a north, south, northeast, northwest, southeast, southwest direction and methods to get the coordinates to a Maybe Tile in each direction. 
 
 ### State
 Keeps track of the Board and the Players in the current state. State also keeps track of which Player's turn it is. The list of Players that State keeps is an ordered list from youngest to oldest.
