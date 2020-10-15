@@ -76,7 +76,9 @@ class Board:
 
     def create_board_from_json(self, board_array):
         """
-        Create a board with fish and holes at specific places.
+        Create a board with fish and holes when the number of fish is 0.
+        If the nested list of fish values is shorter than the row length,
+        the remaining tiles are holes. 
         The given 2d-array is structed as follows, where each int represents
         the number of fish:
         [

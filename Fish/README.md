@@ -30,7 +30,7 @@ CS 4500 Project by Jennifer Der and Timothy Haas
 ## Software Components
 ![Class Diagram](https://i.imgur.com/nTRzWTd.png)
 ### Board
-The Game Board has a two-dimensional array of Tile objects, and calls functions in the Tile class such as `create_hole`, and `set_fish` during Board construction.
+The Game Board has a two-dimensional array of Tile objects, and represents a hexagonal game board for Fish. The coordinate system is described below.
 ### Hexagonal Board Coordinate System
 ```
 # Example of a 4 row, 3 column board
@@ -47,6 +47,7 @@ The Game Board has a two-dimensional array of Tile objects, and calls functions 
         \_____/       \_____/       \_____/
 ```
 - Reachable positions on the board from one tile are positions that can be reached by a straight line over borders (not corners) of the hexagon. If a hole is reached (Tile with no fish), the path stops. Positions are not reachable through 'jumping' over holes on the board.
+  - Example: In the above board, (2, 0) and (3, 1) are reachable from **(0, 0)** but (0, 1) and (3, 0) are **not**.
 - Positions on the Board are represented throughout the project by a (row, col) tuple.
 
 ### Tile
@@ -74,6 +75,17 @@ Create a board that has the same number of fish on every tile and has no holes
 ```
 board = Board(4, 3)
 board.create_board_without_holes(4)
+```
+
+Also, there is an option to create an intermediate game board using a two-dimensional array
+```
+my_board = [
+            [1,     2,      3,      0],
+                [4,     0,      0,      5],
+            [1,     1,      0,      1]
+]
+board = Board(4, 3)
+board.create_board_from_json(my_board)
 ```
 
 Other functionality
