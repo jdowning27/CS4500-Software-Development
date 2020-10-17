@@ -4,14 +4,16 @@ Under each of the following elements below, indicate below where your
 TAs can find:
 
 - the data description of states, including an interpretation:
-
+   - [README description of State](https://github.ccs.neu.edu/CS4500-F20/anton/tree/8393dcabbab10654a58c728144d4f2f0b012461e/Fish#state)
+   - [Class Interpretation](https://github.ccs.neu.edu/CS4500-F20/anton/blob/8393dcabbab10654a58c728144d4f2f0b012461e/Fish/Common/State.py#L8)
 - a signature/purpose statement of functionality that creates states 
-
+   - [Constructor signature and purpose for State](https://github.ccs.neu.edu/CS4500-F20/anton/blob/8393dcabbab10654a58c728144d4f2f0b012461e/Fish/Common/State.py#L18)
 - unit tests for functionality of taking a turn 
-
+   - [Line 102 to 120 in state_test.py](https://github.ccs.neu.edu/CS4500-F20/anton/blob/8393dcabbab10654a58c728144d4f2f0b012461e/Fish/Common/Test/state_test.py#L102)
 - unit tests for functionality of placing an avatar 
-
+   - [Line 24 to 42 in state_test.py](https://github.ccs.neu.edu/CS4500-F20/anton/blob/8393dcabbab10654a58c728144d4f2f0b012461e/Fish/Common/Test/state_test.py#L24)
 - unit tests for functionality of final-state test
+   - [Line 122 to 135 in state_test.py](https://github.ccs.neu.edu/CS4500-F20/anton/blob/8393dcabbab10654a58c728144d4f2f0b012461e/Fish/Common/Test/state_test.py#L122)
 
 The ideal feedback is a GitHub perma-link to the range of lines in specific
 file or a collection of files for each of the above bullet points.
@@ -34,19 +36,4 @@ the specified code snippets answers the request.
 Select ONE of the following choices by deleting the other two options.
 
 A) My partner and I contributed equally to this assignment. 
-
-B) My partner and I contributed not *exactly* equally, but *roughly*
-   equally to this assignment.
-
-C) My partner and I did not contribute roughly equally to this
-   assignment; one of us contributed significantly more.
-
-If you chose C, please give some further explanation below describing
-the state of your partnership and whether and how you have been or are
-addressing this disparity. Describe the overall trajectory of your
-partnership from the beginning until now. Be honest with your answer
-here, and with each other. Even if it's uncomfortable reading this
-together right now.
-
-If you chose one of the other two options, you should feel free to
-also add some explanation if you wish. 
+   - Jenn typed a lot of this assignment and Timmy piloted; we switch off each week who is typing more. We talked about all design decisions together, and pair programmed the entire assignment. Timmy will type next assignment.
