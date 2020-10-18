@@ -26,6 +26,9 @@ class Board:
         self.col = col
         self.row = row
 
+    def __eq__(self, other):
+        return type(other) is Board and self.row == other.row and self.col == other.col and self.tiles == other.tiles
+
     def init_board(self):
         """
         Intializes the game board with Tile objects in each place

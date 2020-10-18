@@ -15,12 +15,21 @@ class Action:
         return type(other) is type(self) and self.__from_posn == other.get_from_posn() and \
             self.__to_posn == other.get_to_posn()
 
+    def __hash__(self):
+        return (self.__from_posn, self.__to_posn).__hash__()
+
     def get_from_posn(self):
         return self.__from_posn
 
     def get_to_posn(self):
         return self.__to_posn
 
-    def __print__(self):
-        print("from_posn: " + self.__from_posn)
-        print("to_posn: " + self.__to_posn)
+    def apply_move(self, state):
+        """
+        Applies itself to the given state and returns the resulting state
+        Action is expected to be valid in game
+
+        :state: State	Origin State
+        :returns: State	Moved State
+        """
+        return state.move_penguin(self.__from_posn, self.__to_posn)

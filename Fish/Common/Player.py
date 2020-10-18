@@ -13,6 +13,10 @@ class Player:
         self.__color = color
         self.__age = age
         self.__penguins = []
+
+    def __eq__(self, other):
+        return type(other) is Player and self.__color == other.get_color() and \
+            self.__age == other.get_age() and self.__penguins.sort() == other.get_penguins().sort()
         
     def get_penguins(self):
         """

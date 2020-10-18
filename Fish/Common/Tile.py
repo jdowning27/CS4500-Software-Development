@@ -23,6 +23,9 @@ class Tile:
         self.col = col
         self.tile_size = GUI_UNIT * MAX_FISH
 
+    def __eq__(self, other):
+        return type(other) is Tile and self.fish == other.fish and self.is_active == other.is_active and self.row == other.row and self.col == other.col
+
     def create_hole(self):
         """
         Creates a whole at this Tile. 

@@ -16,6 +16,9 @@ class GameTree:
         self.state = state
         self.children = {}
 
+    def __eq__(self, other):
+        return type(other) is GameTree and self.state == other.state
+
     def attempt_move(self, state, action):
         """
         Attempts the given action on the state and if legal returns the resulting state.
@@ -39,7 +42,8 @@ class GameTree:
         :returns: List of X		List of values returned by func
         """
         new_states = self.get_child_states(state)
-        return map(func, new_states)
+        moved_states = list(map(func, new_states))
+        return moved_states
 
     def get_child_states(self, state):
         """
@@ -51,16 +55,19 @@ class GameTree:
         possible_moves = state.get_possible_moves()
         new_states = []
         for move in possible_moves:
-            new_states.append(self.attempt_move(state, possible_move))
+            new_states.append(self.attempt_move(state, move))
         return new_states
 
     def create_child_trees(self):
         """
         Creates game trees for each child state
+
+        :returns: Dict {Action : State}
         """
-        possible_move = self.state.get_possible_moves()
+        possible_moves = self.state.get_possible_moves()
         for move in possible_moves:
             maybe_state = self.attempt_move(self.state, move)
             if maybe_state:
                 self.children[move] = GameTree(maybe_state)
         return self.children
+

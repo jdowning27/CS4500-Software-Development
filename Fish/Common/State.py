@@ -28,6 +28,9 @@ class State:
         self.board = board
         self.turn = turn
 
+    def __eq__(self, other):
+        return type(other) is State and self.board == other.board and self.players == other.players and self.turn == other.turn
+
     def place_penguin_for_player(self, player_color, posn):
         """
         Place a penguin at posn (row, col) for the give player if the 
