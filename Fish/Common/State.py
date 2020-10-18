@@ -19,11 +19,10 @@ class State:
         Constructor for State which constructs a game state
         with the given number of players
 
-        :players: array         An array of Players in this game
+        :players: array         An array of Players in this game, assume sorted by age
         :board: Board           The Fish game board in this state
         :turn: int		        The index of the player whose turn it is
         """
-        players.sort(key=lambda p: p.get_age())
         self.players = players
         self.board = board
         self.turn = turn
@@ -79,8 +78,10 @@ class State:
         player = self.get_player_from_penguin(from_posn)
         if self.valid_move(from_posn, to_posn) and player is self.players[self.turn]:
             new_state = self.copy()
+            fish = self.board.tiles[from_posn[1]][from_posn[0]].get_fish()
             new_state.board.remove_tile(*from_posn)
             new_state.players[self.turn].move_penguin(from_posn, to_posn)
+            new_state.players[self.turn].add_to_score(fish)
             new_state.turn = (self.turn + 1) % len(self.players)
             return new_state
         else:
@@ -189,4 +190,16 @@ class State:
                     possible_moves.append(Action(p, reachable))
         return possible_moves
 
+    def print_json(self):
+        """
+        Returns a json representation of the state as a json object
 
+        :returns: Dictionary	State as json
+        """
+        state = {}
+        players = []
+        for player in self.players:
+            players.append(player.print_json())
+        state['players'] = players
+        state['board'] = self.board.print_json()
+        return state

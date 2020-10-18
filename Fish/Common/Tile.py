@@ -176,3 +176,6 @@ class Tile:
                   x1 + (.25 * GUI_UNIT), y0,
                   x1 + (.25 * GUI_UNIT), y1]
         canvas.create_polygon(points, fill=FISH_COLOR)
+
+    def get_fish(self):
+        return self.fish

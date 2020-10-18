@@ -1,0 +1,75 @@
+#!/usr/bin/env python3
+import json
+import sys
+import os
+os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
+sys.path.append(os_path)
+from Board import Board
+from State import State
+from Player import Player
+from Tile import *
+
+
+def parser(input_stream):
+    """
+    Parse the given input string from the client.
+    :input_stream: string       a string representing the JSON input from client
+    :return: JSON object
+    """
+    ordered_output = []
+    maybe_json = ''
+    for line in input_stream:
+        strip_input = line.strip()
+        maybe_json = maybe_json + strip_input
+    return json.loads(maybe_json)
+
+def parse_board(state_json):
+    board_array = state_json['board']
+    row_length = max(map(len, board_array))
+    board = Board(len(board_array), max(map(len, board_array)))
+    board.create_board_from_json(board_array)
+    return board
+
+def parse_players(state_json):
+    players_json = state_json['players']
+    players = []
+    for player in players_json:
+        new_player = Player(player['color'])
+        players.append(add_penguins_to_player(new_player, player['places']))
+    return players
+
+def add_penguins_to_player(player, places):
+    for pos in places:
+        player.add_penguin((pos[0], pos[1]))
+    return player
+
+def find_move(state):
+    penguin = state.players[0].get_penguins()[0]
+    moves = []
+    moves.append(state.board.get_reachable_posn_dir(*penguin, Tile.get_north_coord))
+    moves.append(state.board.get_reachable_posn_dir(*penguin, Tile.get_ne_coord))
+    moves.append(state.board.get_reachable_posn_dir(*penguin, Tile.get_se_coord))
+    moves.append(state.board.get_reachable_posn_dir(*penguin, Tile.get_south_coord))
+    moves.append(state.board.get_reachable_posn_dir(*penguin, Tile.get_sw_coord))
+    moves.append(state.board.get_reachable_posn_dir(*penguin, Tile.get_nw_coord))
+
+    for dir in moves:
+        if len(dir) > 0:
+            maybe_state = state.move_penguin(penguin, dir[0])
+            if maybe_state:
+                return maybe_state
+    return False
+def main():
+    state_json = parser(sys.stdin)
+    board = parse_board(state_json)
+    players = parse_players(state_json)
+    state = State(players, board, 0)
+    print(state.print_json())
+    if len(players) > 0 and len(players[0].get_penguins()) > 0:
+        move = find_move(state)
+        if move:
+            print(move.print_json())
+            return
+    print(False)
+
+main()

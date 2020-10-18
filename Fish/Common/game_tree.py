@@ -62,7 +62,7 @@ class GameTree:
         """
         Creates game trees for each child state
 
-        :returns: Dict {Action : State}
+        :returns: Dict {Action : GameTree}
         """
         possible_moves = self.state.get_possible_moves()
         for move in possible_moves:

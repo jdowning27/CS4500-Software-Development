@@ -1,4 +1,4 @@
-from Util import validate_pos_int, print_error
+from Util import validate_non_neg_int, print_error
 from Color import *
 
 """
@@ -6,13 +6,14 @@ The internal representation of a player which keeps track of its
 penguin color, age, and an array of penguins.
 """
 class Player:
-    def __init__(self, color, age):
-        validate_pos_int(age)
+    def __init__(self, color, age=0, score=0):
+        validate_non_neg_int(age)
         if isinstance(type(color), Color):
             print_error("Invalid Color")
         self.__color = color
         self.__age = age
         self.__penguins = []
+        self.__score = score
 
     def __eq__(self, other):
         return type(other) is Player and self.__color == other.get_color() and \
@@ -68,3 +69,25 @@ class Player:
         if from_posn in self.__penguins:
             self.__penguins.remove(from_posn)
             self.add_penguin(to_posn)
+
+
+    def get_score(self):
+        return self.__score
+
+    def add_to_score(self, fish):
+        self.__score += fish
+
+    def print_json(self):
+        """
+        Returns json representation of the player
+
+        :returns: dictionary	json representation of player
+        """
+        player = {}
+        player['color'] = self.__color
+        player['score'] = self.__score
+        places = []
+        for penguin in self.__penguins:
+            places.append([penguin[0], penguin[1]])
+        player['places'] = places
+        return player

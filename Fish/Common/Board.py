@@ -262,3 +262,17 @@ class Board:
         y1 = offset_y + size + GUI_UNIT
         canvas.create_rectangle(x0, y0, x1, y1, fill=color)
         return canvas
+
+    def print_json(self):
+        """
+        Returns json representation of the board
+
+        :returns: [][]int	2d array of board with fish values
+        """
+        board = []
+        for r in range(0, self.row):
+            row = []
+            for c in range(0, self.col):
+                row.append(self.tiles[c][r].get_fish())
+            board.append(row)
+        return board
