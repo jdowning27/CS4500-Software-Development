@@ -1,5 +1,6 @@
 from tkinter import *
 from Constants import MAX_FISH, GUI_UNIT
+from Action import *
 
 master = Tk()
 
@@ -70,7 +71,7 @@ class State:
 
         :from_posn: tuple	(row, col) of tile where penguin to be moved is
         :to_posn: tuple		(row, col) of tile to move the penguin to
-        :returns: State     A game state with the penguin moved if possible
+        :returns: maybe State   A game state with the penguin moved if possible
         """
         player = self.get_player_from_penguin(from_posn)
         if self.valid_move(from_posn, to_posn) and player is self.players[self.turn]:
@@ -80,8 +81,8 @@ class State:
             new_state.turn = (self.turn + 1) % len(self.players)
             return new_state
         else:
-            print("Not valid move")
-            return self
+            print("Not a valid move")
+            return False
 
 
     def valid_move(self, from_posn, to_posn):
@@ -94,10 +95,9 @@ class State:
         :to_posn: tuple         The (row, col) position to move to
         :returns: bool          True if the move is valid
         """
-        row, col = from_posn
         return from_posn in self.get_all_penguins() and \
             self.is_tile_available(to_posn) and \
-            to_posn in self.board.get_all_reachable_posn(row, col)
+            to_posn in self.board.get_all_reachable_posn(*from_posn)
 
     def any_remaining_moves(self):
         """
@@ -105,12 +105,10 @@ class State:
 
         :returns: bool      True if any Player can make a move
         """
-        for player in self.players:
-            for penguin in player.get_penguins():
-                row, col = penguin
-                for reachable in self.board.get_all_reachable_posn(row, col):
-                    if self.valid_move(penguin, reachable):
-                        return True
+        for penguin in self.get_all_penguins():
+            for reachable in self.board.get_all_reachable_posn(*penguin):
+                if self.valid_move(penguin, reachable):
+                    return True
         return False
 
 
@@ -174,8 +172,18 @@ class State:
             self.board.draw_penguin(canvas, player_color.value, penguin)
         master.mainloop()
 
+    def get_possible_moves(self):
+        """
+        Gets a list of all of the possible moves for the current player in this state.
 
+        :returns: List of Action	possible actions for player
+        """
+        penguins = self.players[self.turn].get_penguins()
+        possible_moves = []
+        for p in penguins:
+            for reachable in self.board.get_all_reachable_posn(*p):
+                if self.valid_move(p, reachable):
+                    possible_moves.append(Action(p, reachable))
+        return possible_moves
 
-
-        
 
