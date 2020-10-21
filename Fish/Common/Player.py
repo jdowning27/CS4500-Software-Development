@@ -31,7 +31,7 @@ class Player:
 
         :returns: Player	Copy of this player
         """
-        new_player = Player(self.__color, self.__age)
+        new_player = Player(self.__color, self.__age, self.__score)
         for penguin in self.__penguins:
             new_player.add_penguin(penguin)
         return new_player
@@ -67,9 +67,7 @@ class Player:
         exists in this penguin.
         """
         if from_posn in self.__penguins:
-            self.__penguins.remove(from_posn)
-            self.add_penguin(to_posn)
-
+            self.__penguins = [to_posn if p == from_posn else p for p in self.__penguins]
 
     def get_score(self):
         return self.__score
