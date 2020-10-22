@@ -19,55 +19,60 @@ class GameTree:
     def __eq__(self, other):
         return type(other) is GameTree and self.state == other.state
 
-    def attempt_move(self, state, action):
+    @staticmethod
+    def attempt_move(tree, action):
         """
         Attempts the given action on the state and if legal returns the resulting state.
         Otherwise returns false.
 
-        :state: State		Origin state
+        :tree: GameTree		Origin GameTree to apply action to
         :action: Action		Attempted action
 
         :returns: maybe State	Resulting state or false
         """
         from_posn = action.get_from_posn()
         to_posn = action.get_to_posn()
-        return state.move_penguin(from_posn, to_posn)
+        return tree.state.move_penguin(from_posn, to_posn)
 
-    def apply_to_children(self, state, func):
+    @staticmethod
+    def apply_to_children(tree, func):
         """
-        Applys the given function to all children of the given state.
+        Applies the given function to all children of the given state.
 
-        :state: State			Parent state of children
-        :func: [State -> X]		function applied to state's children
+        :tree: GameTree			Parent state of children
+        :func: [GameTree -> X]	Function applied to state's children
         :returns: List of X		List of values returned by func
         """
-        new_states = self.get_child_states(state)
-        moved_states = list(map(func, new_states))
-        return moved_states
+        new_trees = GameTree.get_child_trees(tree)
+        moved_trees = list(map(func, new_trees))
+        return moved_trees
 
-    def get_child_states(self, state):
+    @staticmethod
+    def get_child_trees(tree):
         """
-        Gets a list of all the possible direct child states from the given state.
+        Gets a list of all the possible direct child trees from the given tree's state.
 
-        :state: State			Parent state of states returned
-        :returns: List of States	Children of given state
+        :tree: GameTree			    Parent tree, and origin for moves
+        :returns: List of GameTree	Children of given tree (resulting GameTree with possible moves)
         """
-        possible_moves = state.get_possible_moves()
-        new_states = []
+        possible_moves = tree.state.get_possible_moves()
+        new_trees = []
         for move in possible_moves:
-            new_states.append(self.attempt_move(state, move))
-        return new_states
+            new_trees.append(GameTree(GameTree.attempt_move(tree, move)))
+        return new_trees
 
-    def create_child_trees(self):
+    @staticmethod
+    def create_child_trees(tree):
         """
         Creates game trees for each child state
 
+        :tree: GameTree         The tree to get the child GameTrees for
         :returns: Dict {Action : GameTree}
         """
-        possible_moves = self.state.get_possible_moves()
+        possible_moves = tree.state.get_possible_moves()
         for move in possible_moves:
-            maybe_state = self.attempt_move(self.state, move)
+            maybe_state = GameTree.attempt_move(tree, move)
             if maybe_state:
-                self.children[move] = GameTree(maybe_state)
-        return self.children
+                tree.children[move] = GameTree(maybe_state)
+        return tree.children
 

@@ -4,7 +4,6 @@ Represents a game action.
 - Holds the starting coordinate of penguin being moved
 - Holds where it is moved to
 """
-
 class Action:
 
     def __init__(self, from_posn, to_posn):
@@ -24,12 +23,12 @@ class Action:
     def get_to_posn(self):
         return self.__to_posn
 
-    def apply_move(self, state):
+    def apply_move(self, tree):
         """
         Applies itself to the given state and returns the resulting state
         Action is expected to be valid in game
 
-        :state: State	Origin State
-        :returns: State	Moved State
+        :tree: GameTree	    Origin GameTree
+        :returns: State	    GameTree with this action applied
         """
-        return state.move_penguin(self.__from_posn, self.__to_posn)
+        return tree.state.move_penguin(self.__from_posn, self.__to_posn)

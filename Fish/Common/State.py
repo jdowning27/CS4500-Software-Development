@@ -198,7 +198,10 @@ class State:
         """
         state = {}
         players = []
-        for player in self.players:
+        # put the player's whose turn is next first
+        ordered_players = self.players[self.turn:]
+        ordered_players.extend(self.players[:self.turn])
+        for player in ordered_players:
             players.append(player.print_json())
         state['players'] = players
         state['board'] = self.board.print_json()
