@@ -15,20 +15,39 @@ CS 4500 Project by Jennifer Der and Timothy Haas
 │   ├── State.py            # Data representation of game state
 │   ├── Constants.py        # Constants for rendering and game constants
 │   ├── Tile.py             # Representation of hexagonal tile on board
+│   ├── game_tree.py        # Representation of the a Fish game
+│   ├── player_interface.py # Representation of a player interface, to be used by other components
 │   └── Util.py             # All utility functions used throughout Project
 ├── Planning/               # Memos for Fish game planning   
 │   ├── game-state.md       # Design description for data representation of Game States and the external interface
+│   ├── player-protocol.md  # Design description for how components will interact with the player interface
 │   ├── games.md            # Design data representation for full games
 │   ├── milestones.pdf      # Week 1 memo task Fish milestones
 │   ├── self-1.md           # Week 1 self evaluation
 │   ├── self-2.md           # Week 2 self evaluation
+│   ├── self-3.md           # Week 3 self evaluation
 │   └── system.pdf          # Week 1 memo task for Fish software components
 ├── xtest                   # Test script 
 └── README.md               # This README file
 ```
 
 ## Software Components
-![Class Diagram](https://i.imgur.com/nTRzWTd.png)
+![Class Diagram](https://i.imgur.com/07Cj3UX.png)
+
+### GameTree
+The Game Tree consists of a current state and a dictionary pointing to child game trees, where the key is the move or action that results in the value tree.
+```
+# Example usage for how to create N layers of the full Game Tree
+# Given that an instance of a game state exists...
+tree = GameTree(state)
+tree.create_child_trees() # will create the first layer of child trees for this tree
+# Create child trees for the children of the tree above...
+children = GameTree.apply_to_children(tree, GameTree.create_child_trees)
+# Repeat process N times, for each of the children created...
+grandchildren = []
+for child in children:
+    grandchildren.append(GameTree.apply_to_children(child, GameTree.create_child_trees)) # creates a nested list of the grandchildren trees
+```
 ### Board
 The Game Board has a two-dimensional array of Tile objects, and represents a hexagonal game board for Fish. The coordinate system is described below.
 ### Hexagonal Board Coordinate System

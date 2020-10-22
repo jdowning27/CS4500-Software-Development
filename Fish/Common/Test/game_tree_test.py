@@ -37,7 +37,7 @@ class GameTreeTestCase(unittest.TestCase):
 
 
     def test_attempt_move(self):
-        self.assertEqual(type(GameTree.attempt_move(self.game_tree, self.action1)), State)
+        self.assertEqual(type(GameTree.attempt_move(self.game_tree, self.action1)), GameTree)
 
     def test_attempt_move_invalid(self):
         self.assertFalse(GameTree.attempt_move(self.game_tree, Action((0,0), (2,2))))

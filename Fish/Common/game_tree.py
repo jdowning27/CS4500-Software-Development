@@ -2,21 +2,32 @@ import State
 import Action
 
 """
-Represents a a game tree that shows all possible states from
-one state and continues til the end.
+Represents a game tree that shows all possible trees from
+one state, and has the ability to see to the end.
 Includes:
-	- Functionality for creating complete tree
-	- given state and action if action is legal return resulting state else false
-	- Given state and function applies function to all of states immediate children
+	- Functionality for creating resulting trees from player moves
+	- Functionality to apply a function to all child trees
+	- Functionality to see the resulting tree from a given action, and legality of this action
 """
 
 class GameTree:
 
     def __init__(self, state):
+        """
+        Constructor for the Game Tree. Constructs a tree with the given state
+        as the current state. Initializes the children of this game tree to empty
+
+        :state: State       The current state within this GameTree
+        :returns: GameTree  Instance of a GameTree
+        """
         self.state = state
         self.children = {}
 
     def __eq__(self, other):
+        """
+        Overrides equality of GameTree, only compare the states.
+        Note: If states are equal, then the children will be equal by default
+        """
         return type(other) is GameTree and self.state == other.state
 
     @staticmethod
@@ -28,11 +39,15 @@ class GameTree:
         :tree: GameTree		Origin GameTree to apply action to
         :action: Action		Attempted action
 
-        :returns: maybe State	Resulting state or false
+        :returns: maybe GameTree	Resulting GameTree or false
         """
         from_posn = action.get_from_posn()
         to_posn = action.get_to_posn()
-        return tree.state.move_penguin(from_posn, to_posn)
+        maybe_state = tree.state.move_penguin(from_posn, to_posn)
+        if maybe_state:
+            return GameTree(maybe_state)
+        else:
+            return False
 
     @staticmethod
     def apply_to_children(tree, func):
@@ -58,7 +73,7 @@ class GameTree:
         possible_moves = tree.state.get_possible_moves()
         new_trees = []
         for move in possible_moves:
-            new_trees.append(GameTree(GameTree.attempt_move(tree, move)))
+            new_trees.append(GameTree.attempt_move(tree, move))
         return new_trees
 
     @staticmethod
@@ -71,8 +86,8 @@ class GameTree:
         """
         possible_moves = tree.state.get_possible_moves()
         for move in possible_moves:
-            maybe_state = GameTree.attempt_move(tree, move)
-            if maybe_state:
-                tree.children[move] = GameTree(maybe_state)
+            maybe_tree = GameTree.attempt_move(tree, move)
+            if maybe_tree:
+                tree.children[move] = maybe_tree
         return tree.children
 
