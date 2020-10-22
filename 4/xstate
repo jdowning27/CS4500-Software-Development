@@ -69,9 +69,9 @@ def main():
     if len(players) > 0 and len(players[0].get_penguins()) > 0:
         move = find_move(state)
         if move:
-            print(move.print_json())
+            print(json.dumps(move.print_json()))
             return
-    print(False)
+    print(json.dumps(False))
 
 main()
 
