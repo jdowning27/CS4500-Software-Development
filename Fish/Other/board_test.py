@@ -1,3 +1,7 @@
+import os
+import sys
+os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
+sys.path.append(os_path)
 import unittest
 from unittest import mock
 import random

@@ -58,7 +58,7 @@ class PlayerInterface:
         Choose next move from a dictionary of potential actions and resulting GameTrees.
         A player may choose to optimize for specific moves.
 
-        :moves: {Action: GameTree}		Dictionary of available moves and their resulting GameTrees.
-        :returns: Action			Player's chosen action
+        :moves: {Move: GameTree}		Dictionary of available moves and their resulting GameTrees.
+        :returns: Move			Player's chosen action
         """
         pass
