@@ -1,5 +1,5 @@
 from Action import Action
-from DeadEnd import DeadEnd
+from Pass import Pass
 """
 Represents a game action when the penguin is moved.
 - Holds the starting coordinate of penguin being moved
@@ -42,14 +42,12 @@ class Move(Action):
 
         :returns: Move        The action with the lowest row/col number
         """
-        if type(other) is DeadEnd:
+        if type(other) is Pass:
             return self
-        
         from_row, from_col = self.__from_posn
         other_from_row, other_from_col = other.get_from_posn()
         to_row, to_col = self.__to_posn
         other_to_row, other_to_col = other.get_to_posn()
-
         if from_row < other_from_row:
             return self
         elif from_row > other_from_row:
@@ -67,5 +65,8 @@ class Move(Action):
         elif to_col > other_to_col:
             return other
         else:
-            self
+            return self
+
+    def print_json(self):
+        return [self.__from_posn, self.__to_posn]
         

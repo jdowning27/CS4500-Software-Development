@@ -1,5 +1,6 @@
 import State
 import Move
+from Util import validate_pos_int
 
 """
 Represents a game tree that shows all possible trees from
@@ -30,6 +31,9 @@ class GameTree:
         """
         return type(other) is GameTree and self.state == other.state
 
+    def __ne__(self, other):
+        return type(other) is not GameTree and self.state != other.state
+
     @staticmethod
     def attempt_move(tree, action):
         """
@@ -41,9 +45,7 @@ class GameTree:
 
         :returns: maybe GameTree	Resulting GameTree or false
         """
-        from_posn = action.get_from_posn()
-        to_posn = action.get_to_posn()
-        maybe_state = tree.state.move_penguin(from_posn, to_posn)
+        maybe_state = action.apply_move(tree)
         if maybe_state:
             return GameTree(maybe_state)
         else:
@@ -82,7 +84,7 @@ class GameTree:
         Creates game trees for each child state
 
         :tree: GameTree         The tree to get the child GameTrees for
-        :returns: Dict {Move : GameTree}
+        :returns: Dict {Action : GameTree}
         """
         possible_moves = tree.state.get_possible_moves()
         for move in possible_moves:
@@ -96,3 +98,28 @@ class GameTree:
 
     def get_players_score(self, player_color):
         return self.state.get_players_score(player_color)
+
+    def create_n_layers_tree(self, num_layers):
+        """
+        Create N layers of the game decision tree. If num_layers exceeds
+        the number of possible turns in the game, return the full tree.
+
+        :num_layers: PositiveInteger    The number of layers to generate
+        """
+        validate_pos_int(num_layers)
+        children = GameTree.create_child_trees(self) 
+        if num_layers == 1:
+            return self
+        else:
+            for action in children:
+                child_tree = children[action]
+                child_tree.create_n_layers_tree(num_layers - 1)
+            return self
+
+    def print_children(self):
+        if len(self.children) == 0:
+            return self.state.print_json()
+        arr = []
+        for action in self.children:
+            arr.append((action.print_json(), self.children[action].print_children()))
+        return arr

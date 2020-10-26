@@ -153,3 +153,24 @@ class StateTestCase(unittest.TestCase):
             self.assertTrue(action in actions)
         self.assertEqual(len(self.state_full.get_possible_moves()), len(actions))
 
+    def test_get_possible_moves_another_penguin(self):
+        self.player1.add_penguin((0,0))
+        self.player2.add_penguin((2, 1))
+        actions = [Move((0,0), (1, 0)), Move((0,0), (2, 0))]
+        for action in self.state_full.get_possible_moves():
+            self.assertTrue(action in actions)
+        self.assertEqual(len(self.state_full.get_possible_moves()), len(actions))
+
+    def test_get_players_score_after_move(self):
+        self.assertEqual(self.state_full.get_players_score(Color.RED), 0)
+        self.player1.add_penguin((0,0))
+        new_state = self.state_full.move_penguin((0,0), (1,0))
+        self.assertEqual(new_state.get_players_score(Color.RED), 4)
+        self.assertEqual(self.state_full.get_players_score(Color.WHITE), 0)
+
+
+    def test_get_players_score_mutate_player(self):
+        self.assertEqual(self.state_full.get_players_score(Color.RED), 0)
+        self.player1.add_to_score(10)
+        self.assertEqual(self.state_full.get_players_score(Color.RED), 10)
+        

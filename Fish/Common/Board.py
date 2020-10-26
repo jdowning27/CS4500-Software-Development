@@ -113,23 +113,26 @@ class Board:
             return board_array[r][c]
 
 
-    def get_all_reachable_posn(self, row, col):
+    def get_all_reachable_posn(self, row, col, penguin_places=[]):
         """
         Get all reachable board positions from (row, col)
 
+        :row: int
+        :col: int
+        :penguin_places: []tuple        List of penguin places (row, col) tuples, optional
         :returns: array     List of (row, col) representing all possible reachable positions
         """
         result = []
         result.extend(self.get_reachable_posn_dir(
-            row, col, Tile.get_north_coord))
-        result.extend(self.get_reachable_posn_dir(row, col, Tile.get_south_coord))
-        result.extend(self.get_reachable_posn_dir(row, col, Tile.get_nw_coord))
-        result.extend(self.get_reachable_posn_dir(row, col, Tile.get_ne_coord))
-        result.extend(self.get_reachable_posn_dir(row, col, Tile.get_sw_coord))
-        result.extend(self.get_reachable_posn_dir(row, col, Tile.get_se_coord))
+            row, col, Tile.get_north_coord, penguin_places))
+        result.extend(self.get_reachable_posn_dir(row, col, Tile.get_south_coord, penguin_places))
+        result.extend(self.get_reachable_posn_dir(row, col, Tile.get_nw_coord, penguin_places))
+        result.extend(self.get_reachable_posn_dir(row, col, Tile.get_ne_coord, penguin_places))
+        result.extend(self.get_reachable_posn_dir(row, col, Tile.get_sw_coord, penguin_places))
+        result.extend(self.get_reachable_posn_dir(row, col, Tile.get_se_coord, penguin_places))
         return result
 
-    def get_reachable_posn_dir(self, row, col, get_dir_coord):
+    def get_reachable_posn_dir(self, row, col, get_dir_coord, penguin_places=[]):
         """
         Get all reachable positions on board from give (row, col) Tile.
         Result is a list of (row, col)
@@ -137,12 +140,13 @@ class Board:
         :row: int               Current tile's row
         :col: int               Current tile's column
         :get_dir_coord: func    Function to get the next tile in specific direction
+        :penguin_places: []tuple        List of penguin places (row, col) tuples, optional
         :returns: array         List of (row, col) reachable tiles to the give direction
         """
         next_tile = get_dir_coord(self.tiles[col][row])
-        if self.tile_exists(next_tile):
+        if self.tile_exists(next_tile) and next_tile not in penguin_places:
             result = [next_tile]
-            result.extend(self.get_reachable_posn_dir(*next_tile, get_dir_coord))
+            result.extend(self.get_reachable_posn_dir(*next_tile, get_dir_coord, penguin_places))
             return result
         else:
             return []

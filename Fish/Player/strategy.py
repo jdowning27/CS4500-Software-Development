@@ -1,4 +1,5 @@
 from operator import le, ge
+import math
 import os
 import sys
 os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
@@ -48,10 +49,13 @@ def choose_action_minimax(tree, num_turns):
     :tree: GameTree                 The tree to search through
     :num_turns: PositiveInteger     Number of turns N > 0 for this player to look through
 
-    :returns: Move                The action this player should take next
+    :returns: Action                The action this player should take next
     """
     num_players = len(tree.state.players)
-    action_score = choose_action_minimax_subtree(tree, (num_turns - 1) * num_players, tree.get_current_player_color())
+    layers = num_turns * num_players - (num_players - 1)
+    tree.create_n_layers_tree(layers)
+    max_player = tree.get_current_player_color()
+    action_score = choose_action_minimax_subtree(tree, layers, max_player)
     return action_score[0]
 
 
@@ -61,43 +65,53 @@ def choose_action_minimax_subtree(tree, num_turns, max_player):
     the max_player's score if it is opponent, or maximizes max_player's score
     if it is their turn
 
-    :tree: GameTree                     The subtree to search through
-    :num_turns: PositiveInteger         Number of turns to look through for max_player
+    :tree: GameTree                     The tree to search through, child trees should be generated
+    :num_turns: Integer                 Number of turns left to take
     :max_player: Color                  The maximal player's color
 
-    :returns: (Move, Integer)         Where the action is the next action to choose in the tree,
+    :returns: (Action, Integer)         Where the action is the next action to choose in the tree,
                                         and integer for the score of the max_player
     """
-    children = GameTree.create_child_trees(tree)
-    if len(children) == 0:
-        return (DeadEnd(), tree.get_players_score(max_player))
-    elif num_turns == 0:
-        max_action_score = (DeadEnd(), 0)
-        for action in children:
-            child_tree = children[action]
-            curr_score = child_tree.get_players_score(max_player)
-            if tree.get_current_player_color() is max_player:
-                max_action_score = find_minimax_action(max_action_score, (action, curr_score), ge, "called base player")
+    subtree = tree.children
 
-            else:
-                max_action_score = find_minimax_action(max_action_score, (action, curr_score), le, "called base")
-        return max_action_score
+    if len(subtree) == 0:
+        tree.create_n_layers_tree(num_turns)
+        subtree = tree.children
+
+    if num_turns == 1:
+        if tree.get_current_player_color() is max_player:
+            ideal_action_score = (None, -math.inf)
+            for action in subtree:
+                child_tree = subtree[action]
+                next_score = child_tree.get_players_score(max_player)
+                ideal_action_score = find_minimax_action(ideal_action_score, (action, next_score), ge)
+        else:
+            ideal_action_score = (None, math.inf)
+            for action in subtree:
+                child_tree = subtree[action]
+                next_score = child_tree.get_players_score(max_player)
+                ideal_action_score = find_minimax_action(ideal_action_score, (action, next_score), ge)
+        return ideal_action_score
     else:
-        subtree = lambda c : choose_action_minimax_subtree(c, num_turns - 1, max_player)
-        list_minimax = GameTree.apply_to_children(tree, subtree)
-        printer = lambda x : x.state.print_json()
-        print(tree.get_current_player_color(), list_minimax, GameTree.apply_to_children(tree, printer))
-        ideal_action_score = (DeadEnd(), 0)
-        for action, score in list_minimax:
-            if tree.get_current_player_color() is max_player:
-                #print("CURRENT PLAYER CHOOSING A MOVE -----   ", num_turns)
-                ideal_action_score = find_minimax_action(ideal_action_score, (action, score), ge, "called from this players move")
-            else:
-                ideal_action_score = find_minimax_action(ideal_action_score, (action, score), le, "called from else")
+        list_minimax = []
+        for child in subtree:
+            child_tree = subtree[child]
+            a = choose_action_minimax_subtree(child_tree, num_turns - 1, max_player)
+            list_minimax.append((child, a[1]))
+        
+        ideal_action_score = None
+        if tree.get_current_player_color() is max_player:
+            ideal_action_score = (None, -math.inf)
+            for action, score in list_minimax:
+                ideal_action_score = find_minimax_action(ideal_action_score, (action, score), ge)
+        else:
+            ideal_action_score = (None, math.inf)
+            for action, score in list_minimax:
+                ideal_action_score = find_minimax_action(ideal_action_score, (action, score), le)
         return ideal_action_score
 
 
-def find_minimax_action(ideal_action_score, curr_action_score, comparator, out=""):
+def find_minimax_action(ideal_action_score, curr_action_score, comparator):
     """
     Find the minimax action according to the comparator. Comparator is either
     less than (<) or greater than (>) in order to return either the minimum
@@ -109,17 +123,13 @@ def find_minimax_action(ideal_action_score, curr_action_score, comparator, out="
 
     :returns: tuple (Move, Integer)       The ideal minimax Move and score
     """
-    #print(ideal_action_score)
     ideal_action, ideal_score = ideal_action_score
-    curr_action, curr_score = curr_action_score
-    if type(ideal_action) is DeadEnd:
-        #print("type of ideal_action is DeadEnd")
+    if ideal_action is None:
         return curr_action_score
+    curr_action, curr_score = curr_action_score
     if curr_score == ideal_score:
         ideal_action = ideal_action.break_tie(curr_action)
     elif comparator(curr_score, ideal_score):
-        
-        #print("FOUND a better move")
         ideal_score = curr_score
         ideal_action = curr_action
     return (ideal_action, ideal_score)
