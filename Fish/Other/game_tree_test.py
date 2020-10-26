@@ -1,10 +1,15 @@
+import os
+import sys
+os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
+sys.path.append(os_path)
+
 import unittest
 from game_tree import *
 from State import *
 from Board import *
 from Player import *
 from Color import *
-from Action import *
+from Move import *
 
 
 class GameTreeTestCase(unittest.TestCase):
@@ -25,7 +30,7 @@ class GameTreeTestCase(unittest.TestCase):
         self.player1.add_penguin((0,0))
         self.player2.add_penguin((0,2))
 
-        self.action1 = Action((0,0), (1,0))
+        self.action1 = Move((0,0), (1,0))
 
         self.game_tree = GameTree(self.state_full)
         self.game_tree_holes = GameTree(self.state_holes)
@@ -40,7 +45,7 @@ class GameTreeTestCase(unittest.TestCase):
         self.assertEqual(type(GameTree.attempt_move(self.game_tree, self.action1)), GameTree)
 
     def test_attempt_move_invalid(self):
-        self.assertFalse(GameTree.attempt_move(self.game_tree, Action((0,0), (2,2))))
+        self.assertFalse(GameTree.attempt_move(self.game_tree, Move((0,0), (2,2))))
 
     def test_get_child_trees(self):
         states = [self.state1_0, self.state2_0, self.state2_1, self.state3_1]
@@ -69,7 +74,7 @@ class GameTreeTestCase(unittest.TestCase):
         self.assertEqual(len(children), 0)
 
     def test_apply_to_children(self):
-        action = Action((0,2), (1,2))
+        action = Move((0,2), (1,2))
         states = [self.state1_0, self.state2_0, self.state2_1, self.state3_1]
         new_states = GameTree.apply_to_children(self.game_tree, action.apply_move)
         for state in states:

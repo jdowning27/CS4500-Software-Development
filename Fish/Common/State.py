@@ -1,6 +1,6 @@
 from tkinter import *
 from Constants import MAX_FISH, GUI_UNIT
-from Action import *
+from Move import *
 
 master = Tk()
 
@@ -180,14 +180,14 @@ class State:
         """
         Gets a list of all of the possible moves for the current player in this state.
 
-        :returns: List of Action	possible actions for player
+        :returns: List of Move	possible actions for player
         """
         penguins = self.players[self.turn].get_penguins()
         possible_moves = []
         for p in penguins:
             for reachable in self.board.get_all_reachable_posn(*p):
                 if self.valid_move(p, reachable):
-                    possible_moves.append(Action(p, reachable))
+                    possible_moves.append(Move(p, reachable))
         return possible_moves
 
     def print_json(self):
@@ -206,3 +206,9 @@ class State:
         state['players'] = players
         state['board'] = self.board.print_json()
         return state
+
+    def get_players_score(self, player_color):
+        return self.players[self.turn].get_score()
+
+    def get_current_player_color(self):
+        return self.players[self.turn].get_color()

@@ -1,3 +1,8 @@
+import os
+import sys
+os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
+sys.path.append(os_path)
+
 import unittest
 from Tile import *
 from Constants import MAX_FISH, GUI_UNIT

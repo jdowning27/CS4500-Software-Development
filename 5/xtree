@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+import json
+import sys
+import contextlib
+import os
+os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
+sys.path.append(os_path)
+from Board import Board
+from State import State
+from Player import Player
+from Tile import *
+
+
+def parser(input_stream):
+    """
+    Parse the given input string from the client.
+    :input_stream: string       a string representing the JSON input from client
+    :return: JSON object
+    """
+    ordered_output = []
+    maybe_json = ''
+    for line in input_stream:
+        strip_input = line.strip()
+        maybe_json = maybe_json + strip_input
+    return json.loads(maybe_json)
+
+def parse_board(state_json):
+    board_array = state_json['board']
+    row_length = max(map(len, board_array))
+    board = Board(len(board_array), max(map(len, board_array)))
+    board.create_board_from_json(board_array)
+    return board
+
+def parse_players(state_json):
+    players_json = state_json['players']
+    players = []
+    for player in players_json:
+        new_player = Player(player['color'], score=player['score'])
+        players.append(add_penguins_to_player(new_player, player['places']))
+    return players
+
+def add_penguins_to_player(player, places):
+    for pos in places:
+        player.add_penguin((pos[0], pos[1]))
+    return player
+
+def find_move(state, neighbors):
+    # TODO this is assuming using the first penguin
+    penguin = state.players[state.turn].get_penguins()[0]
+    moves = []
+    moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_north_coord))
+    moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_ne_coord))
+    moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_se_coord))
+    moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_south_coord))
+    moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_sw_coord))
+    moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_nw_coord))
+
+    with open(os.devnull, "w") as f, contextlib.redirect_stdout(f):
+        for to_posn in moves:
+            if to_posn in neighbors:
+                maybe_state = state.move_penguin(penguin, to_posn)
+                if maybe_state:
+                    return [penguin, to_posn]
+    return False
+
+def get_neighbors(state, posn):
+    moves = []
+    moves.append(state.board.get_reachable_posn_dir(*posn, Tile.get_north_coord))
+    moves.append(state.board.get_reachable_posn_dir(*posn, Tile.get_ne_coord))
+    moves.append(state.board.get_reachable_posn_dir(*posn, Tile.get_se_coord))
+    moves.append(state.board.get_reachable_posn_dir(*posn, Tile.get_south_coord))
+    moves.append(state.board.get_reachable_posn_dir(*posn, Tile.get_sw_coord))
+    moves.append(state.board.get_reachable_posn_dir(*posn, Tile.get_nw_coord))
+    neighbors = []
+    for direction in moves:
+        if len(direction) > 0:
+            neighbors.append(direction[0])
+    return neighbors
+
+
+def parse_as_tuple(arr):
+    return (arr[0], arr[1])
+
+def main():
+    move_response_json = parser(sys.stdin)
+    state_json = move_response_json['state']
+    board = parse_board(state_json)
+    players = parse_players(state_json)
+    state = State(players, board, 0)
+    from_posn = parse_as_tuple(move_response_json['from'])
+    to_posn = parse_as_tuple(move_response_json['to'])
+    neighbors = get_neighbors(state, to_posn)
+    new_state = state.move_penguin(from_posn, to_posn)
+    if new_state and len(players) > 0:
+        move = find_move(new_state, neighbors)
+        print(json.dumps(move))
+    else: 
+        print(json.dumps(False))
+
+main()
+

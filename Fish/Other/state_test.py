@@ -1,10 +1,15 @@
+import os
+import sys
+os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
+sys.path.append(os_path)
+
 import unittest
 from unittest.mock import MagicMock
 from State import *
 from Board import *
 from Player import *
 from Color import *
-from Action import *
+from Move import *
 
 
 class StateTestCase(unittest.TestCase):
@@ -143,7 +148,7 @@ class StateTestCase(unittest.TestCase):
     def test_get_possible_moves(self):
         self.player1.add_penguin((0,0))
 
-        actions = [Action((0,0), (1, 0)), Action((0,0), (2, 0)), Action((0,0), (2, 1)), Action((0,0), (3, 1))]
+        actions = [Move((0,0), (1, 0)), Move((0,0), (2, 0)), Move((0,0), (2, 1)), Move((0,0), (3, 1))]
         for action in self.state_full.get_possible_moves():
             self.assertTrue(action in actions)
         self.assertEqual(len(self.state_full.get_possible_moves()), len(actions))

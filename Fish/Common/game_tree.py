@@ -1,5 +1,5 @@
 import State
-import Action
+import Move
 
 """
 Represents a game tree that shows all possible trees from
@@ -37,7 +37,7 @@ class GameTree:
         Otherwise returns false.
 
         :tree: GameTree		Origin GameTree to apply action to
-        :action: Action		Attempted action
+        :action: Move		Attempted action
 
         :returns: maybe GameTree	Resulting GameTree or false
         """
@@ -82,7 +82,7 @@ class GameTree:
         Creates game trees for each child state
 
         :tree: GameTree         The tree to get the child GameTrees for
-        :returns: Dict {Action : GameTree}
+        :returns: Dict {Move : GameTree}
         """
         possible_moves = tree.state.get_possible_moves()
         for move in possible_moves:
@@ -91,3 +91,8 @@ class GameTree:
                 tree.children[move] = maybe_tree
         return tree.children
 
+    def get_current_player_color(self):
+        return self.state.get_current_player_color()
+
+    def get_players_score(self, player_color):
+        return self.state.get_players_score(player_color)
