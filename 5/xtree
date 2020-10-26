@@ -50,17 +50,18 @@ def find_move(state, neighbors):
     State [Listof Posn] -> [Maybe Move]
     """
     penguins = state.players[state.turn].get_penguins()
+    all_penguins = state.get_all_penguins()
     all_moves = {}
     for n in neighbors:
         all_moves[n] = []
     for penguin in penguins:
         moves = []
-        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_north_coord))
-        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_ne_coord))
-        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_se_coord))
-        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_south_coord))
-        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_sw_coord))
-        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_nw_coord))
+        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_north_coord, all_penguins))
+        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_ne_coord, all_penguins))
+        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_se_coord, all_penguins))
+        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_south_coord, all_penguins))
+        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_sw_coord, all_penguins))
+        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_nw_coord, all_penguins))
 
         with open(os.devnull, "w") as f, contextlib.redirect_stdout(f):
             for to_posn in moves:
@@ -72,7 +73,7 @@ def find_move(state, neighbors):
     for n in neighbors:
         moves_to_n = all_moves[n]
         if len(moves_to_n) == 1:
-            return all_moves[n]
+            return all_moves[n][0]
         if len(moves_to_n) > 1:
             best_move = moves_to_n[0]
             for move in moves_to_n:
