@@ -8,6 +8,7 @@ sys.path.append(os_path)
 from Board import Board
 from State import State
 from Player import Player
+from Move import Move
 from Tile import *
 
 
@@ -45,22 +46,38 @@ def add_penguins_to_player(player, places):
     return player
 
 def find_move(state, neighbors):
-    # TODO this is assuming using the first penguin
-    penguin = state.players[state.turn].get_penguins()[0]
-    moves = []
-    moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_north_coord))
-    moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_ne_coord))
-    moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_se_coord))
-    moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_south_coord))
-    moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_sw_coord))
-    moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_nw_coord))
+    """
+    State [Listof Posn] -> [Maybe Move]
+    """
+    penguins = state.players[state.turn].get_penguins()
+    all_moves = {}
+    for n in neighbors:
+        all_moves[n] = []
+    for penguin in penguins:
+        moves = []
+        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_north_coord))
+        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_ne_coord))
+        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_se_coord))
+        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_south_coord))
+        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_sw_coord))
+        moves.extend(state.board.get_reachable_posn_dir(*penguin, Tile.get_nw_coord))
 
-    with open(os.devnull, "w") as f, contextlib.redirect_stdout(f):
-        for to_posn in moves:
-            if to_posn in neighbors:
-                maybe_state = state.move_penguin(penguin, to_posn)
-                if maybe_state:
-                    return [penguin, to_posn]
+        with open(os.devnull, "w") as f, contextlib.redirect_stdout(f):
+            for to_posn in moves:
+                if to_posn in neighbors:
+                    maybe_state = state.move_penguin(penguin, to_posn)
+                    if maybe_state:
+                        all_moves[to_posn].append(Move(penguin, to_posn))
+
+    for n in neighbors:
+        moves_to_n = all_moves[n]
+        if len(moves_to_n) == 1:
+            return all_moves[n]
+        if len(moves_to_n) > 1:
+            best_move = moves_to_n[0]
+            for move in moves_to_n:
+                best_move = best_move.break_tie(move)
+            return best_move
     return False
 
 def get_neighbors(state, posn):
@@ -91,9 +108,9 @@ def main():
     to_posn = parse_as_tuple(move_response_json['to'])
     neighbors = get_neighbors(state, to_posn)
     new_state = state.move_penguin(from_posn, to_posn)
-    if new_state and len(players) > 0:
-        move = find_move(new_state, neighbors)
-        print(json.dumps(move))
+    move = find_move(new_state, neighbors)
+    if new_state and len(players) > 0 and move:
+        print(json.dumps(move.print_json()))
     else: 
         print(json.dumps(False))
 
