@@ -1,43 +1,35 @@
 
+"""
+Represents a player interface. Different kinds of players
+may implement this interface, such as AI or Remote players.
+Classes that implement this interface must override these methods.
+"""
 class PlayerInterface:
 
-    def remove_penguins(self):
+    def choose_next_move(self, moves):
         """
-        Removes all of this players penguins. Called when player has violated rules.
+        Choose next move from a dictionary of potential actions and resulting GameTrees.
+        A player may choose to optimize for specific moves.
 
-        :returns: void
+        :moves: {Move: GameTree}		Dictionary of available moves and their resulting GameTrees.
+        :returns: Move			Player's chosen action
+        """
+        pass
+    
+    def place_penguin(self, state):
+        """
+        Return the position (row, col) of where to place a penguin for this player.
+
+        :state: State           The state to place penguins on
+        :returns: (int, int)
         """
         pass
 
-    def get_age(self):
+    def assign_color(self, player_color):
         """
-        Returns the player's age.
+        Assign a Color to the player. Set player.__color to player_color
 
-        :returns: Natural Number	Player's age
-        """
-        pass
-
-    def get_color(self):
-        """
-        Returns player's assigned color.
-
-        :returns: Color		Player's assigned color
-        """
-        pass
-
-    def get_penguins(self):
-        """
-        Gets a set of the position of all of the player's penguins.
-
-        :returns: Set of (row, col)		Set of penguin positions
-        """
-        pass
-
-    def get_score(self):
-        """
-        Returns player's score.
-
-        :returns: Natural Number	Player's score
+        :player_color: Color        The color of this player
         """
         pass
 
@@ -53,12 +45,27 @@ class PlayerInterface:
         """
         pass
 
-    def choose_next_move(self, moves):
+    def remove_penguins(self):
         """
-        Choose next move from a dictionary of potential actions and resulting GameTrees.
-        A player may choose to optimize for specific moves.
+        Removes all of this players penguins. Called when player has violated rules.
 
-        :moves: {Move: GameTree}		Dictionary of available moves and their resulting GameTrees.
-        :returns: Move			Player's chosen action
+        :returns: void
+        """
+        pass
+
+    def game_over(self, state):
+        """
+        Let the Player know that the game has ended.
+
+        :state: State       The last state of the game
+        :returns: void
+        """
+        pass
+
+    def get_age(self):
+        """
+        Returns the player's age.
+
+        :returns: Natural Number	Player's age
         """
         pass
