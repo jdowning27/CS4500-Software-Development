@@ -55,7 +55,10 @@ class GameTreeTestCase(unittest.TestCase):
         self.assertEqual(len(child_trees), len(states))
 
     def test_get_child_trees_no_moves(self):
-        self.assertEqual(GameTree.get_child_trees(self.game_tree_holes), [])
+        child_trees = GameTree.get_child_trees(self.game_tree_holes)
+        self.assertEqual(len(child_trees), 1)
+        self.state_holes.set_next_players_turn()
+        self.assertTrue(child_trees[0] in [GameTree(self.state_holes)])
 
     def test_get_child_trees_player2(self):
         self.game_tree_holes.state.turn = 1
@@ -70,8 +73,10 @@ class GameTreeTestCase(unittest.TestCase):
 
     def test_create_child_trees_no_children(self):
         children = GameTree.create_child_trees(self.game_tree_holes)
-        self.assertEqual(children, {})
-        self.assertEqual(len(children), 0)
+        child_trees = list(children.values())
+        self.assertEqual(len(child_trees), 1)
+        self.state_holes.set_next_players_turn()
+        self.assertTrue(child_trees[0] in [GameTree(self.state_holes)])
 
     def test_apply_to_children(self):
         action = Move((0,2), (1,2))
@@ -89,7 +94,7 @@ class GameTreeTestCase(unittest.TestCase):
         for c in child_trees:
             num_children += len(c)
             self.assertGreater(len(c), 0)
-        self.assertEqual(num_children, 19)
+        self.assertEqual(num_children, 18)
             
 
     def test_apply_to_children_create_trees(self):
@@ -99,4 +104,26 @@ class GameTreeTestCase(unittest.TestCase):
         for c in child_trees:
             num_children += len(c)
             self.assertGreater(len(c), 0)
-        self.assertEqual(num_children, 19)
+        self.assertEqual(num_children, 18)
+
+    def test_create_n_layers_tree(self):
+        board_array = [
+            [1,     2],
+                [1,     2],
+            [1,     2]
+        ]
+        board = Board(3, 2)
+        board.create_board_from_json(board_array)
+        p1 = Player(Color.RED, 5)
+        p2 = Player(Color.WHITE, 5)
+        players = [p1, p2]
+        p1.add_penguin((0,0))
+        state = State(players, board)
+
+        game_tree = GameTree(state)
+        game_tree.create_n_layers_tree(5)
+        json_tree = game_tree.print_children()
+        self.assertEqual(len(json_tree), 3) #p1 has 3 possible moves
+        self.assertEqual(len(json_tree[0][1]), 1) #p2 has no penguins => no moves
+
+

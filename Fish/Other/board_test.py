@@ -7,8 +7,15 @@ from unittest import mock
 import random
 from Board import *
 from Tile import *
+from Pass import *
 
 class BoardTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.board = Board(4, 3)
+        self.board.create_board_without_holes(4)
+
+
     def test_create_board_with_holes(self):
         board = Board(4, 2)
         holes = [(0,0), (1,1)]
@@ -194,3 +201,8 @@ class BoardTestCase(unittest.TestCase):
         tile3_off_x = 12 * size + (2 * size)
         tile3_off_y = size * 3
         self.assertEqual(board.get_offset(3, 3), (tile3_off_x, tile3_off_y))
+
+    def test_board_get_reachable_penguins(self):
+        positions = self.board.get_all_reachable_posn(0, 0, [(2, 1)])
+        self.assertEqual(positions, [(2,0), (1,0)])
+

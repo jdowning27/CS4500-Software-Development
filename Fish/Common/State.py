@@ -1,6 +1,7 @@
 from tkinter import *
 from Constants import MAX_FISH, GUI_UNIT
 from Move import *
+from Pass import *
 
 master = Tk()
 
@@ -82,7 +83,7 @@ class State:
             new_state.board.remove_tile(*from_posn)
             new_state.players[self.turn].move_penguin(from_posn, to_posn)
             new_state.players[self.turn].add_to_score(fish)
-            new_state.turn = (self.turn + 1) % len(self.players)
+            new_state.set_next_players_turn()
             return new_state
         else:
             print("Not a valid move")
@@ -180,14 +181,16 @@ class State:
         """
         Gets a list of all of the possible moves for the current player in this state.
 
-        :returns: List of Move	possible actions for player
+        :returns: List of Action	possible actions for player
         """
         penguins = self.players[self.turn].get_penguins()
         possible_moves = []
         for p in penguins:
-            for reachable in self.board.get_all_reachable_posn(*p):
+            for reachable in self.board.get_all_reachable_posn(*p, self.get_all_penguins()):
                 if self.valid_move(p, reachable):
                     possible_moves.append(Move(p, reachable))
+        if len(possible_moves) == 0: # there are no possible moves for player
+            possible_moves = [Pass()]
         return possible_moves
 
     def print_json(self):
@@ -208,7 +211,11 @@ class State:
         return state
 
     def get_players_score(self, player_color):
-        return self.players[self.turn].get_score()
+        return self.get_player(player_color).get_score()
 
     def get_current_player_color(self):
         return self.players[self.turn].get_color()
+
+    def set_next_players_turn(self):
+        self.turn = (self.turn + 1) % len(self.players)
+
