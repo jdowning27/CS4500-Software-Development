@@ -89,7 +89,7 @@ def choose_action_minimax_subtree(tree, num_turns, max_player):
             for action in subtree:
                 child_tree = subtree[action]
                 next_score = child_tree.get_players_score(max_player)
-                ideal_action_score = find_minimax_action(ideal_action_score, (action, next_score), ge)
+                ideal_action_score = find_minimax_action(ideal_action_score, (action, next_score), le)
         return ideal_action_score
     else:
         list_minimax = []
