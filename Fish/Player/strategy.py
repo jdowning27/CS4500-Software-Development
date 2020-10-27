@@ -6,7 +6,6 @@ os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
 sys.path.append(os_path)
 
 from game_tree import GameTree
-from DeadEnd import DeadEnd
 
 def place_penguin_across(state, player_color):
     """
@@ -52,7 +51,7 @@ def choose_action_minimax(tree, num_turns):
     :returns: Action                The action this player should take next
     """
     num_players = len(tree.state.players)
-    layers = num_turns * num_players - (num_players - 1)
+    layers = num_turns * num_players
     tree.create_n_layers_tree(layers)
     max_player = tree.get_current_player_color()
     action_score = choose_action_minimax_subtree(tree, layers, max_player)
