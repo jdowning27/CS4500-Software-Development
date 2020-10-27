@@ -99,7 +99,7 @@ class StrategyTestCase(unittest.TestCase):
     
     def test_choose_action_minimax_1_turn(self):
         self.player1.add_penguin((0,0))
-        self.assertEqual(choose_action_minimax(self.game_tree, 1), Move((0,0), (1,0)))
+        self.assertEqual(choose_action_minimax(self.game_tree, 1).print_json(), [(0,0), (1,0)])
 
     def test_choose_action_minimax_1_turn_other_penguins(self):
         self.player1.add_penguin((0,0))
@@ -109,9 +109,8 @@ class StrategyTestCase(unittest.TestCase):
     
     def test_choose_action_minimax_2_turn(self):
         self.player1.add_penguin((0,0))
-        self.player2.add_penguin((3,0)) # will minimize player1's moves will go to 2, 1
-        action = choose_action_minimax(self.game_tree, 3)
-        self.assertEqual(choose_action_minimax(self.game_tree,2).print_json(), [(0,0), (1,0)])
+        self.player2.add_penguin((3,0)) 
+        self.assertEqual(choose_action_minimax(self.game_tree, 2).print_json(), [(0,0), (1,0)])
 
     def test_choose_action_minimax_little_tree(self):
         self.player1.add_penguin((0,0))
