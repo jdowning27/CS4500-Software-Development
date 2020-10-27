@@ -8,25 +8,32 @@ CS 4500 Project by Jennifer Der and Timothy Haas
 ```
 .                           # Fish Project Directory
 ├── Common/                 # Holds all files for Fish Program (includes data representation, game logic, and unit tests)
-│   ├── Test/               # Directory of all Python unit tests
+│   ├── Action.py           # Interface for a game action
 │   ├── Board.py            # Representation of Fish game board
 │   ├── Color.py            # Color Enum
+│   ├── Constants.py        # Constants for rendering and game constants
+│   ├── game_tree.py        # Representation of the a Fish game
+│   ├── Move.py             # Representation of a penguin's move, implements Action
+│   ├── Pass.py             # Representation of no move possible in game, implements Action
+│   ├── player_interface.py # Representation of a player interface, to be used by other components
 │   ├── Player.py           # Data representation of player
 │   ├── State.py            # Data representation of game state
-│   ├── Constants.py        # Constants for rendering and game constants
 │   ├── Tile.py             # Representation of hexagonal tile on board
-│   ├── game_tree.py        # Representation of the a Fish game
-│   ├── player_interface.py # Representation of a player interface, to be used by other components
 │   └── Util.py             # All utility functions used throughout Project
+├── Other/                  # Directory of all Python unit tests
 ├── Planning/               # Memos for Fish game planning   
 │   ├── game-state.md       # Design description for data representation of Game States and the external interface
 │   ├── player-protocol.md  # Design description for how components will interact with the player interface
+│   ├── referee.md          # Design description for Referee
 │   ├── games.md            # Design data representation for full games
 │   ├── milestones.pdf      # Week 1 memo task Fish milestones
 │   ├── self-1.md           # Week 1 self evaluation
 │   ├── self-2.md           # Week 2 self evaluation
 │   ├── self-3.md           # Week 3 self evaluation
+│   ├── self-4.md           # Week 4 self evaluation
 │   └── system.pdf          # Week 1 memo task for Fish software components
+├── Player/                 # Files relating to Players 
+│   └── strategy.py         # Strategies for players to place penguins and minimax optimization for actions
 ├── xtest                   # Test script 
 └── README.md               # This README file
 ```
@@ -131,14 +138,12 @@ $ ./xtest
 ```
 Run individual unit test file for Fish:
 ```
-$ cd Fish/Common/
-$ python3 -m unittest Test/<name_of_test_file.py>
+$ python3 -m unittest Other/<name_of_test_file.py>
 ```
 Run an individual unit test:
 ```
-$ cd Fish/Common/
-$ python3 -m unittest -v Test.<name_of_test_file>.<TestClass>.<name_of_test_function>
+$ python3 -m unittest -v Other.<name_of_test_file>.<TestClass>.<name_of_test_function>
 # example:
-$ python3 -m unittest -v Test.board_test.BoardTestCase.test_create_board_with_holes
+$ python3 -m unittest -v Other.board_test.BoardTestCase.test_create_board_with_holes
 ```
 

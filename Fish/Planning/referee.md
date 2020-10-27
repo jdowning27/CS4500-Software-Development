@@ -3,12 +3,19 @@ The data representation for Referee and design for its interface
 
 ## Data representation
 A Referee keeps track of:
-- The current GameTree
+- The current Game
+    - where a Game is one of: GameSetup, GameTree, GameEnded
     - This includes the functionality to find out whose turn it is currently
 - Set of Player
 - Set of Players who have been kicked out of the game 
 - History of Player's moves or actions
     - This represents the whole history of the game
+
+How the Referee interacts with other components:
+- Tournament manager has many Referees who each manage one game in a tournament
+- Referee keeps track of the current list of Players, the current game tree, and manages validity of moves
+    - This is the single source of truth for this Game
+- The Referee also is able to kick out players (remove their penguins), if they violate rules
 
 ## Interface (API)
 ```
@@ -19,7 +26,7 @@ Start the game. Initializes the game board, the game state, and the resulting ga
 
 2. Calls on Players to place their penguins
 
-The resulting GameTree is ready to play.
+The resulting GameTree is ready to play. Updates the current Game to be the Game Tree.
 
 [Listof Player] -> GameTree
 """
@@ -28,7 +35,7 @@ def initialize_game(players):
 
 
 """
-Check that the given action is valid in the current state of the game tree. If it is valid, return the next game tree with the action applied, otherwise False
+Check that the given action is valid in the current state of the game tree. If it is valid, return the next game tree with the action applied, otherwise False.
 
 Action -> [Maybe GameTree]
 """
