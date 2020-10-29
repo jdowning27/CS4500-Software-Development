@@ -39,7 +39,11 @@ CS 4500 Project by Jennifer Der and Timothy Haas
 ```
 
 ## Software Components
-![Class Diagram](https://i.imgur.com/07Cj3UX.png)
+![Class Diagram](https://i.imgur.com/W4HIWV0.png)
+
+### Strategy
+Currently, only one strategy class has been implemented. Players may use this class when playing the game. 
+This gameplay functionality is implemented as a class so that players may choose how to strategize for the game when they are initialized for this specific game/round.
 
 ### GameTree
 The Game Tree consists of a current state and a dictionary pointing to child game trees, where the key is the move or action that results in the value tree.

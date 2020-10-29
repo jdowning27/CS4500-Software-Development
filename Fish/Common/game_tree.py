@@ -16,9 +16,14 @@ class GameTree:
     def __init__(self, state):
         """
         Constructor for the Game Tree. Constructs a tree with the given state
-        as the current state. Initializes the children of this game tree to empty
+        as the current state. Initializes the children of this game tree to empty.
+        Children of this GameTree are computed when create_child_trees is called.
+        Children is a mapping of possible game actions to their resulting GameTrees and 
+        is a recursive data structure that allows possible outcomes of the game to be
+        explored.
 
         :state: State       The current state within this GameTree
+        :children: {Action : GameTree}   Mapping of an Action to resulting GameTree
         :returns: GameTree  Instance of a GameTree
         """
         self.state = state

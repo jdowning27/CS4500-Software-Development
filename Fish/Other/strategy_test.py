@@ -6,7 +6,7 @@ sys.path.append(os_path)
 import unittest
 from operator import le, ge
 
-from strategy import find_minimax_action, place_penguin_across, choose_action_minimax, choose_action_minimax_subtree
+from strategy import *
 from game_tree import *
 from State import *
 from Board import *
@@ -18,6 +18,7 @@ from Move import *
 class StrategyTestCase(unittest.TestCase):
 
     def setUp(self):
+        self.strategy = Strategy()
         self.board_full = Board(4, 3)
         board_array = [
             [1,     2,      3],
@@ -57,66 +58,66 @@ class StrategyTestCase(unittest.TestCase):
         self.state3_1 = self.state_full.move_penguin((0,0), (3,1))
 
     def test_find_minimax_action_score(self):
-        action_score = find_minimax_action((self.action1, 8), (self.action2, 1), ge)
+        action_score = self.strategy.find_minimax_action((self.action1, 8), (self.action2, 1), ge)
         self.assertEqual(action_score, (self.action1, 8))
 
     def test_find_minimax_action_row_ge(self):
         action_row = Move((1, 0), (1, 0))
-        actual_action_score = find_minimax_action((self.action1, 2), (action_row, 2), ge)
+        actual_action_score = self.strategy.find_minimax_action((self.action1, 2), (action_row, 2), ge)
         self.assertEqual(actual_action_score, (self.action1, 2))
 
     def test_find_minimax_action_col_ge(self):
         action_col = Move((3,0), (1, 0))
-        actual_action_score = find_minimax_action((self.action1, 2), (action_col, 2), ge)
+        actual_action_score = self.strategy.find_minimax_action((self.action1, 2), (action_col, 2), ge)
         self.assertEqual(actual_action_score, (self.action1, 2))
         
     def test_find_minimax_action_le(self):
-        action_score = find_minimax_action((self.action1, 8), (self.action2, 1), le)
+        action_score = self.strategy.find_minimax_action((self.action1, 8), (self.action2, 1), le)
         self.assertEqual(action_score, (self.action2, 1))
 
     def test_place_penguin_across_full_state(self):
         posn = (0,0)
         self.assertTrue(self.state_full.is_tile_available(posn))
-        new_state = place_penguin_across(self.state_full, Color.RED)
+        new_state = self.strategy.place_penguin_across(self.state_full, Color.RED)
         self.assertFalse(new_state.is_tile_available(posn))
         self.assertEqual(new_state.get_player(Color.RED).get_penguins(), [posn])
 
     def test_place_penguin_across_holes(self):
         posn = (1,0)
         self.assertTrue(self.state_holes.is_tile_available(posn))
-        new_state = place_penguin_across(self.state_holes, Color.RED)
+        new_state = self.strategy.place_penguin_across(self.state_holes, Color.RED)
         self.assertFalse(new_state.is_tile_available(posn))
         self.assertEqual(new_state.get_player(Color.RED).get_penguins(), [posn])
     
     def test_place_penguin_across_other_penguin(self):
-        new_state = place_penguin_across(self.state_full, Color.RED)
+        new_state = self.strategy.place_penguin_across(self.state_full, Color.RED)
         next_penguin = (0, 1)
         self.assertTrue(new_state.is_tile_available(next_penguin))
-        next_state = place_penguin_across(new_state, Color.WHITE)
+        next_state = self.strategy.place_penguin_across(new_state, Color.WHITE)
         self.assertFalse(next_state.is_tile_available(next_penguin))
         self.assertEqual(next_state.get_player(Color.WHITE).get_penguins(), [next_penguin])
 
     
     def test_choose_action_minimax_1_turn(self):
         self.player1.add_penguin((0,0))
-        self.assertEqual(choose_action_minimax(self.game_tree, 1).print_json(), [(0,0), (1,0)])
+        self.assertEqual(self.strategy.choose_action_minimax(self.game_tree, 1).print_json(), [(0,0), (1,0)])
 
     def test_choose_action_minimax_1_turn_other_penguins(self):
         self.player1.add_penguin((0,0))
         self.player2.add_penguin((2,1))
-        action = choose_action_minimax(self.mini_tree, 2)
+        action = self.strategy.choose_action_minimax(self.mini_tree, 2)
         self.assertEqual(action.print_json(), [(0,0), (1, 0)])
     
     def test_choose_action_minimax_2_turn(self):
         self.player1.add_penguin((0,0))
         self.player2.add_penguin((3,0)) 
-        self.assertEqual(choose_action_minimax(self.game_tree, 2).print_json(), [(0,0), (1,0)])
+        self.assertEqual(self.strategy.choose_action_minimax(self.game_tree, 2).print_json(), [(0,0), (1,0)])
 
     def test_choose_action_minimax_little_tree(self):
         self.player1.add_penguin((0,0))
-        action = choose_action_minimax(self.mini_tree, 2)
+        action = self.strategy.choose_action_minimax(self.mini_tree, 2)
         self.assertEqual(action.print_json(), [(0,0), (2, 0)])
-        action1 = choose_action_minimax(self.mini_tree, 3)
+        action1 = self.strategy.choose_action_minimax(self.mini_tree, 3)
         self.assertEqual(action1.print_json(), [(0,0), (2, 1)])
 
     def test_choose_action_minimax_no_moves(self):
@@ -124,18 +125,18 @@ class StrategyTestCase(unittest.TestCase):
         self.player2.add_penguin((2, 0))
         self.player2.add_penguin((3, 0))
         self.player2.add_penguin((2, 1))
-        action = choose_action_minimax(self.game_tree_holes, 3)
+        action = self.strategy.choose_action_minimax(self.game_tree_holes, 3)
         self.assertEqual(action.print_json(), "Pass")
 
     def test_choose_action_minimax_more_layers(self):
         self.player1.add_penguin((1, 0))
-        action = choose_action_minimax(self.mini_tree, 10)
+        action = self.strategy.choose_action_minimax(self.mini_tree, 10)
         self.assertEqual(action.print_json(), [(1, 0), (0, 1)])
         self.assertNotEqual(action.print_json(), "Pass")
 
     def test_choose_action_minimax_subtree(self):
         self.player1.add_penguin((0, 0))
-        action = choose_action_minimax_subtree(self.game_tree, 6, Color.RED)
+        action = self.strategy.choose_action_minimax_subtree(self.game_tree, 6, Color.RED)
         self.assertEqual(action[0].print_json(), [(0, 0), (1, 0)])
 
 
