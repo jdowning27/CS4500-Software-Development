@@ -9,3 +9,4 @@ class Color(Enum):
     WHITE = 'white'
     BROWN = 'brown'
     BLACK = 'black'
+

@@ -1,7 +1,7 @@
 import State
 import Move
 from Util import validate_pos_int
-
+import Game
 """
 Represents a game tree that shows all possible trees from
 one state, and has the ability to see to the end.
@@ -11,9 +11,9 @@ Includes:
 	- Functionality to see the resulting tree from a given action, and legality of this action
 """
 
-class GameTree:
+class GameTree(Game):
 
-    def __init__(self, state):
+    def __init__(self, state, children={}):
         """
         Constructor for the Game Tree. Constructs a tree with the given state
         as the current state. Initializes the children of this game tree to empty.
@@ -27,7 +27,7 @@ class GameTree:
         :returns: GameTree  Instance of a GameTree
         """
         self.state = state
-        self.children = {}
+        self.children = children
 
     def __eq__(self, other):
         """
@@ -39,18 +39,17 @@ class GameTree:
     def __ne__(self, other):
         return type(other) is not GameTree and self.state != other.state
 
-    @staticmethod
-    def attempt_move(tree, action):
+
+    def attempt_move(self, action):
         """
         Attempts the given action on the state and if legal returns the resulting state.
         Otherwise returns false.
 
-        :tree: GameTree		Origin GameTree to apply action to
         :action: Move		Attempted action
 
         :returns: maybe GameTree	Resulting GameTree or false
         """
-        maybe_state = action.apply_move(tree)
+        maybe_state = action.apply_move(self)
         if maybe_state:
             return GameTree(maybe_state)
         else:
@@ -128,3 +127,27 @@ class GameTree:
         for action in self.children:
             arr.append((action.print_json(), self.children[action].print_children()))
         return arr
+
+    def remove_current_player(self):
+        """
+        Returns the new GameTree created from the state after the current player is removed.
+
+        :returns: GameTree	Resulting GameTree
+        """
+        new_state = self.state.remove_current_player()
+        return GameTree(new_state)
+
+    def has_game_ended(self):
+        return self.state.any_remaining_moves()
+
+    def copy(self):
+        state_copy = self.state.copy()
+        children_copy = {}
+        for action in self.children:
+            children_copy[action] = self.children[action].copy()
+        return GameTree(state_copy, children_copy)
+
+    def get_winners(self):
+        if not self.has_game_ended():
+            return False
+        return self.state.get_winners()

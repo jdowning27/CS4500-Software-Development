@@ -15,7 +15,7 @@ to decide moves for the Player that uses this strategy.
 """
 class Strategy:
 
-    def place_penguin_across(self, state, player_color):
+    def place_penguin_across(self, state):
         """
         Places penguin at next available spot.
         The search for the next available spot on the board starts
@@ -33,15 +33,14 @@ class Strategy:
             \___/   \___/
         
         :state: State           The state to place penguins on
-        :player_color: Color    The color of the Player to place the penguin for
         
-        :returns: State         The state with the penguin placed
+        :returns: (int, int)    Position(row, col) where penguin is placed
         """
         board = state.board
         for row in range(0, board.row):
             for col in range(0, board.col):
                 if state.is_tile_available((row, col)):
-                    return state.place_penguin_for_player(player_color, (row, col))
+                    return (row, col)
 
     def choose_action_minimax(self, tree, num_turns):
         """

@@ -217,5 +217,30 @@ class State:
         return self.players[self.turn].get_color()
 
     def set_next_players_turn(self):
-        self.turn = (self.turn + 1) % len(self.players)
+        self.players = self.players[1:] + self.players[:1]
 
+    def get_fish_at(self, posn):
+        return self.board.tiles[posn[1]][posn[0]].get_fish()
+
+    def remove_current_player(self):
+        """
+        Removes the current player and their penguins from the board without creating holes.
+
+        :returns: State		Resulting State
+        """
+        new_state = self.copy()
+        new_state.players.pop(0)
+        return new_state
+
+    def get_winners(self):
+        max_score = 0
+        winning_players = []
+        for p in self.players:
+            score = p.get_score()
+            if score == max_score:
+                winning_players.append(p)
+            elif score > max_score:
+                max_score = score
+                winning_players = [p]
+        return winning_players
+                

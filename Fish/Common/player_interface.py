@@ -6,12 +6,12 @@ Classes that implement this interface must override these methods.
 """
 class PlayerInterface:
 
-    def choose_next_move(self, moves):
+    def choose_next_move(self, tree):
         """
-        Choose next move from a dictionary of potential actions and resulting GameTrees.
+        Choose next move in this GameTree.
         A player may choose to optimize for specific moves.
 
-        :moves: {Move: GameTree}		Dictionary of available moves and their resulting GameTrees.
+        :tree: GameTree		        Current GameTree
         :returns: Move			Player's chosen action
         """
         pass
