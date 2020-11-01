@@ -56,6 +56,7 @@ class GameTreeTestCase(unittest.TestCase):
 
     def test_get_child_trees_no_moves(self):
         child_trees = GameTree.get_child_trees(self.game_tree_holes)
+        print(self.game_tree_holes.print_children())
         self.assertEqual(len(child_trees), 1)
         self.state_holes.set_next_players_turn()
         self.assertTrue(child_trees[0] in [GameTree(self.state_holes)])
@@ -89,16 +90,6 @@ class GameTreeTestCase(unittest.TestCase):
 
     def test_apply_to_children_get_children(self):
         child_trees = self.game_tree.apply_to_children(GameTree.get_child_trees)
-        self.assertEqual(len(child_trees), 4)
-        num_children = 0
-        for c in child_trees:
-            num_children += len(c)
-            self.assertGreater(len(c), 0)
-        self.assertEqual(num_children, 18)
-            
-
-    def test_apply_to_children_create_trees(self):
-        child_trees = self.game_tree.apply_to_children(GameTree.create_child_trees)
         self.assertEqual(len(child_trees), 4)
         num_children = 0
         for c in child_trees:

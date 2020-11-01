@@ -1,7 +1,7 @@
 import State
 import Move
 from Util import validate_pos_int
-import Game
+from Game import Game
 """
 Represents a game tree that shows all possible trees from
 one state, and has the ability to see to the end.
@@ -13,7 +13,7 @@ Includes:
 
 class GameTree(Game):
 
-    def __init__(self, state, children={}):
+    def __init__(self, state, children=None):
         """
         Constructor for the Game Tree. Constructs a tree with the given state
         as the current state. Initializes the children of this game tree to empty.
@@ -27,7 +27,7 @@ class GameTree(Game):
         :returns: GameTree  Instance of a GameTree
         """
         self.state = state
-        self.children = children
+        self.children = children or {}
 
     def __eq__(self, other):
         """
@@ -42,10 +42,10 @@ class GameTree(Game):
 
     def attempt_move(self, action):
         """
-        Attempts the given action on the state and if legal returns the resulting state.
+        Attempts the given action on the current state of this game tree and if legal returns the resulting state.
         Otherwise returns false.
 
-        :action: Move		Attempted action
+        :action: Move			Attempted action
 
         :returns: maybe GameTree	Resulting GameTree or false
         """
@@ -55,16 +55,14 @@ class GameTree(Game):
         else:
             return False
 
-    @staticmethod
-    def apply_to_children(tree, func):
+    def apply_to_children(self, func):
         """
-        Applies the given function to all children of the given state.
+        Applies the given function to all children of the current game state.
 
-        :tree: GameTree			Parent state of children
         :func: [GameTree -> X]	Function applied to state's children
         :returns: List of X		List of values returned by func
         """
-        new_trees = GameTree.get_child_trees(tree)
+        new_trees = GameTree.get_child_trees(self)
         moved_trees = list(map(func, new_trees))
         return moved_trees
 
@@ -82,20 +80,18 @@ class GameTree(Game):
             new_trees.append(GameTree.attempt_move(tree, move))
         return new_trees
 
-    @staticmethod
-    def create_child_trees(tree):
+    def create_child_trees(self):
         """
         Creates game trees for each child state
 
-        :tree: GameTree         The tree to get the child GameTrees for
         :returns: Dict {Action : GameTree}
         """
-        possible_moves = tree.state.get_possible_moves()
+        possible_moves = self.state.get_possible_moves()
         for move in possible_moves:
-            maybe_tree = GameTree.attempt_move(tree, move)
+            maybe_tree = self.attempt_move(move)
             if maybe_tree:
-                tree.children[move] = maybe_tree
-        return tree.children
+                self.children[move] = maybe_tree
+        return self.children
 
     def get_current_player_color(self):
         return self.state.get_current_player_color()
@@ -111,7 +107,7 @@ class GameTree(Game):
         :num_layers: PositiveInteger    The number of layers to generate
         """
         validate_pos_int(num_layers)
-        children = GameTree.create_child_trees(self) 
+        children = self.create_child_trees()
         if num_layers == 1:
             return self
         else:
