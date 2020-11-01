@@ -1,11 +1,11 @@
-import Game
+from Game import Game
 """
 Represents a game which has ended.
 """
 class GameEnded(Game):
 
     def __init__(self, state):
-        if state.has_remaining_moves():
+        if state.any_remaining_moves():
             raise ValueError("Game state has remaining moves. Game is not over.")
         self.__state = state
 

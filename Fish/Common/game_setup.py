@@ -1,4 +1,4 @@
-import Game
+from Game import Game
 """
 Represents a game that has not started yet.
 """

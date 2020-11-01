@@ -4,6 +4,8 @@ from Color import Color
 from Board import Board
 from State import State
 from game_tree import GameTree
+from game_setup import GameSetup
+from game_ended import GameEnded
 """
 Data representation for the referee. Keeps track of the current game,
 the list of players in the order they play, and kicked players.
@@ -85,8 +87,10 @@ class Referee:
 
         void -> Boolean
         """
-        if self.__game.has_game_ended():
-            self.__game = GameEnded()
+        if type(self.__game) is GameEnded:
+            return True
+        elif type(self.__game) is GameTree and  self.__game.has_game_ended():
+            self.__game = GameEnded(self.__game.state)
             return True
         return False
 
@@ -119,7 +123,14 @@ class Referee:
         """
         if not self.has_game_ended():
             return False
-        return self.__game.get_winner()
+        internal_winners =  self.__game.get_winners()
+        ext_winners = []
+        for p in internal_winners:
+            color = p.get_color()
+            maybe_player = self.get_player_with_color(color)
+            if maybe_player:
+                ext_winners.append(maybe_player)
+        return ext_winners
 
     def get_history(self):
         """
@@ -148,7 +159,7 @@ class Referee:
                 self.__players.pop(0)
                 self.__game = self.__game.remove_current_player()
             else:
-                self.__history.append(self.__game.get_current_player_color(), action)
+                self.__history.append((self.__game.get_current_player_color(), action))
                 self.__game = maybe_game_tree
                 from_posn = action.get_from_posn()
                 current_player.move_penguin(from_posn, action.get_to_posn(), self.__game.state.get_fish_at(from_posn))
@@ -162,3 +173,9 @@ class Referee:
         :returns: void
         """
         self.__players = self.__players[1:] + self.__players[:1]
+
+    def get_player_with_color(self, color):
+        for p in self.__players:
+            if p.get_color() == color:
+                return p
+        return False

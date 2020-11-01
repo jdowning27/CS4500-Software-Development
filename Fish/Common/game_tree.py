@@ -134,7 +134,7 @@ class GameTree(Game):
         return GameTree(new_state)
 
     def has_game_ended(self):
-        return self.state.any_remaining_moves()
+        return not self.state.any_remaining_moves()
 
     def copy(self):
         state_copy = self.state.copy()

@@ -1,3 +1,8 @@
+import os
+import sys
+os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
+sys.path.append(os_path)
+
 from player_interface import PlayerInterface
 from strategy import Strategy
 
@@ -5,7 +10,7 @@ class Player(PlayerInterface):
 
     def __init__(self, age, look_ahead=3):
         self.__age = age
-        self.__penguins = {}
+        self.__penguins = set()
         self.__color = None
         self.__strategy = Strategy()
         self.__look_ahead = look_ahead
@@ -20,7 +25,8 @@ class Player(PlayerInterface):
         return posn
 
     def assign_color(self, player_color):
-        self.__color = player_color
+        if self.__color is None:
+            self.__color = player_color
 
     def move_penguin(self, from_posn, to_posn, fish):
         if from_posn in self.__penguins:
@@ -43,3 +49,8 @@ class Player(PlayerInterface):
     def get_color(self):
         return self.__color
 
+    def get_penguins(self):
+        return self.__penguins
+
+    def get_fish(self):
+        return self.__fish
