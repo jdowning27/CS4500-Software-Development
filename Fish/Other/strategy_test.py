@@ -78,25 +78,18 @@ class StrategyTestCase(unittest.TestCase):
     def test_place_penguin_across_full_state(self):
         posn = (0,0)
         self.assertTrue(self.state_full.is_tile_available(posn))
-        new_state = self.strategy.place_penguin_across(self.state_full, Color.RED)
-        self.assertFalse(new_state.is_tile_available(posn))
-        self.assertEqual(new_state.get_player(Color.RED).get_penguins(), [posn])
+        self.assertEqual(self.strategy.place_penguin_across(self.state_full), posn)
 
     def test_place_penguin_across_holes(self):
         posn = (1,0)
         self.assertTrue(self.state_holes.is_tile_available(posn))
-        new_state = self.strategy.place_penguin_across(self.state_holes, Color.RED)
-        self.assertFalse(new_state.is_tile_available(posn))
-        self.assertEqual(new_state.get_player(Color.RED).get_penguins(), [posn])
+        self.assertEqual(self.strategy.place_penguin_across(self.state_holes), posn)
     
     def test_place_penguin_across_other_penguin(self):
-        new_state = self.strategy.place_penguin_across(self.state_full, Color.RED)
+        new_state = self.state_full.place_penguin_for_player(Color.RED, (0,0))
         next_penguin = (0, 1)
         self.assertTrue(new_state.is_tile_available(next_penguin))
-        next_state = self.strategy.place_penguin_across(new_state, Color.WHITE)
-        self.assertFalse(next_state.is_tile_available(next_penguin))
-        self.assertEqual(next_state.get_player(Color.WHITE).get_penguins(), [next_penguin])
-
+        self.assertEqual(self.strategy.place_penguin_across(new_state), next_penguin)
     
     def test_choose_action_minimax_1_turn(self):
         self.player1.add_penguin((0,0))
@@ -133,12 +126,12 @@ class StrategyTestCase(unittest.TestCase):
         action = self.strategy.choose_action_minimax(self.mini_tree, 10)
         self.assertEqual(action.print_json(), [(1, 0), (0, 1)])
         self.assertNotEqual(action.print_json(), "Pass")
-
+    """
     def test_choose_action_minimax_subtree(self):
         self.player1.add_penguin((0, 0))
         action = self.strategy.choose_action_minimax_subtree(self.game_tree, 6, Color.RED)
         self.assertEqual(action[0].print_json(), [(0, 0), (1, 0)])
-
+    """
 
 
     

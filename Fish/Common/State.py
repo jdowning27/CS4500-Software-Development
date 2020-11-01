@@ -10,26 +10,23 @@ master = Tk()
 Represents a snapshot of the state of the game, which includes:
     - the state of the board
     - the current coordinates of all penguins
-    - which Player's turn it is
-    - a sorted list of Player objects, from youngest to oldest
+    - a sorted list of Player objects, in order of turns
 """
 class State:
 
-    def __init__(self, players, board, turn=0):
+    def __init__(self, players, board):
         """
         Constructor for State which constructs a game state
         with the given number of players
 
         :players: array         An array of Players in this game, assume sorted by age
         :board: Board           The Fish game board in this state
-        :turn: int		        The index of the player whose turn it is
         """
         self.players = players
         self.board = board
-        self.turn = turn
 
     def __eq__(self, other):
-        return type(other) is State and self.board == other.board and self.players == other.players and self.turn == other.turn
+        return type(other) is State and self.board == other.board and self.players == other.players
 
     def place_penguin_for_player(self, player_color, posn):
         """
@@ -63,7 +60,7 @@ class State:
         for player in self.players:
             players.append(player.copy())
         board = self.board.copy()
-        return State(players, board, self.turn)
+        return State(players, board)
 
 
     def move_penguin(self, from_posn, to_posn):
@@ -77,12 +74,12 @@ class State:
         :returns: maybe State   A game state with the penguin moved if possible
         """
         player = self.get_player_from_penguin(from_posn)
-        if self.valid_move(from_posn, to_posn) and player is self.players[self.turn]:
+        if self.valid_move(from_posn, to_posn) and player is self.players[0]:
             new_state = self.copy()
             fish = self.board.tiles[from_posn[1]][from_posn[0]].get_fish()
             new_state.board.remove_tile(*from_posn)
-            new_state.players[self.turn].move_penguin(from_posn, to_posn)
-            new_state.players[self.turn].add_to_score(fish)
+            new_state.players[0].move_penguin(from_posn, to_posn)
+            new_state.players[0].add_to_score(fish)
             new_state.set_next_players_turn()
             return new_state
         else:
@@ -183,7 +180,7 @@ class State:
 
         :returns: List of Action	possible actions for player
         """
-        penguins = self.players[self.turn].get_penguins()
+        penguins = self.players[0].get_penguins()
         possible_moves = []
         for p in penguins:
             for reachable in self.board.get_all_reachable_posn(*p, self.get_all_penguins()):
@@ -201,10 +198,7 @@ class State:
         """
         state = {}
         players = []
-        # put the player's whose turn is next first
-        ordered_players = self.players[self.turn:]
-        ordered_players.extend(self.players[:self.turn])
-        for player in ordered_players:
+        for player in self.players:
             players.append(player.print_json())
         state['players'] = players
         state['board'] = self.board.print_json()
@@ -214,7 +208,7 @@ class State:
         return self.get_player(player_color).get_score()
 
     def get_current_player_color(self):
-        return self.players[self.turn].get_color()
+        return self.players[0].get_color()
 
     def set_next_players_turn(self):
         self.players = self.players[1:] + self.players[:1]

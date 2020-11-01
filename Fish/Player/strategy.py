@@ -59,7 +59,7 @@ class Strategy:
         """
         num_players = len(tree.state.players)
         layers = num_turns * num_players
-        tree.create_n_layers_tree(layers)
+        tree = tree.create_n_layers_tree(layers)
         max_player = tree.get_current_player_color()
         action_score = self.choose_action_minimax_subtree(tree, layers, max_player)
         return action_score[0]
@@ -81,9 +81,9 @@ class Strategy:
         subtree = tree.children
 
         if len(subtree) == 0:
-            tree.create_n_layers_tree(num_turns)
+            tree = tree.create_n_layers_tree(num_turns)
             subtree = tree.children
-
+        
         if num_turns == 1:
             if tree.get_current_player_color() is max_player:
                 ideal_action_score = (None, -math.inf)
