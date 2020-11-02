@@ -5,6 +5,8 @@ sys.path.append(os_path)
 os_path = os.path.dirname(os.getcwd()) + '/Fish/Admin'
 sys.path.append(os_path)
 
+from mock import patch
+
 import unittest
 from player import Player
 from referee import Referee
@@ -51,3 +53,39 @@ class RefereeTestCase(unittest.TestCase):
     def test_play_game(self):
         self.assertEqual(type(self.referee.play_game(self.ext_players)), GameEnded)
         self.assertEqual(self.referee.get_winners(), self.ext_players)
+
+    def test_alert_winners(self):
+        with patch.object(Player, "game_over") as mock_game_over:
+            game_over = self.referee.play_game(self.ext_players)
+            self.referee.alert_players()
+        mock_game_over.assert_called()
+
+    def test_alert_winners_no_winners(self):
+        with patch.object(Player, "game_over") as mock_game_over:
+            game = self.referee.initialize_game(self.ext_players)
+            self.referee.alert_players()
+        mock_game_over.assert_not_called()
+
+    def test_next_turn(self):
+        self.referee.initialize_game(self.ext_players)
+        self.assertEqual(self.referee.get_players(), self.ext_players)
+        self.referee.next_turn()
+        self.assertEqual(self.referee.get_players(), [self.player2, self.player3, self.player1])
+
+    def test_get_winners(self):
+        self.referee.play_game(self.ext_players)
+        self.assertEqual(self.referee.get_winners(), self.ext_players)
+
+    def test_get_winners_game_not_played(self):
+        self.referee.initialize_game(self.ext_players)
+        self.assertFalse(self.referee.get_winners())
+
+    def test_get_current_scores(self):
+        self.referee.initialize_game(self.ext_players)
+        self.assertEqual(self.referee.get_current_scores(), [(self.player1, 0), (self.player2, 0), (self.player3, 0)])
+
+    def test_has_game_ended(self):
+        self.assertFalse(self.referee.has_game_ended())
+        self.referee.play_game(self.ext_players)
+        self.assertTrue(self.referee.has_game_ended())
+

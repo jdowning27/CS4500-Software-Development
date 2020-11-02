@@ -1,5 +1,5 @@
-import State
-import Move
+from State import State
+from Move import Move
 from Util import validate_pos_int
 from Game import Game
 """

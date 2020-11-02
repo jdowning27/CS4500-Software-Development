@@ -9,7 +9,7 @@ from game_ended import GameEnded
 """
 Data representation for the referee. Keeps track of the current game,
 the list of players in the order they play, and kicked players.
-Kicked players have broken the rules.
+Kicked players are those who have returned invalid moves to referee.
 """
 class Referee:
 
@@ -18,6 +18,33 @@ class Referee:
         self.__kicked_players = {}
         self.__game = GameSetup()
         self.__history = []
+
+    def play_game(self, players):
+        """
+        Controls game mechanics and runs the game.
+
+        :players: List of Players       External Player representations
+        :returns: GameEnded             Final Game
+        """
+        self.initialize_game(players)
+        while not self.has_game_ended():
+            current_player = self.__players[0]
+            action = current_player.choose_next_move(self.__game.copy())
+            maybe_game_tree =  self.check_move_validity(action)
+            if not maybe_game_tree:
+                self.__kicked_players.add(current_player)
+                current_player.remove_penguins()
+                self.__players.pop(0)
+                self.__game = self.__game.remove_current_player()
+            else:
+                self.__history.append((self.__game.get_current_player_color(), action))
+                self.__game = maybe_game_tree
+                from_posn = action.get_from_posn()
+                current_player.move_penguin(from_posn, action.get_to_posn(), self.__game.state.get_fish_at(from_posn))
+                self.next_turn()
+        self.alert_players()
+        return self.__game
+
 
     def initialize_game(self, players):
         """
@@ -103,15 +130,16 @@ class Referee:
         """
         return self.__game.state.print_json()
 
-    def get_curr_scores(self):
+    def get_current_scores(self):
         """
         Get scores of players.
 
-        void -> {Player: int}
+        void -> List of (Player, int)
         """
-        player_score = {}
+        player_score = []
         for p in self.__game.state.players:
-            player_score[p] = p.get_score()
+            ext_p = self.get_player_with_color(p.get_color())
+            player_score.append((ext_p, p.get_score()))
         return player_score
 
     def get_winners(self):
@@ -141,30 +169,13 @@ class Referee:
         """
         return self.__history
 
-    def play_game(self, players):
+    def alert_players(self):
         """
-        Controls game mechanics and runs the game.
-
-        :players: List of Players	External Player representations
-        :returns: GameEnded		Final Game
+        Alert each player that the game is over and tell them who the winner(s) are.
         """
-        self.initialize_game(players)
-        while not self.has_game_ended():
-            current_player = self.__players[0]
-            action = current_player.choose_next_move(self.__game.copy())
-            maybe_game_tree =  self.check_move_validity(action)
-            if not maybe_game_tree:
-                self.__kicked_players.add(current_player)
-                current_player.remove_penguins()
-                self.__players.pop(0)
-                self.__game = self.__game.remove_current_player()
-            else:
-                self.__history.append((self.__game.get_current_player_color(), action))
-                self.__game = maybe_game_tree
-                from_posn = action.get_from_posn()
-                current_player.move_penguin(from_posn, action.get_to_posn(), self.__game.state.get_fish_at(from_posn))
-                self.next_turn()
-        return self.__game
+        if type(self.__game) is GameEnded:
+            for p in self.__players:
+                p.game_over(self.__game.get_state().print_json(), self.get_winners())
 
     def next_turn(self):
         """
@@ -179,3 +190,6 @@ class Referee:
             if p.get_color() == color:
                 return p
         return False
+
+    def get_players(self):
+        return self.__players

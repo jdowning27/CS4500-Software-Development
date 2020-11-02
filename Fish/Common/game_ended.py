@@ -17,3 +17,6 @@ class GameEnded(Game):
 
     def copy(self):
         return GameEnded(self.__state.copy())
+
+    def get_state(self):
+        return self.__state

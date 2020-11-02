@@ -53,11 +53,12 @@ class PlayerInterface:
         """
         pass
 
-    def game_over(self, state):
+    def game_over(self, state, winners):
         """
         Let the Player know that the game has ended.
 
-        :state: State       The last state of the game
+        :state: JSON       		The last state of the game represented in json
+        :winners: List of Player	The list of the winner(s)
         :returns: void
         """
         pass

@@ -40,7 +40,7 @@ class Player(PlayerInterface):
         # Set to None so player cannot add again
         self.__penguins = None
 
-    def game_over(self, state):
+    def game_over(self, state, winners):
         print("Player received game over")
 
     def get_age(self):
