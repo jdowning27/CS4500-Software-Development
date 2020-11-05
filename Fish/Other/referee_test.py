@@ -5,9 +5,10 @@ sys.path.append(os_path)
 os_path = os.path.dirname(os.getcwd()) + '/Fish/Admin'
 sys.path.append(os_path)
 
-from mock import patch
 
 import unittest
+from unittest import mock
+from unittest.mock import patch
 from player import Player
 from referee import Referee
 from game_tree import GameTree

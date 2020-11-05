@@ -3,6 +3,7 @@ from Player import Player as IntPlayer
 from Color import Color
 from Board import Board
 from State import State
+from Pass import Pass
 from game_tree import GameTree
 from game_setup import GameSetup
 from game_ended import GameEnded
@@ -39,8 +40,9 @@ class Referee:
             else:
                 self.__history.append((self.__game.get_current_player_color(), action))
                 self.__game = maybe_game_tree
-                from_posn = action.get_from_posn()
-                current_player.move_penguin(from_posn, action.get_to_posn(), self.__game.state.get_fish_at(from_posn))
+                if type(action) is not Pass:
+                    from_posn = action.get_from_posn()
+                    current_player.move_penguin(from_posn, action.get_to_posn(), self.__game.state.get_fish_at(from_posn))
                 self.next_turn()
         self.alert_players()
         return self.__game

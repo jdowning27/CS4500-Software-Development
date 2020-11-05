@@ -14,8 +14,8 @@ from strategy import Strategy
 
 class PlayerTestCase(unittest.TestCase):
     def setUp(self):
-        self.player1 = ExtPlayer(3)
-        self.player2 = ExtPlayer(5)
+        self.player1 = ExtPlayer()
+        self.player2 = ExtPlayer()
         mini_board_array = [
             [1,     5],
                 [2,     10],

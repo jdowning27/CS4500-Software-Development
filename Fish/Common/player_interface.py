@@ -62,11 +62,3 @@ class PlayerInterface:
         :returns: void
         """
         pass
-
-    def get_age(self):
-        """
-        Returns the player's age.
-
-        :returns: Natural Number	Player's age
-        """
-        pass

@@ -7,6 +7,9 @@ CS 4500 Project by Jennifer Der and Timothy Haas
 
 ```
 .                           # Fish Project Directory
+├── Admin/                  # Directory for files relating to game management
+│   ├── referee.py          # Data representation of a game referee
+│   └── manager_interface.py # Data representation for a tournament manager
 ├── Common/                 # Holds all files for Fish Program (includes data representation, game logic, and unit tests)
 │   ├── Action.py           # Interface for a game action
 │   ├── Board.py            # Representation of Fish game board
@@ -26,6 +29,7 @@ CS 4500 Project by Jennifer Der and Timothy Haas
 │   ├── player-protocol.md  # Design description for how components will interact with the player interface
 │   ├── referee.md          # Design description for Referee
 │   ├── games.md            # Design data representation for full games
+│   ├── manager-protocol.md # Design description for how the manager interacts with other components
 │   ├── milestones.pdf      # Week 1 memo task Fish milestones
 │   ├── self-1.md           # Week 1 self evaluation
 │   ├── self-2.md           # Week 2 self evaluation
@@ -33,13 +37,21 @@ CS 4500 Project by Jennifer Der and Timothy Haas
 │   ├── self-4.md           # Week 4 self evaluation
 │   └── system.pdf          # Week 1 memo task for Fish software components
 ├── Player/                 # Files relating to Players 
+│   ├── player.py           # Data representation of an external player
 │   └── strategy.py         # Strategies for players to place penguins and minimax optimization for actions
 ├── xtest                   # Test script 
 └── README.md               # This README file
 ```
 
 ## Software Components
-![Class Diagram](https://i.imgur.com/W4HIWV0.png)
+![Class Diagram](https://i.imgur.com/q2304lZ.png)
+
+### External Player
+The external player implements the Player Interface that is outlined [here](https://github.ccs.neu.edu/CS4500-F20/anton/blob/master/Fish/Common/player_interface.py). AI, Remote, and House players are able to implement this interfaced in order to participate in Fish game tournaments
+
+### Referee
+The referee is in charge of managing the game. There is one Referee for each game within a tournament. The Referee communicates with the External Players, the internal game system, as well as reporting game outcomes to both the tournament manager, observers, and external players.
+
 
 ### Strategy
 Currently, only one strategy class has been implemented. Players may use this class when playing the game. 
@@ -86,7 +98,7 @@ Data representation of a hexagonal tile. A hexagonal tile has a north, south, no
 ### State
 Keeps track of the Board and the Players in the current state. State also keeps track of which Player's turn it is. The list of Players that State keeps is an ordered list from youngest to oldest.
 
-### Player
+### Internal Player
 The internal data representation of a Player. A Player has access to their penguins, where a penguin is represented by a (row, col) tuple which is their location on the Board.
 
 ### Examples of how to create boards, and render

@@ -1,14 +1,13 @@
 # Manager Protocol
-The protocol for the tournament manager.
+The protocol for the tournament manager; how the tournament manager interacts with other components.
 
 ### After the tournament manager has been instantiated:
-- Listens for player sign ups through the function `player_signup(player)`
-	- Where player is a class that implements PlayerInterface
 - Accepts a collection of players sorted by age (where age is determined by when they signed up) from the sign up server
 	- Prefers 4 player games, will only create 2 or 3 player games when the number of players is not divisible by 4
 	- For example if there are 6 players left it will split them into 2 games of 3
 - Listens for observers to sign up
 	- When an observer signs up, the tournament manager updates them on on going actions and tournament statistics by sending json through tcp.
+	- Observers are able to sign up at any point during the game or tournament
 - Receives updates about each game from the referee after it has ended
 	- Updates include: who won the game, players who have been kicked out for breaking the rules or cheating
 	- Removes cheating players from the tournament
