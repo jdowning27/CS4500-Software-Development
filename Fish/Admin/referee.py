@@ -15,8 +15,16 @@ Kicked players are those who have returned invalid moves to referee.
 class Referee:
 
     def __init__(self):
+        """
+        Constructor for a Referee who supervises one game. 
+
+        __players: [List-of Player]      External players who play the game, in the order in which they play
+        __kicked_players: [Set Player]   Players who have cheated, and cannot play anymore
+        __game: Game                     Current Game, initialized to GameSetup
+        __history: [List-of (Player, Action)]  History of all game actions mapped to Player
+        """
         self.__players = []
-        self.__kicked_players = {}
+        self.__kicked_players = set()
         self.__game = GameSetup()
         self.__history = []
 
