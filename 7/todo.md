@@ -1,7 +1,7 @@
 ## Functionality per data definition
 ### Code base
-[] Contract checking
-    - [] Check instances of players in Referee as well as in State (for internal players)
+[X] Contract checking
+    - [X] Check instances of players in Referee as well as in State (for internal players)
         - including: no players with same color, the class type
 [] Privatizing fields throughout code base
     - [] Priotize State
