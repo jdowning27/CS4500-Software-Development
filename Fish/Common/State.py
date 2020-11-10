@@ -1,5 +1,5 @@
 from tkinter import *
-from constants import MAX_FISH, GUI_UNIT
+from constants import MAX_FISH, GUI_UNIT, MIN_PLAYERS, MAX_PLAYERS
 from move import Move
 from skip import Skip
 
@@ -19,9 +19,17 @@ class State:
         Constructor for State which constructs a game state
         with the given number of players
 
-        :players: array         An array of Players in this game, assume sorted by age
+        :players: PlayerData[]  An array of Players in this game, assume sorted by age
         :board: Board           The Fish game board in this state
         """
+        if len(players) < MIN_PLAYERS or len(players) > MAX_PLAYERS:
+            raise ValueError("Invalid number of players")
+        seen_colors = []
+        for player in players:
+            if player.get_color() in seen_colors:
+                raise ValueError("Players cannot have duplicate colors")
+            seen_colors.append(player.get_color())
+        
         self.players = players
         self.board = board
 
@@ -36,16 +44,16 @@ class State:
 
         :player_color: Color        The color of the Player to get
         :posn: tuple                The (row, col) position to place the penguin
-        :returns: State		        Returns a game state with the penguin added if possible
+        :returns: maybe State		Returns a game state with the penguin added if possible
         """
         new_state = self.copy()
         player = new_state.get_player(player_color)
         if not player:
             print("No player with color {} found".format(player_color))
-            return self
+            return False
         elif not self.is_tile_available(posn):
             print("Cannot place penguin at {}".format(posn))
-            return self
+            return False
         else:
             player.add_penguin(posn)
             return new_state

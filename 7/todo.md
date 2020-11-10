@@ -1,16 +1,17 @@
 ## Functionality per data definition
 ### Code base
-[] Privatizing fields throughout code base
-    - [] Priotize State
-[X] Rename all files, stick to lowercase_underscore.py naming convention
 [] Contract checking
     - [] Check instances of players in Referee as well as in State (for internal players)
         - including: no players with same color, the class type
+[] Privatizing fields throughout code base
+    - [] Priotize State
+[X] Rename all files, stick to lowercase_underscore.py naming convention
+
 ### Game
-[] Refactor the Game Interface
-    - [] Will need to refactor GameTree (privatizing fields, implementing other methods, etc)
 [] Deals with refactoring how we generate a GameTree, need to implement lazy generation
     - [] Refactor the maximal gain strategy to fit the new GameTree implementation
+[] Refactor the Game Interface
+    - [] Will need to refactor GameTree (privatizing fields, implementing other methods, etc)
 [] Game result to also return the set of kicked players from the game
 ### Player
 [X] Renaming Player classes: Need to have an external Player class and a State Player (internal data representation)

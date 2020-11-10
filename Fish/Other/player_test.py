@@ -12,6 +12,9 @@ class PlayerTestCase(unittest.TestCase):
         self.player1 = PlayerData(Color.RED, 5)
         self.player2 = PlayerData(Color.WHITE, 10)
     
+    def test_invalid_color(self):
+        self.assertRaisesRegex(ValueError, "Invalid color", PlayerData, 5)
+
     def test_get_penguins(self):
         self.assertEqual(self.player1.get_penguins(), [])
         self.player1.add_penguin((0,0))

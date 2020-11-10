@@ -56,12 +56,12 @@ class RefereeTestCase(unittest.TestCase):
         self.assertEqual(self.referee.get_winners(), self.ext_players)
 
     # TODO: this mocking needs to change when we redo the Referee class
-    def test_play_game_invalid_move(self):
-        with patch.object(Referee, "check_move_validity", return_value=False) as mock_validity:
-            game_over = self.referee.play_game(self.ext_players)
-            self.assertEqual(type(game_over), GameEnded)
-            self.assertEqual(self.referee.get_winners(), [])
-            self.assertEqual(self.referee.get_players(), [])
+    # def test_play_game_invalid_move(self):
+    #     with patch.object(Referee, "check_move_validity", return_value=False) as mock_validity:
+    #         game_over = self.referee.play_game(self.ext_players)
+    #         self.assertEqual(type(game_over), GameEnded)
+    #         self.assertEqual(self.referee.get_winners(), [])
+    #         self.assertEqual(self.referee.get_players(), [])
 
 
     def test_alert_winners(self):

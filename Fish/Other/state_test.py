@@ -22,10 +22,25 @@ class StateTestCase(unittest.TestCase):
 
         self.player1 = PlayerData(Color.RED, 5)
         self.player2 = PlayerData(Color.WHITE, 10)
+        self.player3 = PlayerData(Color.BROWN)
+        self.player4 = PlayerData(Color.BLACK)
+        self.player5 = PlayerData(Color.BLACK) 
         self.players = [self.player1, self.player2]
 
         self.state_full = State(self.players, self.board_full)
         self.state_holes = State(self.players, self.board_holes)
+
+    # init
+    def test_too_few_players(self):
+        self.assertRaisesRegex(ValueError, "Invalid number of players", State, [], self.board_full)
+
+    def test_too_many_players(self):
+        too_many_players = [self.player1, self.player2, self.player3, self.player4, self.player5]
+        self.assertRaisesRegex(ValueError, "Invalid number of players", State, too_many_players, self.board_full)
+    
+    def test_duplicate_player_colors(self):
+        duplicate_colors = [self.player1, self.player3, self.player4, self.player5]
+        self.assertRaisesRegex(ValueError, "Players cannot have duplicate colors", State, duplicate_colors, self.board_full)
 
     def test_place_penguin_for_player_success(self):
         self.assertEqual(self.state_full.get_all_penguins(), [])
@@ -34,18 +49,15 @@ class StateTestCase(unittest.TestCase):
 
     def test_place_penguin_for_player_out_of_bounds(self):
         self.assertEqual(self.state_full.get_all_penguins(), [])
-        new_state = self.state_full.place_penguin_for_player(Color.RED, (4, 3))
-        self.assertEqual(new_state.get_all_penguins(), [])
+        self.assertFalse(self.state_full.place_penguin_for_player(Color.RED, (4, 3)))
     
     def test_place_penguin_for_player_hole(self):
         self.assertEqual(self.state_holes.get_all_penguins(), [])
-        new_state = self.state_holes.place_penguin_for_player(Color.RED, (0, 0))
-        self.assertEqual(new_state.get_all_penguins(), [])
-    
+        self.assertFalse(self.state_holes.place_penguin_for_player(Color.RED, (0, 0)))
+
     def test_place_penguin_for_player_no_player(self):
         self.assertEqual(self.state_full.get_all_penguins(), [])
-        new_state = self.state_full.place_penguin_for_player(Color.BROWN, (1, 2))
-        self.assertEqual(new_state.get_all_penguins(), [])
+        self.assertFalse(self.state_full.place_penguin_for_player(Color.BROWN, (1, 2)))
 
     def test_get_all_penguins(self):
         self.assertEqual(self.state_full.get_all_penguins(), [])
@@ -133,7 +145,7 @@ class StateTestCase(unittest.TestCase):
     def test_any_remaining_moves_no_moves(self):
         board = Board(4, 3)
         board.create_board_with_holes([(1, 0), (2, 0)], 0)
-        state = State([self.player1], board)
+        state = State(self.players, board)
         self.player1.add_penguin((0,0))
         self.assertFalse(state.any_remaining_moves())
 

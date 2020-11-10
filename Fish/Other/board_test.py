@@ -15,6 +15,14 @@ class BoardTestCase(unittest.TestCase):
         self.board = Board(4, 3)
         self.board.create_board_without_holes(4)
 
+    def test_make_board_with_neg_row(self):
+        self.assertRaisesRegex(ValueError, "row and col must be positive", Board, -1, 5)
+    
+    def test_make_board_with_neg_col(self):
+        self.assertRaisesRegex(ValueError, "row and col must be positive", Board, 5, -1)
+    
+    def test_make_board_with_zeros(self):
+        self.assertRaisesRegex(ValueError, "row and col must be positive", Board, 0, 0)
 
     def test_create_board_with_holes(self):
         board = Board(4, 2)
@@ -40,9 +48,8 @@ class BoardTestCase(unittest.TestCase):
     
     def test_create_board_without_holes_error(self):
         board = Board(2, 2)
-        with self.assertRaises(SystemExit) as err:
-            board.create_board_without_holes(0)
-        self.assertEqual(err.exception.code, 1)
+        self.assertRaisesRegex(ValueError, "fish must be positive and less than the max allowed fish",
+            board.create_board_without_holes, 0)
 
     def test_create_board_json(self):
         tiles = [
@@ -89,6 +96,14 @@ class BoardTestCase(unittest.TestCase):
         self.assertTrue(board.tile_exists((0,1)))
         self.assertFalse(board.tile_exists((0,0)))
         self.assertFalse(board.tile_exists((0,5)))
+    
+    def test_create_board_negative_one_fish(self):
+        self.assertRaisesRegex(ValueError, "the number of tiles with one fish cannot be negative", 
+            self.board.create_board_with_holes, [(0,0), (0,1)], -2)
+
+    def test_create_board_too_many_holes(self):
+        self.assertRaisesRegex(ValueError, "holes and number of one fish tiles cannot be greater than the total number of tiles", 
+            self.board.create_board_with_holes, [(0,0), (0,1)], 12)
 
     def test_get_reachable_posn_north(self):
         board = Board(8, 1)
@@ -136,19 +151,8 @@ class BoardTestCase(unittest.TestCase):
         board.create_board_with_holes([(0,0)], 1)
         self.assertEqual(board.get_all_reachable_posn(1, 0), [(3, 0), (0, 1), (2, 0), (2, 1), (3, 1)])
 
-    def test_init_board(self):
-        board = Board(3, 3)
-        for col in board.tiles:
-            for t in col:
-                self.assertEqual(t, None)
-        board.init_board()
-        for col in board.tiles:
-            for t in col:
-                self.assertTrue(type(t) is Tile)
-
     def test_tile_exists(self):
         board = Board(3, 3)
-        board.init_board()
         self.assertTrue(board.tile_exists((2,2)))
         self.assertFalse(board.tile_exists((-1, 1)))
         self.assertFalse(board.tile_exists((3, 1)))
@@ -161,7 +165,6 @@ class BoardTestCase(unittest.TestCase):
 
     def test_set_all(self):
         board = Board(3, 3)
-        board.init_board()
         for col in board.tiles:
             for t in col:
                 self.assertEqual(t.fish, None)
@@ -172,7 +175,6 @@ class BoardTestCase(unittest.TestCase):
 
     def test_remove_tile(self):
         board = Board(3, 3)
-        board.init_board()
         self.assertTrue(board.tiles[0][0].is_active)
         board.remove_tile(0, 0)
         self.assertFalse(board.tiles[0][0].is_active)

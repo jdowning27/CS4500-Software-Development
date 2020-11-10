@@ -1,5 +1,5 @@
 from util import validate_non_neg_int, print_error
-from color import *
+from color import Color
 
 """
 The internal representation of a player which keeps track of its
@@ -7,9 +7,8 @@ penguin color, age, and an array of penguins.
 """
 class PlayerData:
     def __init__(self, color, age=0, score=0):
-        validate_non_neg_int(age)
-        if isinstance(type(color), Color):
-            print_error("Invalid Color")
+        if type(color) is not Color:
+            raise ValueError("Invalid color")
         self.__color = color
         self.__age = age
         self.__penguins = []

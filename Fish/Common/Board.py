@@ -20,22 +20,14 @@ class Board:
         :row: int       The number of rows
         :col: int       The number of columns
         """
-        
-        validate_pos_int(row, col)
-        self.tiles = [[None for r in range(0, row)] for c in range(0, col)]
+        if row <= 0 or col <= 0:
+            raise ValueError("row and col must be positive")
+        self.tiles = [[Tile(r, c) for r in range(0, row)] for c in range(0, col)]
         self.col = col
         self.row = row
 
     def __eq__(self, other):
         return type(other) is Board and self.row == other.row and self.col == other.col and self.tiles == other.tiles
-
-    def init_board(self):
-        """
-        Intializes the game board with Tile objects in each place
-        """
-        for c in range(0, self.col):
-            for r in range(0, self.row):
-                self.tiles[c][r] = Tile(r, c)
 
     def copy(self):
         """
@@ -48,23 +40,22 @@ class Board:
         new_board.tiles = new_tiles
         return new_board
 
-    def create_board_with_holes(self, holes, min):
+    def create_board_with_holes(self, holes, min_fish):
         """
-        Create board with given holes and min number of tiles with 1 Fish
+        Create board with given holes and min_fish number of tiles with 1 Fish
 
         :holes: array         List of (x, y) positions where there are holes in board
-        :min:   int           The minimum number of tiles with one fish
+        :min_fish:   int           The minimum number of tiles with one fish
         """
-        self.init_board()
-        validate_non_neg_int(len(holes), min)
-        if len(holes) + min > (self.row * self.col):
-            print_error(
-                "usage: Invalid Input: holes + min > Total number of tiles")
+        if min_fish < 0:
+            raise ValueError("the number of tiles with one fish cannot be negative")
+        if len(holes) + min_fish > (self.row * self.col):
+            raise ValueError("holes and number of one fish tiles cannot be greater than the total number of tiles")
         self.set_all(1)
         for h in holes:
             r, c = h
             self.remove_tile(r, c)
-        self.set_random_tiles(self.col * self.row - (len(holes) + min))
+        self.set_random_tiles(self.col * self.row - (len(holes) + min_fish))
 
     def create_board_without_holes(self, fish):
         """
@@ -73,9 +64,10 @@ class Board:
 
         :fish: int          The number of fish per tile
         """
-        self.init_board()
-        validate_pos_int(fish)
-        self.set_all(fish)
+        if fish <= 0 or fish > MAX_FISH:
+            raise ValueError("fish must be positive and less than the max allowed fish")
+        else:
+            self.set_all(fish)
 
     def create_board_from_json(self, board_array):
         """
