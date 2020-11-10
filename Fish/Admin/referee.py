@@ -1,5 +1,4 @@
-from player import Player as ExtPlayer
-from Player import Player as IntPlayer
+from player_data import PlayerData
 from color import Color
 from board import Board
 from state import State
@@ -77,7 +76,7 @@ class Referee:
         internal_players = []
         for p in range(0, len(self.__players)):
             color = self.__assign_color_to_player(p, self.__players[p])
-            internal_players.append(IntPlayer(color))
+            internal_players.append(PlayerData(color))
 
         board = self.__create_board()
         state = State(internal_players, board)

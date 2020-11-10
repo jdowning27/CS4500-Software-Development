@@ -10,7 +10,7 @@ from strategy import *
 from game_tree import *
 from state import *
 from board import *
-from Player import *
+from player_data import PlayerData
 from color import *
 from move import *
 
@@ -37,8 +37,8 @@ class StrategyTestCase(unittest.TestCase):
         self.mini_board = Board(3, 2)
         self.mini_board.create_board_from_json(mini_board_array)
 
-        self.player1 = Player(Color.RED, 5)
-        self.player2 = Player(Color.WHITE, 10)
+        self.player1 = PlayerData(Color.RED, 5)
+        self.player2 = PlayerData(Color.WHITE, 10)
         self.players = [self.player1, self.player2]
 
         self.state_full = State(self.players, self.board_full)

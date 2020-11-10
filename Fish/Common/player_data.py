@@ -5,7 +5,7 @@ from color import *
 The internal representation of a player which keeps track of its
 penguin color, age, and an array of penguins.
 """
-class Player:
+class PlayerData:
     def __init__(self, color, age=0, score=0):
         validate_non_neg_int(age)
         if isinstance(type(color), Color):
@@ -16,7 +16,7 @@ class Player:
         self.__score = score
 
     def __eq__(self, other):
-        return type(other) is Player and self.__color == other.get_color() and \
+        return type(other) is PlayerData and self.__color == other.get_color() and \
             self.__age == other.get_age() and self.__penguins.sort() == other.get_penguins().sort()
         
     def get_penguins(self):
@@ -29,9 +29,9 @@ class Player:
         """
         Makes a deep copy of this player
 
-        :returns: Player	Copy of this player
+        :returns: PlayerData	Copy of this PlayerData
         """
-        new_player = Player(self.__color, self.__age, self.__score)
+        new_player = PlayerData(self.__color, self.__age, self.__score)
         for penguin in self.__penguins:
             new_player.add_penguin(penguin)
         return new_player

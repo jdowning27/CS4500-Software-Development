@@ -10,7 +10,7 @@ sys.path.append(os_path)
 
 from board import Board
 from state import *
-from Player import Player
+from player_data import PlayerData
 from move import Move
 from tile import *
 from strategy import *
@@ -41,7 +41,7 @@ def parse_players(state_json):
     players_json = state_json['players']
     players = []
     for player in players_json:
-        new_player = Player(player['color'], score=player['score'])
+        new_player = PlayerData(player['color'], score=player['score'])
         players.append(add_penguins_to_player(new_player, player['places']))
     return players
 

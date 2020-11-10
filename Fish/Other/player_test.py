@@ -5,12 +5,12 @@ sys.path.append(os_path)
 
 import unittest
 from color import *
-from Player import *
+from player_data import PlayerData
 
 class PlayerTestCase(unittest.TestCase):
     def setUp(self):
-        self.player1 = Player(Color.RED, 5)
-        self.player2 = Player(Color.WHITE, 10)
+        self.player1 = PlayerData(Color.RED, 5)
+        self.player2 = PlayerData(Color.WHITE, 10)
     
     def test_get_penguins(self):
         self.assertEqual(self.player1.get_penguins(), [])

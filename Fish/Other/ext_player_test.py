@@ -4,8 +4,8 @@ os_path = os.path.dirname(os.getcwd()) + '/Fish/Player'
 sys.path.append(os_path)
 
 import unittest
-from player import Player as ExtPlayer
-from Player import Player as IntPlayer
+from player import Player
+from player_data import PlayerData
 from board import Board
 from color import Color
 from state import State
@@ -14,8 +14,8 @@ from strategy import Strategy
 
 class PlayerTestCase(unittest.TestCase):
     def setUp(self):
-        self.player1 = ExtPlayer()
-        self.player2 = ExtPlayer()
+        self.player1 = Player()
+        self.player2 = Player()
         mini_board_array = [
             [1,     5],
                 [2,     10],
@@ -24,8 +24,8 @@ class PlayerTestCase(unittest.TestCase):
         self.mini_board = Board(3, 2)
         self.mini_board.create_board_from_json(mini_board_array)
         self.strategy = Strategy()
-        self.in_player1 = IntPlayer(Color.RED)
-        self.in_player2 = IntPlayer(Color.WHITE)
+        self.in_player1 = PlayerData(Color.RED)
+        self.in_player2 = PlayerData(Color.WHITE)
         self.players = [self.in_player1, self.in_player2]
         self.mini_state = State(self.players, self.mini_board)
         self.mini_tree = GameTree(self.mini_state)

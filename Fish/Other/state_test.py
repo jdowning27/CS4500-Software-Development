@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import MagicMock
 from state import *
 from board import *
-from Player import *
+from player_data import PlayerData
 from color import *
 from move import *
 
@@ -20,8 +20,8 @@ class StateTestCase(unittest.TestCase):
         self.board_holes = Board(4, 3)
         self.board_holes.create_board_with_holes([(0,0), (1,1)], 3)
 
-        self.player1 = Player(Color.RED, 5)
-        self.player2 = Player(Color.WHITE, 10)
+        self.player1 = PlayerData(Color.RED, 5)
+        self.player2 = PlayerData(Color.WHITE, 10)
         self.players = [self.player1, self.player2]
 
         self.state_full = State(self.players, self.board_full)
