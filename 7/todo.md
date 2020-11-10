@@ -13,7 +13,7 @@
     - [] Refactor the maximal gain strategy to fit the new GameTree implementation
 [] Game result to also return the set of kicked players from the game
 ### Player
-[] Renaming Player classes: Need to have an external Player class and a State Player (internal data representation)
+[X] Renaming Player classes: Need to have an external Player class and a State Player (internal data representation)
 ### Board
 [] Move tile coordinate system to Board
     - Currently, Tiles know their position on board, this should be taken out completely and only exist in Board
