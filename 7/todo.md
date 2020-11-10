@@ -2,7 +2,7 @@
 ### Code base
 [] Privatizing fields throughout code base
     - [] Priotize State
-[] Rename all files, stick to lowercase_underscore.py naming convention
+[X] Rename all files, stick to lowercase_underscore.py naming convention
 [] Contract checking
     - [] Check instances of players in Referee as well as in State (for internal players)
         - including: no players with same color, the class type
