@@ -5,11 +5,11 @@ sys.path.append(os_path)
 
 import unittest
 from unittest.mock import MagicMock
-from State import *
-from Board import *
+from state import *
+from board import *
 from Player import *
-from Color import *
-from Move import *
+from color import *
+from move import *
 
 
 class StateTestCase(unittest.TestCase):

@@ -5,9 +5,9 @@ sys.path.append(os_path)
 import unittest
 from unittest import mock
 import random
-from Board import *
-from Tile import *
-from Pass import *
+from board import *
+from tile import *
+from skip import Skip
 
 class BoardTestCase(unittest.TestCase):
 

@@ -4,8 +4,8 @@ os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
 sys.path.append(os_path)
 
 import unittest
-from Move import Move
-from Pass import Pass
+from move import Move
+from skip import Skip
 
 class ActionTestCase(unittest.TestCase):
     def setUp(self):
@@ -14,16 +14,16 @@ class ActionTestCase(unittest.TestCase):
         self.move2_0 = Move((0,0), (2,0))
         self.move2_0from = Move((2,0), (1,0))
         self.move2_1from = Move((2,1), (1,0))
-        self.pass_action = Pass()
+        self.skip_action = Skip()
 
     def test_break_tie_origin(self):
         # also row to
         self.assertEqual(self.move_origin.break_tie(self.move2_1), self.move_origin)
         self.assertEqual(self.move2_1.break_tie(self.move_origin), self.move_origin)
 
-    def test_break_tie_pass(self):
-        self.assertEqual(self.pass_action.break_tie(self.move2_1), self.move2_1)
-        self.assertEqual(self.move2_1.break_tie(self.pass_action), self.move2_1)
+    def test_break_tie_skip(self):
+        self.assertEqual(self.skip_action.break_tie(self.move2_1), self.move2_1)
+        self.assertEqual(self.move2_1.break_tie(self.skip_action), self.move2_1)
 
     def test_break_tie_col_to(self):
         self.assertEqual(self.move2_1.break_tie(self.move2_0), self.move2_0)

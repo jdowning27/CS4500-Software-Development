@@ -4,8 +4,8 @@ os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
 sys.path.append(os_path)
 
 import unittest
-from Tile import *
-from Constants import MAX_FISH, GUI_UNIT
+from tile import *
+from constants import MAX_FISH, GUI_UNIT
 
 
 class TileTestCase(unittest.TestCase):

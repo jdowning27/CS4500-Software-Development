@@ -1,5 +1,5 @@
-from Action import Action
-from Pass import Pass
+from action import Action
+from skip import Skip
 """
 Represents a game action when the penguin is moved.
 - Holds the starting coordinate of penguin being moved
@@ -42,7 +42,7 @@ class Move(Action):
 
         :returns: Move        The action with the lowest row/col number
         """
-        if type(other) is Pass:
+        if type(other) is Skip:
             return self
         from_row, from_col = self.__from_posn
         other_from_row, other_from_col = other.get_from_posn()

@@ -1,5 +1,5 @@
-from Util import validate_non_neg_int, print_error
-from Color import *
+from util import validate_non_neg_int, print_error
+from color import *
 
 """
 The internal representation of a player which keeps track of its

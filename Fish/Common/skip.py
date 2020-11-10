@@ -1,18 +1,18 @@
-from Action import Action
+from action import Action
 """
 Represents an action by a Player where no move is possible.
 Skip this player's turn, and the game state remains the same.
 """
-class Pass(Action):
+class Skip(Action):
 
     def __eq__(self, other):
-        return type(other) is Pass  
+        return type(other) is Skip  
 
     def __ne__(self, other):
-        return type(other) is not Pass
+        return type(other) is not Skip
 
     def __hash__(self):
-        return "pass".__hash__()
+        return "skip".__hash__()
 
     def apply_move(self, tree):
         """
@@ -31,4 +31,4 @@ class Pass(Action):
         return other
     
     def print_json(self):
-        return "Pass"
+        return "Skip"

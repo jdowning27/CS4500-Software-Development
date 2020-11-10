@@ -6,9 +6,9 @@ sys.path.append(os_path)
 import unittest
 from player import Player as ExtPlayer
 from Player import Player as IntPlayer
-from Board import Board
-from Color import Color
-from State import State
+from board import Board
+from color import Color
+from state import State
 from game_tree import GameTree
 from strategy import Strategy
 

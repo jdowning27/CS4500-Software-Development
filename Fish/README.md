@@ -11,18 +11,18 @@ CS 4500 Project by Jennifer Der and Timothy Haas
 │   ├── referee.py          # Data representation of a game referee
 │   └── manager_interface.py # Data representation for a tournament manager
 ├── Common/                 # Holds all files for Fish Program (includes data representation, game logic, and unit tests)
-│   ├── Action.py           # Interface for a game action
-│   ├── Board.py            # Representation of Fish game board
-│   ├── Color.py            # Color Enum
-│   ├── Constants.py        # Constants for rendering and game constants
+│   ├── action.py           # Interface for a game action
+│   ├── board.py            # Representation of Fish game board
+│   ├── color.py            # Color Enum
+│   ├── constants.py        # Constants for rendering and game constants
 │   ├── game_tree.py        # Representation of the a Fish game
-│   ├── Move.py             # Representation of a penguin's move, implements Action
-│   ├── Pass.py             # Representation of no move possible in game, implements Action
+│   ├── move.py             # Representation of a penguin's move, implements Action
+│   ├── skip.py             # Representation of no move possible in game, implements Action
 │   ├── player_interface.py # Representation of a player interface, to be used by other components
-│   ├── Player.py           # Data representation of player
-│   ├── State.py            # Data representation of game state
-│   ├── Tile.py             # Representation of hexagonal tile on board
-│   └── Util.py             # All utility functions used throughout Project
+│   ├── player.py           # Data representation of player
+│   ├── state.py            # Data representation of game state
+│   ├── tile.py             # Representation of hexagonal tile on board
+│   └── util.py             # All utility functions used throughout Project
 ├── Other/                  # Directory of all Python unit tests
 ├── Planning/               # Memos for Fish game planning   
 │   ├── game-state.md       # Design description for data representation of Game States and the external interface

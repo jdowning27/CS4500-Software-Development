@@ -1,7 +1,7 @@
-from State import State
-from Move import Move
-from Util import validate_pos_int
-from Game import Game
+from state import State
+from move import Move
+from util import validate_pos_int
+from game import Game
 """
 Represents a game tree that shows all possible trees from
 one state, and has the ability to see to the end.
@@ -22,7 +22,7 @@ class GameTree(Game):
         Children is a mapping of possible game actions to their resulting GameTrees and 
         is a recursive data structure that allows possible outcomes of the game to be
         explored. Actions that result in GameTrees are one of a Move (a player moves
-        a penguin) or Pass (the player's move is skipped)
+        a penguin) or Skip (the player's move is skipped)
 
         :state: State       The current state within this GameTree
         :children: {Action : GameTree}   Mapping of an Action to resulting GameTree

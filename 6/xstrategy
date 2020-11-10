@@ -8,11 +8,11 @@ sys.path.append(os_path)
 os_path = os.path.dirname(os.getcwd()) + '/Fish/Player'
 sys.path.append(os_path)
 
-from Board import Board
-from State import *
+from board import Board
+from state import *
 from Player import Player
-from Move import Move
-from Tile import *
+from move import Move
+from tile import *
 from strategy import *
 from game_tree import *
 

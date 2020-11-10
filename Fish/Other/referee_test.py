@@ -12,8 +12,8 @@ from unittest.mock import patch
 from player import Player
 from referee import Referee
 from game_tree import GameTree
-from Color import Color
-from Move import Move
+from color import Color
+from move import Move
 from game_ended import GameEnded
 
 class RefereeTestCase(unittest.TestCase):

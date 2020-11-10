@@ -1,7 +1,7 @@
 from tkinter import *
-from Constants import MAX_FISH, GUI_UNIT
-from Move import *
-from Pass import *
+from constants import MAX_FISH, GUI_UNIT
+from move import Move
+from skip import Skip
 
 master = Tk()
 
@@ -187,7 +187,7 @@ class State:
                 if self.valid_move(p, reachable):
                     possible_moves.append(Move(p, reachable))
         if len(possible_moves) == 0: # there are no possible moves for player
-            possible_moves = [Pass()]
+            possible_moves = [Skip()]
         return possible_moves
 
     def print_json(self):

@@ -4,8 +4,8 @@ import sys
 import os
 os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
 sys.path.append(os_path)
-from Board import Board
-from State import State
+from board import Board
+from state import State
 
 def parser(input_stream):
     """

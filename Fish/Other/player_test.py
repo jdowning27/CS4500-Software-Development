@@ -4,7 +4,7 @@ os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
 sys.path.append(os_path)
 
 import unittest
-from Color import *
+from color import *
 from Player import *
 
 class PlayerTestCase(unittest.TestCase):

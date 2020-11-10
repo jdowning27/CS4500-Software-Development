@@ -1,9 +1,9 @@
 from player import Player as ExtPlayer
 from Player import Player as IntPlayer
-from Color import Color
-from Board import Board
-from State import State
-from Pass import Pass
+from color import Color
+from board import Board
+from state import State
+from skip import Skip
 from game_tree import GameTree
 from game_setup import GameSetup
 from game_ended import GameEnded
@@ -48,7 +48,7 @@ class Referee:
             else:
                 self.__history.append((self.__game.get_current_player_color(), action))
                 self.__game = maybe_game_tree
-                if type(action) is not Pass:
+                if type(action) is not Skip:
                     from_posn = action.get_from_posn()
                     current_player.move_penguin(from_posn, action.get_to_posn(), self.__game.state.get_fish_at(from_posn))
                 self.next_turn()

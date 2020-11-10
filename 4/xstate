@@ -5,10 +5,10 @@ import contextlib
 import os
 os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
 sys.path.append(os_path)
-from Board import Board
-from State import State
+from board import Board
+from state import State
 from Player import Player
-from Tile import *
+from tile import *
 
 
 def parser(input_stream):

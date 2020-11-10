@@ -2,9 +2,9 @@ import math
 import random
 import sys
 
-from Tile import *
-from Util import validate_non_neg_int, validate_pos_int, print_error
-from Constants import MAX_FISH, GUI_UNIT
+from tile import *
+from util import validate_non_neg_int, validate_pos_int, print_error
+from constants import MAX_FISH, GUI_UNIT
 
 
 

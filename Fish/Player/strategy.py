@@ -51,7 +51,7 @@ class Strategy:
         that minimizes this player's gain.
         If actions result in the same gain, prioritize the penguin whose origin
         has the lowest row, then lowest column index.
-        If there are no valid moves, return a Pass (skipping the current player's turn)
+        If there are no valid moves, return a Skip (skipping the current player's turn)
 
         :tree: GameTree                 The tree to search through
         :num_turns: PositiveInteger     Number of turns N > 0 for this player to look through
