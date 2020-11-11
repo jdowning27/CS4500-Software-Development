@@ -17,7 +17,9 @@ class State:
     def __init__(self, players, board):
         """
         Constructor for State which constructs a game state
-        with the given number of players
+        with the given number of players. 
+        Must have between MIN_PLAYERS and MAX_PLAYERS.
+        Player's Colors must be unique.
 
         :players: PlayerData[]  An array of Players in this game, assume sorted by age
         :board: Board           The Fish game board in this state
