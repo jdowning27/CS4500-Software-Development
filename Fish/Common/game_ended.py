@@ -20,3 +20,6 @@ class GameEnded(Game):
 
     def get_state(self):
         return self.__state
+
+    def get_players_score(self, player_color):
+        return self.__state.get_players_score(player_color)

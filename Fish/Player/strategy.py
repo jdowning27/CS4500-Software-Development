@@ -6,6 +6,7 @@ os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
 sys.path.append(os_path)
 
 from game_tree import GameTree
+from game_ended import GameEnded
 
 """
 Represents a strategy to play the game.
@@ -64,7 +65,6 @@ class Strategy:
         """
         num_players = len(tree.state.players)
         layers = num_turns * num_players
-        tree = tree.create_n_layers_tree(layers)
         max_player = tree.get_current_player_color()
         action_score = self.choose_action_minimax_subtree(tree, layers, max_player)
         return action_score[0]
@@ -83,53 +83,48 @@ class Strategy:
         :returns: (Action, Integer)         Where the action is the next action to choose in the tree,
                                             and integer for the score of the max_player
         """
-        subtree = tree.children
-
-        if len(subtree) == 0:
-            tree = tree.create_n_layers_tree(num_turns)
-            subtree = tree.children
-        
-        if num_turns == 1:
+        if type(tree) is GameEnded:
+            return (None, tree.get_players_score(max_player))
+        elif num_turns == 1:
+            actions = tree.get_possible_actions()
             if tree.get_current_player_color() is max_player:
                 ideal_action_score = (None, -math.inf)
-                for action in subtree:
-                    child_tree = subtree[action]
+                for action in actions:
+                    child_tree = tree.attempt_move(action)
                     next_score = child_tree.get_players_score(max_player)
                     ideal_action_score = self.find_minimax_action(ideal_action_score, (action, next_score), ge)
             else:
                 ideal_action_score = (None, math.inf)
-                for action in subtree:
-                    child_tree = subtree[action]
+                for action in actions:
+                    child_tree = tree.attempt_move(action)
                     next_score = child_tree.get_players_score(max_player)
                     ideal_action_score = self.find_minimax_action(ideal_action_score, (action, next_score), le)
             return ideal_action_score
         else:
-            tree_so_far = {}
-            for child in subtree:
-                child_tree = subtree[child]
-                a = self.choose_action_minimax_subtree(child_tree, num_turns - 1, max_player)
-                tree_so_far[child] = a[1]
-            
-            if tree.get_current_player_color() is max_player:
-                return self.find_ideal_minimax_action((None, -math.inf), tree_so_far, ge)
-            else:
-                return self.find_ideal_minimax_action((None, math.inf), tree_so_far, le)
+            actions = tree.get_possible_actions()
+            action_scores = []
+            for action in actions:
+                child = tree.attempt_move(action)
+                next_action, score = self.choose_action_minimax_subtree(child, num_turns - 1, max_player)
+                action_scores.append((action, score))
 
-    def find_ideal_minimax_action(self, ideal_action_score, subtree, comparator):
+            if tree.get_current_player_color() is max_player:
+                return self.find_ideal_minimax_action((None, -math.inf), action_scores, ge)
+            else:
+                return self.find_ideal_minimax_action((None, math.inf), action_scores, le)
+
+    def find_ideal_minimax_action(self, ideal_action_score, action_scores, comparator):
         """
         Abstraction to find the ideal action for the current player who is making a move.
         Either want to maximize or minimize the action depending on the comparator that is 
-        passed in
+        passed in. We pick the ideal action, score tuple from the list of action_scores
         
-        :ideal_action_score: tuple      The initial tuple of action to score to compare to
-        :subtree: (Action, Integer)     The mapping of Actions to their resulting scores of the maximal player
-        :comparator: [Number Number -> Boolean]     Function to compare scores
-
-        :returns: tuple (Action, Integer)   The ideal action and score for the current player
+        (Action, Integer) 
+        [List-of (Action, Integer)] 
+        [Number Number -> Boolean]      -> (Action, Integer)
         """
         curr_ideal = ideal_action_score
-        for action in subtree:
-            score = subtree[action]
+        for action, score in action_scores:
             curr_ideal = self.find_minimax_action(curr_ideal, (action, score), comparator)
         return curr_ideal
 

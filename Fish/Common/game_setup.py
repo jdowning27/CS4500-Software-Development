@@ -12,3 +12,6 @@ class GameSetup(Game):
 
     def copy(self):
         return GameSetup()
+
+    def get_players_score(self, player_color):
+        return 0

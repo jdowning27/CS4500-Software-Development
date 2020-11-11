@@ -26,3 +26,9 @@ class Game:
         :returns: Game
         """
         pass
+    def get_players_score(self, player_color):
+        """
+        returns the score of the player given by color
+        Color -> Integer
+        """
+        pass

@@ -49,7 +49,7 @@ class Referee:
                 self.__game = maybe_game_tree
                 if type(action) is not Skip:
                     from_posn = action.get_from_posn()
-                    current_player.move_penguin(from_posn, action.get_to_posn(), self.__game.state.get_fish_at(from_posn))
+                    current_player.move_penguin(from_posn, action.get_to_posn(), self.__game.get_state().get_fish_at(from_posn))
                 self.next_turn()
         self.alert_players()
         return self.__game
