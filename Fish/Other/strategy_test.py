@@ -90,7 +90,15 @@ class StrategyTestCase(unittest.TestCase):
         next_penguin = (0, 1)
         self.assertTrue(new_state.is_tile_available(next_penguin))
         self.assertEqual(self.strategy.place_penguin_across(new_state), next_penguin)
-    
+    def test_place_penguin_across_no_spaces(self):
+        state = self.mini_state.place_penguin_for_player(Color.RED, (0, 0))
+        state = state.place_penguin_for_player(Color.WHITE, (0, 1))
+        state = state.place_penguin_for_player(Color.RED, (1, 0))
+        state = state.place_penguin_for_player(Color.WHITE, (1, 1))
+        state = state.place_penguin_for_player(Color.RED, (2, 0))
+        state = state.place_penguin_for_player(Color.WHITE, (2, 1))
+        self.assertTrue(self.strategy.place_penguin_across(state) is False)
+
     def test_choose_action_minimax_1_turn(self):
         self.player1.add_penguin((0,0))
         self.assertEqual(self.strategy.choose_action_minimax(self.game_tree, 1).print_json(), [(0,0), (1,0)])
