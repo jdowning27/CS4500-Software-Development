@@ -54,12 +54,12 @@
 [X] Data definition/interpretation of the game tree doesn't mention how "skip" transitions are dealt with
 [X] Purpose statement doesn't say what happens when there are no valid moves
 [] No negative unit test for the placement strategy (placement fails)
-[] Insufficient interpretation of the game state, it should be clear what all components of the data definition mean and it is unclear how players are related to penguins
-[] it is unclear if the game tree node can represent all three kinds of nodes: game-is-over, current-player-is-stuck, and current-player-can-move; only current-player-can-move is obvious
-[] No info on how many players can play a game
-[] No unit tests for turn-taking functionality; only tested moving a penguin, the test doesn't show the switch to next player.
-[] No interpretation of the data/type definition for a tile representation
-[] No interpretation of the data/type definition for a board/coordinates representation.
-[] Reachable-tiles purpose statement does not specify positions are reachable via straight lines
+[X] Insufficient interpretation of the game state, it should be clear what all components of the data definition mean and it is unclear how players are related to penguins
+[X] it is unclear if the game tree node can represent all three kinds of nodes: game-is-over, current-player-is-stuck, and current-player-can-move; only current-player-can-move is obvious
+[X] No info on how many players can play a game
+[X] No unit tests for turn-taking functionality; only tested moving a penguin, the test doesn't show the switch to next player.
+[X] No interpretation of the data/type definition for a tile representation
+[X] No interpretation of the data/type definition for a board/coordinates representation.
+[X] Reachable-tiles purpose statement does not specify positions are reachable via straight lines
 
 
