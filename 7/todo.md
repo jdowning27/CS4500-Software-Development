@@ -8,9 +8,11 @@
 [X] Rename all files, stick to lowercase_underscore.py naming convention
 
 ### Game
-[] Deals with refactoring how we generate a GameTree, need to implement lazy generation
+[] Rework how next action in GameTree is applied
+    - Do not regenerate a new GameTree when given an action, search through children first for the action and return the resulting GameTree if found. Only after action is not found in children, generate the resulting GameTree with a new state.
+[] Deal with refactoring how we generate a GameTree, need to implement lazy generation
     - [] Refactor the maximal gain strategy to fit the new GameTree implementation
-[] Refactor the Game Interface
+[] Rework the Game Interface
     - [] Will need to refactor GameTree (privatizing fields, implementing other methods, etc)
 [] Game result to also return the set of kicked players from the game
 ### Player
@@ -24,20 +26,21 @@
 [] Do not pass in a list of penguins to board get all reachable posns function
     - Instead, have method in State to stop exploring the board when you hit another penguin
 [] Add method to remove Player with given color, not just the current player
-[] Unit test for switching to the next player after one takes a turn
 ### External Player Protocol
 [] Give the Player a State when asking for the next move instead of a list of moves
 [] Remove move_penguin function, instead have a function that lets the player know the new state of the game after they have made their move
 [] Update player-protocol.md doc
     - Player is not given a list of moves to decide on next move, it is given a GameTree (or State depending on above refactoring)
 ### Referee
-[] Add functionality for external players time out
-    - [] Also add to list of ways a player can be kicked in docs
+[] Communicate changes in the game to players
+    - Notify players of other players actions on the board and when others are kicked out of the game
 [] Extract constants out of Referee
     - [] List of colors
     - [] Function that returns the maximum number of penguins
-[] Refactor functions 
+[] Add helper functions for playing the game
     - [] One function for taking one turn, plus unit tests
+[] Add functionality for external players time out
+    - [] Also add to list of ways a player can be kicked in docs
 ### Strategy
 [] Negative unit test for failed penguin placement, when board is not big enough
     - [] Document behavior in purpose statement
@@ -61,5 +64,12 @@
 [X] No interpretation of the data/type definition for a tile representation
 [X] No interpretation of the data/type definition for a board/coordinates representation.
 [X] Reachable-tiles purpose statement does not specify positions are reachable via straight lines
+
+### Integration Tests
+[X] Fix JSON integration tests
+    - Milestone 6: Fish values should be [0, 5]
+    - Milestone 5: Made changes to State, Players need 6 - N penguins
+    - Milestone 4: Need appropriate number of Players
+    - All: Needed to update PlayerData constructor call with contract checking for Color
 
 
