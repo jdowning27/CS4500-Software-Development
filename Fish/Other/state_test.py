@@ -122,17 +122,20 @@ class StateTestCase(unittest.TestCase):
 
         self.assertTrue((0, 0) in self.state_full.get_all_penguins())
         self.assertFalse((2, 0) in self.state_full.get_all_penguins())
-
+        self.assertEqual(self.state_full.get_current_player_color(), Color.RED)
         new_state = self.state_full.move_penguin((0, 0), (2, 0))
         self.assertTrue((2, 0) in new_state.get_all_penguins())
         self.assertFalse((0, 0) in new_state.get_all_penguins())
+        self.assertEqual(new_state.get_current_player_color(), Color.WHITE)
 
     def test_move_penguin_occupied(self):
         self.player1.add_penguin((0,0))
         self.player2.add_penguin((2,0))
         self.assertEqual(self.state_full.get_all_penguins(), [(0, 0), (2, 0)])
+        self.assertEqual(self.state_full.get_current_player_color(), Color.RED)
         self.assertFalse(self.state_full.move_penguin((0, 0), (2, 0)))
         self.assertEqual(self.state_full.get_all_penguins(), [(0, 0), (2, 0)])
+        self.assertEqual(self.state_full.get_current_player_color(), Color.RED)
 
     def test_any_remaining_moves_true(self):
         self.player1.add_penguin((0,0))
