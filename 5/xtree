@@ -10,6 +10,7 @@ from state import State
 from player_data import PlayerData
 from move import Move
 from tile import *
+from color import Color
 
 
 def parser(input_stream):
@@ -36,7 +37,7 @@ def parse_players(state_json):
     players_json = state_json['players']
     players = []
     for player in players_json:
-        new_player = PlayerData(player['color'], score=player['score'])
+        new_player = PlayerData(Color(player['color']), score=player['score'])
         players.append(add_penguins_to_player(new_player, player['places']))
     return players
 
@@ -49,7 +50,7 @@ def find_move(state, neighbors):
     """
     State [Listof Posn] -> [Maybe Move]
     """
-    penguins = state.players[state.turn].get_penguins()
+    penguins = state.players[0].get_penguins()
     all_penguins = state.get_all_penguins()
     all_moves = {}
     for n in neighbors:
@@ -104,7 +105,7 @@ def main():
     state_json = move_response_json['state']
     board = parse_board(state_json)
     players = parse_players(state_json)
-    state = State(players, board, 0)
+    state = State(players, board)
     from_posn = parse_as_tuple(move_response_json['from'])
     to_posn = parse_as_tuple(move_response_json['to'])
     neighbors = get_neighbors(state, to_posn)

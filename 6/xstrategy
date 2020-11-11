@@ -15,6 +15,7 @@ from move import Move
 from tile import *
 from strategy import *
 from game_tree import *
+from color import Color
 
 
 def parser(input_stream):
@@ -41,7 +42,7 @@ def parse_players(state_json):
     players_json = state_json['players']
     players = []
     for player in players_json:
-        new_player = PlayerData(player['color'], score=player['score'])
+        new_player = PlayerData(Color(player['color']), score=player['score'])
         players.append(add_penguins_to_player(new_player, player['places']))
     return players
 

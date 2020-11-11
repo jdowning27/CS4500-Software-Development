@@ -81,7 +81,7 @@ class PlayerData:
         :returns: dictionary	json representation of player
         """
         player = {}
-        player['color'] = self.__color
+        player['color'] = self.__color.value
         player['score'] = self.__score
         places = []
         for penguin in self.__penguins:

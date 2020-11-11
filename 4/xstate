@@ -9,6 +9,7 @@ from board import Board
 from state import State
 from player_data import PlayerData
 from tile import *
+from color import Color
 
 
 def parser(input_stream):
@@ -35,7 +36,7 @@ def parse_players(state_json):
     players_json = state_json['players']
     players = []
     for player in players_json:
-        new_player = PlayerData(player['color'], score=player['score'])
+        new_player = PlayerData(Color(player['color']), score=player['score'])
         players.append(add_penguins_to_player(new_player, player['places']))
     return players
 
@@ -65,7 +66,7 @@ def main():
     state_json = parser(sys.stdin)
     board = parse_board(state_json)
     players = parse_players(state_json)
-    state = State(players, board, 0)
+    state = State(players, board)
     if len(players) > 0 and len(players[0].get_penguins()) > 0:
         move = find_move(state)
         if move:
