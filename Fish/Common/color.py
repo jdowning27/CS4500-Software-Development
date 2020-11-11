@@ -9,4 +9,7 @@ class Color(Enum):
     WHITE = 'white'
     BROWN = 'brown'
     BLACK = 'black'
-
+    
+    @classmethod
+    def get_all_colors(cls):
+        return [color for color in Color]

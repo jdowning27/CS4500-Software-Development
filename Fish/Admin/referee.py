@@ -6,6 +6,7 @@ from skip import Skip
 from game_tree import GameTree
 from game_setup import GameSetup
 from game_ended import GameEnded
+from util import get_max_penguin_count
 """
 Data representation for the referee. Keeps track of the current game,
 the list of players in the order they play, and kicked players.
@@ -80,7 +81,7 @@ class Referee:
 
         board = self.__create_board()
         state = State(internal_players, board)
-        rounds = 6 - len(self.__players)
+        rounds = get_max_penguin_count(len(self.__players))
         for round in range(0, rounds):
             for p in self.__players:
                 posn = p.place_penguin(state)
@@ -96,7 +97,7 @@ class Referee:
         :ext_player: Player	Player to assign color to
         :returns: Color		Color assigned
         """
-        colors = [Color.RED, Color.WHITE, Color.BROWN, Color.BLACK]
+        colors = Color.get_all_colors()
         assign_color = colors[index]
         ext_player.assign_color(assign_color)
         return assign_color

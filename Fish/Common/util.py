@@ -53,3 +53,10 @@ def print_error(mess):
     """
     print(mess)
     sys.exit(1)
+
+def get_max_penguin_count(player_count):
+    """
+    gets the max number of penguins a player can have in a game with player_count players
+    Integer -> Integer
+    """
+    return 6 - player_count
