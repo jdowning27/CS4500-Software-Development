@@ -39,10 +39,10 @@
 - [] Privatize fields in GameTree, and implement appropriate getters, `GameTree.get_winners` should not return winners  
 
 ### Game
-[] Rework how next action in GameTree is applied
+[X] Rework how next action in GameTree is applied
 - Do not regenerate a new GameTree when given an action, search through children first for the action and return the resulting GameTree if found. Only after action is not found in children, generate the resulting GameTree with a new state.
-- Generate a GameEnded when no player can make a move during tree generation
-- [] Fix the maximal gain strategy to fit the new GameTree implementation
+- [X] Generate a GameEnded when no player can make a move during tree generation
+- [X] Fix the maximal gain strategy to fit the new GameTree implementation
 
 [] Game result to also return the set of kicked players from the game
 

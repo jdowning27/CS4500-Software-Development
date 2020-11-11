@@ -41,3 +41,5 @@ Added info about reachable tiles via straight lines
 - [Added to purpose statement of reachable positions function](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/8b005b54ed9ea5539d9d7adcc8c62659bd7472b7)
 - [Added explanation and examples in README](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/af3702f2047a632712c96a1c22ff57932934aa74#diff-f4923aab63564278027a266fe91df7a4R48)
 
+Rework how next action in GameTree is applied, using lazy generation for GameTree
+- [commit](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/04bf927305b5586b28d6428f528e785f826ce37d)
