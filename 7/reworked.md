@@ -43,3 +43,6 @@ Added info about reachable tiles via straight lines
 
 Rework how next action in GameTree is applied, using lazy generation for GameTree
 - [commit](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/04bf927305b5586b28d6428f528e785f826ce37d)
+
+Extract magic constants out of Referee
+- [commit](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/2d2154f0bc9769f2b266ba38f9c35a216010ac24)

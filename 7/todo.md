@@ -57,9 +57,9 @@
 
 
 ### Referee
-[] Extract constants out of Referee
-- [] List of colors
-- [] Function that returns the maximum number of penguins
+[X] Extract constants out of Referee
+- [X] List of colors
+- [X] Function that returns the maximum number of penguins
 [] Add helper functions for playing the game
 - [] One function for taking one turn, plus unit tests
 [] Add functionality for external players time out
