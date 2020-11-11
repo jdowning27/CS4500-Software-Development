@@ -8,9 +8,9 @@ master = Tk()
 
 """
 Represents a snapshot of the state of the game, which includes:
-    - the state of the board
-    - the current coordinates of all penguins
-    - a sorted list of Player objects, in order of turns
+    - the state of the board, using Board class
+    - a sorted list of PlayerData, in order of turns
+        - PlayerData keeps track of its penguins, represented as a list of (row, col) tuples, score, and color
 """
 class State:
 
