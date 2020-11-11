@@ -21,7 +21,10 @@ class Strategy:
         The search for the next available spot on the board starts
         in the top left corner and moves across the board from left 
         to right, and down a row when the row is filled.
+
         Assume that the board is large enough to accommodate all penguins.
+        If there are not enough spaces, return False.
+        
         An example of a 4 x 2 board is shown below.
 
         s = start, tiles numbered in priority order
@@ -34,13 +37,14 @@ class Strategy:
         
         :state: State           The state to place penguins on
         
-        :returns: (int, int)    Position(row, col) where penguin is placed
+        :returns: [Maybe (int, int)]    Position(row, col) where penguin is placed
         """
         board = state.board
         for row in range(0, board.row):
             for col in range(0, board.col):
                 if state.is_tile_available((row, col)):
                     return (row, col)
+        return False
 
     def choose_action_minimax(self, tree, num_turns):
         """
