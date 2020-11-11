@@ -53,7 +53,7 @@
 ### Grading Feedback
 [X] Data definition/interpretation of the game tree doesn't mention how "skip" transitions are dealt with
 [X] Purpose statement doesn't say what happens when there are no valid moves
-[] No negative unit test for the placement strategy (placement fails)
+[X] No negative unit test for the placement strategy (placement fails)
 [X] Insufficient interpretation of the game state, it should be clear what all components of the data definition mean and it is unclear how players are related to penguins
 [X] it is unclear if the game tree node can represent all three kinds of nodes: game-is-over, current-player-is-stuck, and current-player-can-move; only current-player-can-move is obvious
 [X] No info on how many players can play a game
