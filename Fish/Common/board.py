@@ -107,7 +107,10 @@ class Board:
 
     def get_all_reachable_posn(self, row, col, penguin_places=[]):
         """
-        Get all reachable board positions from (row, col)
+        Get all reachable board positions from (row, col) via straight lines.
+        Straight lines extend in all six directions over edges of each hexagonal tiles.
+        The path stops at holes or penguins on the board, reachable paths cannot jump
+        over these obstacles.
 
         :row: int
         :col: int
