@@ -30,9 +30,6 @@
 
 [] Update documentation  
 - [] Function signatures
-- [] Revisit naming of some functions (check_move_validity, move_penguin)
-- [] Update player-protocol.md doc
-    - Player is not given a list of moves to decide on next move, it is given a GameTree (or State depending on rework of protocol)
 
 [] Privatizing fields throughout code base
 - [] Priotize State
@@ -44,15 +41,15 @@
 - [X] Generate a GameEnded when no player can make a move during tree generation
 - [X] Fix the maximal gain strategy to fit the new GameTree implementation
 
-[] Game result to also return the set of kicked players from the game
+[X] Game result to also return the set of kicked players from the game
 
 ### Player
 [X] Renaming Player classes: Need to have an external Player class and a State Player (internal data representation)
 ### External Player Protocol
-[] Give the Player a State when asking for the next move instead of a Tree  
-[] Referee communicates changes in the game to players  
+[X] Do not pass the Player a GameTree when asking for next move
+[X] Referee communicates changes in the game to players  
 - Notify players of other players actions on the board and when others are kicked out of the game
-- [] Remove move_penguin function
+- [X] Remove move_penguin function
     - Dependent on protocol rework: add a function that lets the player know the new state of the game after they have made their move 
 
 
@@ -60,8 +57,8 @@
 [X] Extract constants out of Referee
 - [X] List of colors
 - [X] Function that returns the maximum number of penguins
-[] Add helper functions for playing the game
-- [] One function for taking one turn, plus unit tests
+[X] Add helper functions for playing the game
+- [X] One function to initialize, one to run the game, and one to return the end result
 [] Add functionality for external players time out
 - [] Also add to list of ways a player can be kicked in docs
 ### Board

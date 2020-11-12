@@ -46,3 +46,18 @@ Rework how next action in GameTree is applied, using lazy generation for GameTre
 
 Extract magic constants out of Referee
 - [commit](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/2d2154f0bc9769f2b266ba38f9c35a216010ac24)
+
+Rework Referee game play functions
+- [Added helper function to run the game](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/5688856ddb01fac068313d9302473ff9da223380?branch=a6af646c1f7850e05d7e2ae19328f0ad739ea12d&diff=split#diff-619ed369755f300d8288d31bd5ac934eR78-R93)
+- [Added helper function to run penguin placement](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/5688856ddb01fac068313d9302473ff9da223380?branch=a6af646c1f7850e05d7e2ae19328f0ad739ea12d&diff=split#diff-619ed369755f300d8288d31bd5ac934eR196-R215)
+- [Game result includes the kicked players](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/5688856ddb01fac068313d9302473ff9da223380?branch=a6af646c1f7850e05d7e2ae19328f0ad739ea12d&diff=split#diff-619ed369755f300d8288d31bd5ac934eR185-R194)
+
+Rework Referee to Player Protocol
+- Alert Players of each change in the state of the game
+    - [After Player is kicked when taking a turn](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/5688856ddb01fac068313d9302473ff9da223380?branch=a6af646c1f7850e05d7e2ae19328f0ad739ea12d&diff=split#diff-619ed369755f300d8288d31bd5ac934eR89)
+    - [After a Player has made a move](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/5688856ddb01fac068313d9302473ff9da223380?branch=a6af646c1f7850e05d7e2ae19328f0ad739ea12d&diff=split#diff-619ed369755f300d8288d31bd5ac934eR92)
+- [Alert Players after all penguins have been placed, and before any moves have been made](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/5688856ddb01fac068313d9302473ff9da223380?branch=a6af646c1f7850e05d7e2ae19328f0ad739ea12d&diff=split#diff-619ed369755f300d8288d31bd5ac934eR75)
+- [Helper functions to alert all active players](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/5688856ddb01fac068313d9302473ff9da223380?branch=a6af646c1f7850e05d7e2ae19328f0ad739ea12d&diff=split#diff-619ed369755f300d8288d31bd5ac934eR235-R249)
+- [Function to alert Players when game has ended](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/5688856ddb01fac068313d9302473ff9da223380?branch=a6af646c1f7850e05d7e2ae19328f0ad739ea12d&diff=split#diff-619ed369755f300d8288d31bd5ac934eR175-R182)
+- [Remove `move_penguin` and `remove_penguins` function from PlayerInterface](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/5688856ddb01fac068313d9302473ff9da223380?branch=a6af646c1f7850e05d7e2ae19328f0ad739ea12d&diff=split#diff-4cef33b16438410cec59c5c34c1e7428L36-L54)
+    - [Remove from Player](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/5688856ddb01fac068313d9302473ff9da223380?branch=a6af646c1f7850e05d7e2ae19328f0ad739ea12d&diff=split#diff-6288c3ab2dbd1fc8d1576c9da29a569eL47-L57)
