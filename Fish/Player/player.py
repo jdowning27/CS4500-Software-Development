@@ -5,6 +5,9 @@ sys.path.append(os_path)
 
 from player_interface import PlayerInterface
 from strategy import Strategy
+from game_setup import GameSetup
+from game_tree import GameTree
+from game_ended import GameEnded
 
 """
 Implementation of a player for Fish game.
@@ -20,50 +23,37 @@ class Player(PlayerInterface):
         """
         Constructor for a player for Fish game.
 
-        __penguins: [Set (int, int)]        Set of posn (row, col) of each penguin
         __color: Color                      Assigned by referee, one of red, white, brown, or black
         __strategy: Strategy                Strategy class to use when making decisions
         __look_ahead: PositiveInteger       Depth of turns to look ahead in game tree, default = 3
         __fish: Natural                     Player's current score                   
         """
-        self.__penguins = set()
         self.__color = None
         self.__strategy = Strategy()
         self.__look_ahead = look_ahead
-        self.__fish = 0
+        self.__game = GameSetup()
 
-    def choose_next_move(self, tree):
-        return self.__strategy.choose_action_minimax(tree, self.__look_ahead)
+    def set_state(self, state):
+        if state.any_remaining_moves():
+            self.__game = GameTree(state)
+        else:
+            self.__game = GameEnded(state)
 
-    def place_penguin(self, state):
+    def choose_next_move(self):
+        return self.__strategy.choose_action_minimax(self.__game, self.__look_ahead)
+
+    def choose_placement(self, state):
         posn = self.__strategy.place_penguin_across(state)
-        self.__penguins.add(posn)
         return posn
 
     def assign_color(self, player_color):
-        if self.__color is None:
-            self.__color = player_color
+        self.__color = player_color
 
-    def move_penguin(self, from_posn, to_posn, fish):
-        if from_posn in self.__penguins:
-            self.__penguins.remove(from_posn)
-            self.__penguins.add(to_posn)
-            self.__fish += fish
-        else:
-            print("Illegal Move: This player does not have penguin at", from_posn )
+    def update_with_action(self, action):
+        self.__game = self.__game.attempt_move(action)
 
-    def remove_penguins(self):
-        # Set to None so player cannot add again
-        self.__penguins = None
-
-    def game_over(self, state, winners):
+    def game_over(self, game_result):
         print("Player received game over")
 
     def get_color(self):
         return self.__color
-
-    def get_penguins(self):
-        return self.__penguins
-
-    def get_fish(self):
-        return self.__fish

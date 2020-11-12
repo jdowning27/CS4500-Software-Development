@@ -23,3 +23,9 @@ class GameEnded(Game):
 
     def get_players_score(self, player_color):
         return self.__state.get_players_score(player_color)
+
+    def get_possible_actions(self):
+        return []
+    
+    def get_current_player_color(self):
+        return False

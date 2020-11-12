@@ -154,7 +154,7 @@ class State:
         return False
         
         :player_color: Color            Player's color to get
-        :returns: Player or False       returns a maybe Player
+        :returns: [Maybe Player]      returns a maybe Player
         """
         for player in self.players:
             if player.get_color() == player_color:
@@ -226,16 +226,19 @@ class State:
     def get_fish_at(self, posn):
         return self.board.tiles[posn[1]][posn[0]].get_fish()
 
-    def remove_current_player(self):
+    def remove_player(self, color):
         """
-        Removes the current player and their penguins from the board without creating holes.
+        Removes the player with given color and their penguins from the board without creating holes.
+        If player with given color is not found, return the same state.
 
-        :returns: State		Resulting State
+        Color -> State
         """
         new_state = self.copy()
-        new_state.players.pop(0)
+        player = new_state.get_player(color)
+        if player is not False:
+            new_state.players.remove(player)
         return new_state
-
+        
     def get_winners(self):
         max_score = 0
         winning_players = []

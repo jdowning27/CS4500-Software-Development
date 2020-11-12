@@ -15,3 +15,9 @@ class GameSetup(Game):
 
     def get_players_score(self, player_color):
         return 0
+    
+    def get_possible_actions(self):
+        return []
+
+    def get_current_player_color(self):
+        return False

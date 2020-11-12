@@ -6,17 +6,25 @@ Classes that implement this interface must override these methods.
 """
 class PlayerInterface:
 
-    def choose_next_move(self, tree):
+    def set_state(self, state):
         """
-        Choose next move in this GameTree.
+        Sets the player's Game representation using the given State.
+
+        State -> void
+        """
+        pass
+
+    def choose_next_move(self):
+        """
+        Choose next move in the Game. The player is responsible for keeping
+        track of their own instance of Game.
         A player may choose to optimize for specific moves.
 
-        :tree: GameTree		        Current GameTree
-        :returns: Move			Player's chosen action
+        void -> Action
         """
         pass
     
-    def place_penguin(self, state):
+    def choose_placement(self, state):
         """
         Return the position (row, col) of where to place a penguin for this player.
 
@@ -33,32 +41,26 @@ class PlayerInterface:
         """
         pass
 
-    def move_penguin(self, from_posn, to_posn, fish):
-        """
-        Moves the player's penguin located at from_posn to to_posn. Add fish to the player's score.
-        The referee only calls this function if it is a legal move.
-
-        :from_posn: (Nat, Nat)		(row,col)Location of penguin to be moved
-        :to_posn: (Nat, Nat)		(row, col)Location where the penguin will be moved to
-        :fish: Positive Int		Fish to add to player's score
-        :returns: void
-        """
-        pass
-
-    def remove_penguins(self):
-        """
-        Removes all of this players penguins. Called when player has violated rules.
-
-        :returns: void
-        """
-        pass
-
-    def game_over(self, state, winners):
+    def game_over(self, game_result):
         """
         Let the Player know that the game has ended.
 
-        :state: JSON       		The last state of the game represented in json
-        :winners: List of Player	The list of the winner(s)
-        :returns: void
+        GameResult -> void
+        """
+        pass
+
+    def update_with_action(self, action):
+        """
+        Update the Player's local Game with the given action
+
+        Action -> void
+        """
+        pass
+
+    def get_color(self):
+        """
+        Returns this Player's color
+
+        void -> Color
         """
         pass

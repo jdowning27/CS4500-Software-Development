@@ -118,14 +118,14 @@ class GameTree(Game):
             arr.append((action.print_json(), self.children[action].print_children()))
         return arr
 
-    def remove_current_player(self):
+    def remove_player(self, color):
         """
-        Returns the new GameTree created from the state after the current player is removed.
+        Returns the new GameTree created from the state after the player with given color is removed.
 
-        :returns: GameTree	Resulting GameTree
+        Color -> GameTree
         """
-        new_state = self.state.remove_current_player()
-        return GameTree(new_state)
+        new_state = self.state.remove_player(color)
+        return GameTree(new_state) 
 
     def has_game_ended(self):
         return not self.state.any_remaining_moves()
@@ -147,3 +147,6 @@ class GameTree(Game):
 
     def get_state(self):
         return self.state
+
+    def get_current_player_color(self):
+        return self.state.get_current_player_color()

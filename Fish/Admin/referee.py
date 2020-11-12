@@ -11,6 +11,11 @@ from util import get_max_penguin_count
 Data representation for the referee. Keeps track of the current game,
 the list of players in the order they play, and kicked players.
 Kicked players are those who have returned invalid moves to referee.
+
+A GameResult is a Dictionary with keys "state", "winners", "kicked_players", where:
+    - "state" is a JSON representation of the terminal state.
+    - "winners" is [List-of PlayerInterface]
+    - "kicked_players" is a [Set PlayerInterface]
 """
 class Referee:
 
@@ -18,12 +23,12 @@ class Referee:
         """
         Constructor for a Referee who supervises one game. 
 
-        __players: [List-of Player]      External players who play the game, in the order in which they play
-        __kicked_players: [Set Player]   Players who have cheated, and cannot play anymore
-        __game: Game                     Current Game, initialized to GameSetup
-        __history: [List-of (Player, Action)]  History of all game actions mapped to Player
+        __players: {Color : PlayerInterface}      Mapping of player's Color to the external player object
+        __kicked_players: [Set PlayerInterface]   Players who have cheated, and cannot play anymore
+        __game: Game                              Current Game, initialized to GameSetup
+        __history: [List-of (PlayerInterface, Action)]  History of all game actions mapped to Player
         """
-        self.__players = []
+        self.__players = {}
         self.__kicked_players = set()
         self.__game = GameSetup()
         self.__history = []
@@ -32,87 +37,66 @@ class Referee:
         """
         Controls game mechanics and runs the game.
 
-        :players: List of Players       External Player representations
-        :returns: GameEnded             Final Game
+        [List-of PlayerInterface] -> GameResult
         """
         self.initialize_game(players)
-        while not self.has_game_ended():
-            current_player = self.__players[0]
-            action = current_player.choose_next_move(self.__game.copy())
-            maybe_game_tree =  self.check_move_validity(action)
-            if not maybe_game_tree:
-                self.__kicked_players.add(current_player)
-                current_player.remove_penguins()
-                self.__players.pop(0)
-                self.__game = self.__game.remove_current_player()
-            else:
-                self.__history.append((self.__game.get_current_player_color(), action))
-                self.__game = maybe_game_tree
-                if type(action) is not Skip:
-                    from_posn = action.get_from_posn()
-                    current_player.move_penguin(from_posn, action.get_to_posn(), self.__game.get_state().get_fish_at(from_posn))
-                self.next_turn()
-        self.alert_players()
-        return self.__game
-
+        self.run_game()
+        game_result = self.__get_game_result()
+        self.alert_players(game_result)
+        return game_result
 
     def initialize_game(self, players):
         """
         Start the game. Initializes the game board, the game state,
         and the resulting game tree with the parameters.
+        The resulting GameTree is ready to play.
 
         1. Takes care of what kind of Board to make (does it have holes, number of fish, etc),
         and makes sure that the board is big enough for the number of players and their penguins
-
         2. Calls on Players to place their penguins
 
-        The resulting GameTree is ready to play.
-        Updates the current Game to be the Game Tree.
+        EFFECT: Sets the current Game to be the GameTree.
 
         [Listof Player] -> GameTree
         """
         if type(self.__game) is not GameSetup:
             raise ValueError("Cannot initialize game: Game already started")
-        self.__players = players
+
         internal_players = []
-        for p in range(0, len(self.__players)):
-            color = self.__assign_color_to_player(p, self.__players[p])
+        for p in range(0, len(players)):
+            color = self.__assign_color_to_player(p, players[p])
+            self.__players[color] = players[p]
             internal_players.append(PlayerData(color))
 
         board = self.__create_board()
         state = State(internal_players, board)
-        rounds = get_max_penguin_count(len(self.__players))
-        for round in range(0, rounds):
-            for p in self.__players:
-                posn = p.place_penguin(state)
-                state = state.place_penguin_for_player(p.get_color(), posn)
         self.__game = GameTree(state)
+        self.__run_penguin_placement()
+        self.__broadcast_current_state()
         return self.__game
 
-    def __assign_color_to_player(self, index, ext_player):
+    def run_game(self):
         """
-        Assigns color to player based on index. Returns color assigned.
-
-        :index: int		Index of color
-        :ext_player: Player	Player to assign color to
-        :returns: Color		Color assigned
+        Run the game until the end.
         """
-        colors = Color.get_all_colors()
-        assign_color = colors[index]
-        ext_player.assign_color(assign_color)
-        return assign_color
-
-    def __create_board(self):
-        board = Board(4, 3)
-        board.create_board_without_holes(3)
-        return board
+        while not self.has_game_ended():
+            color = self.__game.get_current_player_color()
+            current_player = self.get_player_with_color(color)
+            action = current_player.choose_next_move()
+            maybe_game_tree =  self.check_move_validity(action)
+            if maybe_game_tree is False:
+                self.__kick_player(color)
+                self.__broadcast_current_state()
+            else:
+                self.__game = maybe_game_tree
+                self.__broadcast_player_action(action)
 
     def check_move_validity(self, action):
         """
         Check that the given action is valid in the current state of the game tree.
         If it is valid, return the next game tree with the action applied, otherwise False.
 
-        Action -> [Maybe GameTree]
+        Action -> [Maybe Game]
         """
         if type(self.__game) is not GameTree:
             return False
@@ -124,12 +108,7 @@ class Referee:
 
         void -> Boolean
         """
-        if type(self.__game) is GameEnded:
-            return True
-        elif type(self.__game) is GameTree and  self.__game.has_game_ended():
-            self.__game = GameEnded(self.__game.state)
-            return True
-        return False
+        return self.__game.has_game_ended()
 
     def get_current_state(self):
         """
@@ -179,27 +158,104 @@ class Referee:
         """
         return self.__history
 
-    def alert_players(self):
-        """
-        Alert each player that the game is over and tell them who the winner(s) are.
-        """
-        if type(self.__game) is GameEnded:
-            for p in self.__players:
-                p.game_over(self.__game.get_state().print_json(), self.get_winners())
-
-    def next_turn(self):
-        """
-        Shifts the player list so it is the next player's turn.
-
-        :returns: void
-        """
-        self.__players = self.__players[1:] + self.__players[:1]
-
     def get_player_with_color(self, color):
-        for p in self.__players:
-            if p.get_color() == color:
-                return p
-        return False
+        """
+        void -> [Maybe Player]
+        """
+        return self.__players.get(color, False)
 
     def get_players(self):
-        return self.__players
+        """
+        Return a list of color keys for players who have not been kicked out of the Game.
+
+        void -> [List-of Color]
+        """
+        return [color for color in self.__players if self.get_player_with_color(color) not in self.__kicked_players]
+
+    def alert_players(self, game_result):
+        """
+        Send the GameResult to the active players in the game (non-kicked players).
+        """
+        if type(self.__game) is GameEnded:
+            for color in self.get_players():
+                player = self.get_player_with_color(color)
+                player.game_over(game_result)
+
+    def __get_game_result(self):
+        """
+        Creates the game result, which includes a JSON representation of the terminal state,
+        a list of the winners, and a set of the players who were kicked from the game.
+
+        void -> GameResult
+        """
+        return {"state": self.__game.get_state().print_json(), 
+                "winners": self.get_winners(), 
+                "kicked_players": self.__kicked_players}
+
+    def __run_penguin_placement(self):
+        """
+        Run as many penguin placement rounds as necessary. 
+        Call on Players to place their penguins.
+
+        EFFECT: Updates the current GameTree when penguins are placed
+
+        void -> void
+        """
+        rounds = get_max_penguin_count(len(self.__players))
+        for round in range(0, rounds):
+            for color in self.get_players():
+                state = self.__game.get_state()
+                player = self.get_player_with_color(color)
+                posn = player.choose_placement(state)
+                maybe_state = state.place_penguin_for_player(color, posn)
+                if maybe_state is False:
+                    self.__kick_player(color)
+                else:
+                    self.__game = GameTree(maybe_state)
+
+
+    def __assign_color_to_player(self, index, ext_player):
+        """
+        Assigns color to player based on index. Returns color assigned.
+
+        :index: int		Index of color
+        :ext_player: PlayerInterface	Player to assign color to
+        :returns: Color		Color assigned
+        """
+        colors = Color.get_all_colors()
+        assign_color = colors[index]
+        ext_player.assign_color(assign_color)
+        return assign_color
+
+    def __create_board(self):
+        board = Board(4, 3)
+        board.create_board_without_holes(3)
+        return board
+
+    def __broadcast_player_action(self, action):
+        """
+        Update players who have not been kicked on ongoing game actions.
+        """
+        for color in self.get_players():
+            player = self.get_player_with_color(color)
+            player.update_with_action(action)
+
+    def __broadcast_current_state(self):
+        """
+        Update players with new state. Called when a player has been kicked.
+        """
+        for color in self.get_players():
+            player = self.get_player_with_color(color)
+            player.set_state(self.__game.get_state())
+
+    def __kick_player(self, color):
+        """
+        Remove the current player from the game. Tell the current player to remove penguins.
+
+        EFFECT: Adds the current player to the set of kicked players
+                Reset the current Game instance to new Game with current player removed
+
+        Color -> void
+        """
+        self.__kicked_players.add(self.get_player_with_color(color))
+        self.__game = self.__game.remove_player(color)

@@ -15,7 +15,7 @@ class Game:
         """
         Returns the list of winners of the game if they exist. If the game is not over returns false.
 
-        :returns: Maybe List of Players		Players who have won
+        :returns: [Maybe [List-of Player]]		Players who have won
         """
         pass
 
@@ -26,9 +26,27 @@ class Game:
         :returns: Game
         """
         pass
+
     def get_players_score(self, player_color):
         """
         returns the score of the player given by color
         Color -> Integer
+        """
+        pass
+
+    def get_possible_actions(self):
+        """
+        Get the possible actions from the Game.
+        Only GameTree will result in a non-empty list. 
+
+        void -> [List-of Action]
+        """
+        pass
+
+    def get_current_player_color(self):
+        """
+        Get the color of the current player.
+
+        void -> [Maybe Color]
         """
         pass

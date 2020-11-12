@@ -63,7 +63,7 @@ class Strategy:
 
         :returns: Action                The action this player should take next
         """
-        num_players = len(tree.state.players)
+        num_players = len(tree.get_state().players)
         layers = num_turns * num_players
         max_player = tree.get_current_player_color()
         action_score = self.choose_action_minimax_subtree(tree, layers, max_player)
