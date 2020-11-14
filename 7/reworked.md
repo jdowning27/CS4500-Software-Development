@@ -16,7 +16,7 @@ Added to purpose statement to say what happens when there are no valid moves
 - [Commit](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/a9942bc6d71697d13e4f55c9e2dcbda5f80dd57e#diff-8668b6307021688899b1d56141354730)
 
 Updated to State class interpretation to include how players are related to penguins and what each component of the data definition mean
-- [Commit](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/b57f7bc2e09f50b454cab4d8d212dce4b7f88c48#diff-3c0c742881289081d1c3cfb361c6da0e>)
+- [Commit](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/b57f7bc2e09f50b454cab4d8d212dce4b7f88c48#diff-3c0c742881289081d1c3cfb361c6da0e)
 
 Added Game interface, as well as GameSetup and GameEnded classes to represent a state where game-is-over, current-player-is-stuck, and current-player-can-move
 - [Game Interface](https://github.ccs.neu.edu/CS4500-F20/detroit/commit/08d4300f27781efac24b411041b421aff1218067#diff-2d8e341e1a13a7b67eb38f98c777b250)
