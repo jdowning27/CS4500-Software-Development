@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+# import path setup
+import sys
+import os
+os_path = os.path.dirname(os.getcwd()) + '/Fish/Admin'
+sys.path.append(os_path)
+os_path = os.path.dirname(os.getcwd()) + '/Fish/Player'
+sys.path.append(os_path)
+os_path = os.path.dirname(os.getcwd()) + '/Other'
+sys.path.append(os_path)
+# python imports
+from collections import OrderedDict
+import contextlib
+# our code
+from json_utils import parser, json_print
+from player import Player
+from referee import Referee
+
+
+def main():
+    json_in = parser(sys.stdin)
+    board_config = {
+        "row": json_in["row"],
+        "col": json_in["column"],
+        "fish": json_in["fish"]
+    }
+    json_players = json_in["players"]
+    player_dict = OrderedDict()
+    for string, depth in json_players:
+        new_player = Player(depth)
+        player_dict[string] = new_player
+    referee = Referee(board_config)
+    
+    with open(os.devnull, "w") as f, contextlib.redirect_stdout(f):
+        game_result = referee.play_game(list(player_dict.values()))
+
+    winners = game_result["winners"]
+    winner_names = []
+    for string, player in player_dict.items():
+        if player in winners:
+            winner_names.append(string)
+
+    winner_names.sort()
+
+    json_print(winner_names)
+main()
