@@ -16,18 +16,29 @@ A GameResult is a Dictionary with keys "state", "winners", "kicked_players", whe
     - "state" is a JSON representation of the terminal state.
     - "winners" is [List-of PlayerInterface]
     - "kicked_players" is a [Set PlayerInterface]
+
+A BoardConfiguration is a dictionary with keys "row", "col", and "fish", where:
+    - "row" is a Natural in [2,5]
+    - "column" is a Natural in [2,5]
+    - "fish" is a Natural in [1,5]
+The BoardConfiguration describes the board dimensions and the default number of fish
+on each tile.  
 """
 class Referee:
 
-    def __init__(self):
+    default_board_config = {"row": 4, "col": 3, "fish": 3}
+
+    def __init__(self, board_config=default_board_config):
         """
         Constructor for a Referee who supervises one game. 
 
+        __board_config: BoardConfiguration        a python dictionary that describes how a board should be created
         __players: {Color : PlayerInterface}      Mapping of player's Color to the external player object
         __kicked_players: [Set PlayerInterface]   Players who have cheated, and cannot play anymore
         __game: Game                              Current Game, initialized to GameSetup
         __history: [List-of (PlayerInterface, Action)]  History of all game actions mapped to Player
         """
+        self.__board_config = board_config
         self.__players = {}
         self.__kicked_players = set()
         self.__game = GameSetup()
@@ -228,8 +239,8 @@ class Referee:
         return assign_color
 
     def __create_board(self):
-        board = Board(4, 3)
-        board.create_board_without_holes(3)
+        board = Board(self.__board_config["row"], self.__board_config["col"])
+        board.create_board_without_holes(self.__board_config["fish"])
         return board
 
     def __broadcast_player_action(self, action):
