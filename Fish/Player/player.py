@@ -57,3 +57,9 @@ class Player(PlayerInterface):
 
     def get_color(self):
         return self.__color
+
+    def tournament_start(self):
+        return True
+
+    def tournament_end(self, result):
+        return True

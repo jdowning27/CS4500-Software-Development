@@ -33,6 +33,8 @@ class Referee:
 
     default_board_config = {"row": 4, "col": 3, "fish": 3}
 
+    #TODO: notify players of game start and game end (alert_players does game end)
+
     def __init__(self, board_config=default_board_config):
         """
         Constructor for a Referee who supervises one game. 

@@ -1,9 +1,4 @@
-"""
-keep winners for each round
-a list of active players (non failing cheating players)
-    - need to make sure to remove kicked players after each game
-after winners are reported, they need to respond/accept the message
-"""
+from timeout import timeout
 from manager_interface import ManagerInterface
 """
 #TODO manager interpretation
@@ -12,8 +7,10 @@ A RoundResult is a Dictionary with keys: "winners", "losers", "kicked_players", 
     - "winners" is a [Set PlayerInterface]
     - "losers" is a [Set PlayerInterface]
     - "kicked_players" is a [Set PlayerInterface]
+    - "games_played" is a Natural
 and represents the winners, losers (non-winning players who followed the rules), 
-and kicked_players (those who broke the rules or timed out) for each round of the tournament.
+and kicked_players (those who broke the rules or timed out) for each round of the tournament,
+and the number of games played in this round is represented by "games_played".
 """
 class Manager(ManagerInterface):
 
@@ -21,14 +18,25 @@ class Manager(ManagerInterface):
         self.__queue = []
         self.__active_players = set()
         self.__previous_winners = set() # winners from round n - 1
+        self.__games_in_previous_round = 0
         self.__kicked_players = set()
 
 
     def run_tournament(self, players):
+        self.__queue = players
+        self.__active_players = set(players)
+
+        self.__broadcast_tournament_start()
+
         while not self.__is_tournament_over():
             match_players = self.__make_rounds()
             round_result = self.__run_round(match_players)
             self.__update_bracket(round_result)
+        
+        self.__broadcast_tournament_end()
+
+        return self.__get_tournament_result()
+
 
     def __update_bracket(self, round_result):
         """
@@ -39,12 +47,24 @@ class Manager(ManagerInterface):
 
         RoundResult -> void
         """
-        self.__previous_winners = self.__queue
-        self.__queue = round_result["winners"]
+        self.__games_in_previous_round = round_result["games_played"]
+
+        self.__previous_winners = set(self.__queue)
+        self.__queue = list(filter(lambda p: p in round_result["winners"], self.__queue))
 
         kicked_players = round_result["kicked_players"]
+        self.__kick_players(kicked_players)
+
+    def __kick_players(self, bad_players):
+        """
+        Removes the bad_players from the tournament.
+        EFFECT: removes the bad_players from the active_players and the queue
+                adds the bad_players to the set of kicked_players
+        [Set PlayerInterface] -> void 
+        """
         self.__active_players = self.__active_players.difference(kicked_players)
         self.__kicked_players.update(kicked_players)
+        self.__queue = list((filter(lambda p: p not in bad_players), self.__queue))
 
     def __run_round(self, match_players):
         """
@@ -56,7 +76,8 @@ class Manager(ManagerInterface):
         round_result = {
             "winners": set(),
             "losers": set(),
-            "kicked_players": set()
+            "kicked_players": set(),
+            "games_played": len(match_players)
         }
         for players in match_players:
             ref = Referee()
@@ -125,14 +146,65 @@ class Manager(ManagerInterface):
 
         void -> Boolean
         """
-        pass
+        return set(self.__queue) == self.__previous_winners or \
+                len(self.__queue) < MIN_PLAYERS or \
+                self.__games_in_previous_round == 1
 
-    def __message_players(self):
+
+
+    def __broadcast_tournament_start(self):
+        """
+        Notifies all active players that the tournament is about to start. If the player fails to
+        respond then they will be kicked.
+        EFFECT: calls the tournament_start method on all active PlayerInterfaces in this tournament
+                Players who fail to respond will be removed from the active_players and the queue
+        void -> void
+        """
+        bad_players = set()
+        for player in self.__active_players:
+            response = safe_call(player.tournament_start)
+            if response is False:
+                bad_players.add(player)
+        
+        self.__kick_players(bad_players)
+
+
+    def __broadcast_tournament_end(self):
         """
         Notifies all active players (those who have not failed or cheated) whether they
         have won or lost the game. Winners who fail to respond to the message become
         losers.
 
+        EFFECT: calls the tournament_end method on all active PlayerInterfaces in this tournament
+                Players who fail to respond will be removed from the active_players and the queue
         void -> void
         """
-        pass
+        bad_players = set()
+        for player in self.__active_players:
+            did_win = player in self.__queue
+            response = safe_call(player.tournament_end, did_win)
+            if response is False:
+                bad_players.add(player)
+
+        self.__kick_players(bad_players)
+
+    def __get_tournament_result(self):
+        """
+        Return the list of players who won the tournament. 
+
+        void -> [List-of PlayerInterface]
+        """
+        return self.__queue
+
+    def safe_call(self, func, *args):
+        """
+        Used to make safe calls to player code. It will call the given
+        function with the given arguments and catch any exceptions
+        If the player raises and exception then this function will return False
+        [X ... -> Y], X ... -> [Maybe Y]
+        """
+        try:
+            response = func(args)
+            return response
+        except:
+            return False

@@ -64,3 +64,20 @@ class PlayerInterface:
         void -> Color
         """
         pass
+
+    def tournament_start(self):
+        """
+        Used by the tournament manager to notify this player that the tournament is starting
+        Players must return True to indicate they are ready to start the tournament
+        void -> Boolean
+        """
+        pass
+
+    def tournament_end(self, result):
+        """
+        Used by the tournament manager to notify the players that the tournamemt is over and if they
+        have won or lost.
+        Players must return True to indicate they they have recieved the message.
+        String -> Boolean
+        """
+        pass
