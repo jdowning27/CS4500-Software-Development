@@ -11,11 +11,16 @@ from util import get_max_penguin_count
 Data representation for the referee. Keeps track of the current game,
 the list of players in the order they play, and kicked players.
 Kicked players are those who have returned invalid moves to referee.
+A Referee can be reused to run multiple games sequentially, the
+manager can call Referee.reset_game() to reinitialize this referee for reuse.
 
-A GameResult is a Dictionary with keys "state", "winners", "kicked_players", where:
+A GameResult is a Dictionary with keys "state", "winners", "losers", "kicked_players", where:
     - "state" is a JSON representation of the terminal state.
     - "winners" is [List-of PlayerInterface]
+    - "losers" is a [List-of PlayerInterface]
     - "kicked_players" is a [Set PlayerInterface]
+and represents the result of a single game that this referee has run.
+Losers of the game are players who neither lost nor cheated/were kicked out.
 
 A BoardConfiguration is a dictionary with keys "row", "col", and "fish", where:
     - "row" is a Natural in [2,5]
@@ -36,13 +41,11 @@ class Referee:
         __players: {Color : PlayerInterface}      Mapping of player's Color to the external player object
         __kicked_players: [Set PlayerInterface]   Players who have cheated, and cannot play anymore
         __game: Game                              Current Game, initialized to GameSetup
-        __history: [List-of (PlayerInterface, Action)]  History of all game actions mapped to Player
         """
         self.__board_config = board_config
         self.__players = {}
         self.__kicked_players = set()
         self.__game = GameSetup()
-        self.__history = []
 
     def play_game(self, players):
         """
@@ -53,6 +56,7 @@ class Referee:
         self.initialize_game(players)
         self.run_game()
         game_result = self.__get_game_result()
+        # TODO catch exceptions or timeout when alerting players, delete winners from winners if they do not respond
         self.alert_players(game_result)
         return game_result
 
@@ -68,7 +72,7 @@ class Referee:
 
         EFFECT: Sets the current Game to be the GameTree.
 
-        [Listof Player] -> GameTree
+        [List-of PlayerInterface] -> GameTree
         """
         if type(self.__game) is not GameSetup:
             raise ValueError("Cannot initialize game: Game already started")
@@ -160,22 +164,13 @@ class Referee:
                 ext_winners.append(maybe_player)
         return ext_winners
 
-    def get_history(self):
-        """
-        Get the game history. The tournament manager may use this in its own tournament statistics.
-        Returns a list of Player to Action mappings.
-
-        void -> [Listof (Player, Action)]
-        """
-        return self.__history
-
     def get_player_with_color(self, color):
         """
         void -> [Maybe Player]
         """
         return self.__players.get(color, False)
 
-    def get_players(self):
+    def get_players_as_colors(self):
         """
         Return a list of color keys for players who have not been kicked out of the Game.
 
@@ -183,14 +178,34 @@ class Referee:
         """
         return [color for color in self.__players if self.get_player_with_color(color) not in self.__kicked_players]
 
+    def get_players(self):
+        """
+        Return a list of active players in the game (those who have not cheated or failed).
+
+        void -> [List-of PlayerInterface]
+        """
+        return [self.get_player_with_color(color) for color in self.get_players_as_colors()]
+    
+
     def alert_players(self, game_result):
         """
         Send the GameResult to the active players in the game (non-kicked players).
         """
         if type(self.__game) is GameEnded:
-            for color in self.get_players():
-                player = self.get_player_with_color(color)
+            for player in self.get_players():
                 player.game_over(game_result)
+
+    def reset_game(self):
+        """
+        Reset this referee to be reused to play another Fish game.
+        Should only be called after the previous game has ended and returned game results.
+
+        EFFECT: Reinitialize all class variables to empty.
+                Reset game to GameSetup()
+        """
+        self.__players = {}
+        self.__kicked_players = set()
+        self.__game = GameSetup()
 
     def __get_game_result(self):
         """
@@ -199,8 +214,10 @@ class Referee:
 
         void -> GameResult
         """
+        winners = self.get_winners()
         return {"state": self.__game.get_state().print_json(), 
-                "winners": self.get_winners(), 
+                "winners": winners, 
+                "losers": [player for player in self.get_players() if player not in winners],
                 "kicked_players": self.__kicked_players}
 
     def __run_penguin_placement(self):
@@ -214,7 +231,7 @@ class Referee:
         """
         rounds = get_max_penguin_count(len(self.__players))
         for round in range(0, rounds):
-            for color in self.get_players():
+            for color in self.get_players_as_colors():
                 state = self.__game.get_state()
                 player = self.get_player_with_color(color)
                 posn = player.choose_placement(state)
@@ -247,16 +264,14 @@ class Referee:
         """
         Update players who have not been kicked on ongoing game actions.
         """
-        for color in self.get_players():
-            player = self.get_player_with_color(color)
+        for player in self.get_players():
             player.update_with_action(action)
 
     def __broadcast_current_state(self):
         """
         Update players with new state. Called when a player has been kicked.
         """
-        for color in self.get_players():
-            player = self.get_player_with_color(color)
+        for player in self.get_players():
             player.set_state(self.__game.get_state())
 
     def __kick_player(self, color):

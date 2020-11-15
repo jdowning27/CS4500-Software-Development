@@ -10,6 +10,23 @@ It collects tournament statistics at the end of each game and informs observers 
 """
 class ManagerInterface:
 
+    def run_tournament(self, players):
+        """
+        Run the Fish game tournament to completion. Returns a list of tournament winners.
+
+        The tournament ends when one of the following conditions is met:
+            - Two sequential rounds produce the same winners
+            - There are too few (< MIN_PLAYERS) players for a single game
+            - When there are few enough participants to run a single game. 
+                This game is run, and the winners of this game are the winners of the tournament.
+
+        This tournament manager notifies players whether they won or lost the tournament.
+        Winners who fail to accept this message become losers.
+
+        [List-of PlayerInterface] -> [List-of PlayerInterface]
+        """
+        pass
+
     def observer_signup(self, tcp_address):
         """
         Allows observers to signup to be alerted to ongoing tournament statistics.
@@ -18,14 +35,3 @@ class ManagerInterface:
         :returns: void
         """
         pass
-
-    def leave_tournament(self, player):
-        """
-        Allows player to leave the tournament.
-
-        :player:	Player who wants to leave tournament
-        :returns: void
-        """
-        pass
-
-

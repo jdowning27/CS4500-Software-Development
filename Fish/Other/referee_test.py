@@ -38,7 +38,7 @@ class RefereeTestCase(unittest.TestCase):
     def test_initialize_game_player_kicked(self):
         self.player1.choose_placement = MagicMock(return_value=(-1, 0))
         game = self.referee.initialize_game(self.ext_players)
-        self.assertEqual(self.referee.get_players(), [Color.WHITE, Color.BROWN])
+        self.assertEqual(self.referee.get_players_as_colors(), [Color.WHITE, Color.BROWN])
 
     def test_check_move_validity(self):
         game = self.referee.initialize_game(self.ext_players)
