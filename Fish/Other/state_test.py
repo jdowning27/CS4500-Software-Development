@@ -29,14 +29,6 @@ class StateTestCase(unittest.TestCase):
 
         self.state_full = State(self.players, self.board_full)
         self.state_holes = State(self.players, self.board_holes)
-
-    # init
-    def test_too_few_players(self):
-        self.assertRaisesRegex(ValueError, "Invalid number of players", State, [], self.board_full)
-
-    def test_too_many_players(self):
-        too_many_players = [self.player1, self.player2, self.player3, self.player4, self.player5]
-        self.assertRaisesRegex(ValueError, "Invalid number of players", State, too_many_players, self.board_full)
     
     def test_duplicate_player_colors(self):
         duplicate_colors = [self.player1, self.player3, self.player4, self.player5]

@@ -1,4 +1,5 @@
 from tkinter import *
+from copy import deepcopy
 from constants import MAX_FISH, GUI_UNIT, MIN_PLAYERS, MAX_PLAYERS
 from move import Move
 from skip import Skip
@@ -24,8 +25,6 @@ class State:
         :players: PlayerData[]  An array of Players in this game, assume sorted by age
         :board: Board           The Fish game board in this state
         """
-        if len(players) < MIN_PLAYERS or len(players) > MAX_PLAYERS:
-            raise ValueError("Invalid number of players")
         seen_colors = []
         for player in players:
             if player.get_color() in seen_colors:

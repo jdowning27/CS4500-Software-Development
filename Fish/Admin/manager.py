@@ -1,7 +1,23 @@
-from timeout import timeout
+from constants import MIN_PLAYERS, MAX_PLAYERS
 from manager_interface import ManagerInterface
+from referee import Referee
+from player_interface import PlayerInterface
 """
-#TODO manager interpretation
+A Manager runs a Fish game tournament. A tournament are many games which are run
+in succession for a collection of PlayerInterface (sorted by age), where each
+subsequent round is run with the winners from the previous round.
+Class fields of the Manager are:
+    - queue: [List-of PlayerInterface], a list of players sorted by age (youngest to oldest) 
+        and represents the players who are currently still playing in the tournament
+    - active_players: [Set PlayerInterface]
+        represents the set of players who have not cheated or failed
+    - previous_winners: [Set PlayerInterface]
+        represents the winners from round N - 1, in the first round, this set is empty
+    - games_in_previous_round: Natural
+        represents the number of games that were run in the previous round, this is used for checking tournament completion
+    - kicked_players: [Set PlayerInterface]
+        represents players who have either cheated or failed (did not respond to messages)
+
 
 A RoundResult is a Dictionary with keys: "winners", "losers", "kicked_players", where
     - "winners" is a [Set PlayerInterface]
@@ -25,7 +41,6 @@ class Manager(ManagerInterface):
     def run_tournament(self, players):
         self.__queue = players
         self.__active_players = set(players)
-
         self.__broadcast_tournament_start()
 
         while not self.__is_tournament_over():
@@ -47,13 +62,13 @@ class Manager(ManagerInterface):
 
         RoundResult -> void
         """
+        kicked_players = round_result["kicked_players"]
+        self.__kick_players(kicked_players)
         self.__games_in_previous_round = round_result["games_played"]
 
         self.__previous_winners = set(self.__queue)
         self.__queue = list(filter(lambda p: p in round_result["winners"], self.__queue))
 
-        kicked_players = round_result["kicked_players"]
-        self.__kick_players(kicked_players)
 
     def __kick_players(self, bad_players):
         """
@@ -62,9 +77,9 @@ class Manager(ManagerInterface):
                 adds the bad_players to the set of kicked_players
         [Set PlayerInterface] -> void 
         """
-        self.__active_players = self.__active_players.difference(kicked_players)
-        self.__kicked_players.update(kicked_players)
-        self.__queue = list((filter(lambda p: p not in bad_players), self.__queue))
+        self.__active_players = self.__active_players.difference(bad_players)
+        self.__kicked_players.update(bad_players)
+        self.__queue = list(filter(lambda p: p not in bad_players, self.__queue))
 
     def __run_round(self, match_players):
         """
@@ -79,8 +94,9 @@ class Manager(ManagerInterface):
             "kicked_players": set(),
             "games_played": len(match_players)
         }
+        board_config = { "row": 5, "col": 3, "fish": 3 }
         for players in match_players:
-            ref = Referee()
+            ref = Referee(board_config)
             game_result = ref.play_game(players)
             round_result["winners"].update(game_result["winners"])
             round_result["losers"].update(game_result["losers"])
@@ -131,8 +147,6 @@ class Manager(ManagerInterface):
             match_players[-2] = last_two[:len_last_two - MIN_PLAYERS]
             match_players[-1] = last_two[-MIN_PLAYERS:]
             return match_players
-        
-            
 
 
     def __is_tournament_over(self):
@@ -162,7 +176,7 @@ class Manager(ManagerInterface):
         """
         bad_players = set()
         for player in self.__active_players:
-            response = safe_call(player.tournament_start)
+            response = self.safe_call(player.tournament_start)
             if response is False:
                 bad_players.add(player)
         
@@ -182,7 +196,7 @@ class Manager(ManagerInterface):
         bad_players = set()
         for player in self.__active_players:
             did_win = player in self.__queue
-            response = safe_call(player.tournament_end, did_win)
+            response = self.safe_call(player.tournament_end, did_win)
             if response is False:
                 bad_players.add(player)
 
@@ -204,7 +218,10 @@ class Manager(ManagerInterface):
         [X ... -> Y], X ... -> [Maybe Y]
         """
         try:
-            response = func(args)
+            if len(args) == 0:
+                response = func()
+            else:
+                response = func(args)
             return response
         except:
             return False

@@ -21,6 +21,8 @@ class RefereeTestCase(unittest.TestCase):
         self.player1 = Player(3)
         self.player2 = Player(5)
         self.player3 = Player(7)
+        self.player4 = Player(1)
+        self.player5 = Player(1)
         self.ext_players = [self.player1, self.player2, self.player3]
         self.referee = Referee()
 
@@ -39,6 +41,13 @@ class RefereeTestCase(unittest.TestCase):
         self.player1.choose_placement = MagicMock(return_value=(-1, 0))
         game = self.referee.initialize_game(self.ext_players)
         self.assertEqual(self.referee.get_players_as_colors(), [Color.WHITE, Color.BROWN])
+
+    def test_initialize_game_too_few_players(self):
+        self.assertRaisesRegex(ValueError, "Invalid number of players", self.referee.initialize_game, [])
+
+    def test_initialize_game_too_many_players(self):
+        too_many_players = [self.player1, self.player2, self.player3, self.player4, self.player5]
+        self.assertRaisesRegex(ValueError, "Invalid number of players", self.referee.initialize_game, too_many_players)
 
     def test_check_move_validity(self):
         game = self.referee.initialize_game(self.ext_players)

@@ -5,6 +5,7 @@ sys.path.append(os_path)
 
 import unittest
 from game_tree import GameTree
+from game_ended import GameEnded
 from state import *
 from board import *
 from player_data import PlayerData
@@ -43,7 +44,32 @@ class GameTreeTestCase(unittest.TestCase):
 
     def test_attempt_move(self):
         self.assertEqual(type(self.game_tree.attempt_move(self.action1)), GameTree)
-    # TODO: test that a game that is over returns a GameEnded
+    
+    def test_attempt_move_last_move(self):
+        mini_board_array = [
+            [1,     5],
+                [2,     1],
+            [1,     5],
+                [1,     5],
+            [0,     5]
+        ]
+        player1 = PlayerData(Color.RED)
+        player2 = PlayerData(Color.WHITE)
+        player1.add_penguin((0,0))
+        player1.add_penguin((1,0))
+        player1.add_penguin((2,0))
+        player1.add_penguin((3,0))
+        player2.add_penguin((0,1))
+        player2.add_penguin((1,1))
+        player2.add_penguin((2,1))
+        player2.add_penguin((3,1))
+        players = [player1, player2]
+        board = Board(5, 2)
+        board.create_board_from_json(mini_board_array)
+        state = State(players, board)
+        game_tree = GameTree(state)
+        action = Move((3, 0), (4, 1))
+        self.assertEqual(type(game_tree.attempt_move(action)), GameEnded)
 
     def test_attempt_move_invalid(self):
         self.assertFalse(self.game_tree.attempt_move(Move((0,0), (2,2))))
@@ -71,18 +97,6 @@ class GameTreeTestCase(unittest.TestCase):
             self.assertTrue(move_state in new_states)
         self.assertEqual(len(new_states), len(states))
 
-    #TODO: rewrite new tests for apply to children
-    # def test_apply_to_children_get_children(self):
-    #     test_function = lambda child : child.create_child_trees()
-    #     child_trees = self.game_tree.apply_to_children(test_function)
-    #     self.assertEqual(len(child_trees), 4)
-    #     num_children = 0
-    #     for c in child_trees:
-    #         num_children += len(c)
-    #         self.assertGreater(len(c), 0)
-    #     self.assertEqual(num_children, 18)
-            
-
     def test_apply_to_children_create_trees(self):
         child_trees = self.game_tree.apply_to_children(GameTree.create_child_trees)
         self.assertEqual(len(child_trees), 4)
@@ -91,25 +105,3 @@ class GameTreeTestCase(unittest.TestCase):
             num_children += len(c)
             self.assertGreater(len(c), 0)
         self.assertEqual(num_children, 18)
-
-    # def test_create_n_layers_tree(self):
-    #     board_array = [
-    #         [1,     2],
-    #             [1,     2],
-    #         [1,     2]
-    #     ]
-    #     board = Board(3, 2)
-    #     board.create_board_from_json(board_array)
-    #     p1 = PlayerData(Color.RED, 5)
-    #     p2 = PlayerData(Color.WHITE, 5)
-    #     players = [p1, p2]
-    #     p1.add_penguin((0,0))
-    #     state = State(players, board)
-
-    #     game_tree = GameTree(state)
-    #     game_tree.create_n_layers_tree(5)
-    #     json_tree = game_tree.print_children()
-    #     self.assertEqual(len(json_tree), 3) #p1 has 3 possible moves
-    #     self.assertEqual(len(json_tree[0][1]), 1) #p2 has no penguins => no moves
-
-

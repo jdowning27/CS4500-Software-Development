@@ -19,7 +19,7 @@ depth to look ahead in the game tree, and number of fish (the score)
 """
 class Player(PlayerInterface):
 
-    def __init__(self, look_ahead=3):
+    def __init__(self, look_ahead=2):
         """
         Constructor for a player for Fish game.
 

@@ -1,5 +1,6 @@
 from player_data import PlayerData
 from color import Color
+from constants import MIN_PLAYERS, MAX_PLAYERS
 from board import Board
 from state import State
 from skip import Skip
@@ -32,8 +33,6 @@ on each tile.
 class Referee:
 
     default_board_config = {"row": 4, "col": 3, "fish": 3}
-
-    #TODO: notify players of game start and game end (alert_players does game end)
 
     def __init__(self, board_config=default_board_config):
         """
@@ -76,6 +75,8 @@ class Referee:
 
         [List-of PlayerInterface] -> GameTree
         """
+        if len(players) < MIN_PLAYERS or len(players) > MAX_PLAYERS:
+            raise ValueError("Invalid number of players")
         if type(self.__game) is not GameSetup:
             raise ValueError("Cannot initialize game: Game already started")
 
