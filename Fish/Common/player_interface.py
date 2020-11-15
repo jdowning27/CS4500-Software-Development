@@ -75,9 +75,9 @@ class PlayerInterface:
 
     def tournament_end(self, result):
         """
-        Used by the tournament manager to notify the players that the tournamemt is over and if they
+        Used by the tournament manager to notify the players that the tournament is over and if they
         have won or lost.
-        Players must return True to indicate they they have recieved the message.
+        Players must return True to indicate they they have received the message.
         String -> Boolean
         """
         pass

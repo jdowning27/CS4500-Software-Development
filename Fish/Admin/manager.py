@@ -177,7 +177,7 @@ class Manager(ManagerInterface):
         bad_players = set()
         for player in self.__active_players:
             response = self.safe_call(player.tournament_start)
-            if response is False:
+            if response is not True:
                 bad_players.add(player)
         
         self.__kick_players(bad_players)
@@ -218,10 +218,7 @@ class Manager(ManagerInterface):
         [X ... -> Y], X ... -> [Maybe Y]
         """
         try:
-            if len(args) == 0:
-                response = func()
-            else:
-                response = func(args)
+            response = func(*args)
             return response
         except:
             return False
