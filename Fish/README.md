@@ -44,7 +44,7 @@ CS 4500 Project by Jennifer Der and Timothy Haas
 ```
 
 ## Software Components
-![Class Diagram](https://i.imgur.com/q2304lZ.png)
+![Class Diagram](https://i.imgur.com/wMdeS7o.png)
 
 ### External Player
 The external player implements the Player Interface that is outlined [here](https://github.ccs.neu.edu/CS4500-F20/anton/blob/master/Fish/Common/player_interface.py). AI, Remote, and House players are able to implement this interfaced in order to participate in Fish game tournaments
