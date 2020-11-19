@@ -133,11 +133,11 @@ and represents an action taken by the Player during the game
 A GameResult is a JSON object as follows:
 {
   "winners": [List-of String],
-  "losers": [List-of String].
+  "losers": [List-of String],
   "kicked_players": [List-of String],
   "state": State
 }
-and represents the end result of one game of Fish.
+and represents the end result of one game of Fish, using the Player's unique name identifiers.
 
 A Position is a tuple as follows:
 [ Natural, Natural ]
@@ -145,7 +145,7 @@ and represents a position on the board with row, and column respectively.
 
 A State is a JSON object as follows:
 {
-  "board": [List-of [List-of Natural]]
+  "board": [List-of [List-of Natural]],
   "players": [List-of Player]
 }
 and represents a game state, where board is a nested array of natural numnbers
