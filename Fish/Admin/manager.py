@@ -1,6 +1,7 @@
 from constants import MIN_PLAYERS, MAX_PLAYERS
 from manager_interface import ManagerInterface
 from player_interface import PlayerInterface
+from referee import Referee
 
 import os
 import sys
@@ -36,6 +37,9 @@ and the number of games played in this round is represented by "games_played".
 class Manager(ManagerInterface):
 
     def __init__(self, referee_type=ExtendedReferee):
+
+        self.__is_valid_referee_type(referee_type)
+
         self.__queue = []
         self.__active_players = set()
         self.__previous_winners = set() # winners from round n - 1
@@ -43,6 +47,9 @@ class Manager(ManagerInterface):
         self.__kicked_players = set()
         self.__referee_type = referee_type
 
+    def __is_valid_referee_type(self, referee_type):
+        if not issubclass(referee_type, Referee):
+            raise ValueError("referee_type must be Referee or a subclass of Referee")
 
     def run_tournament(self, players):
         self.__queue = players

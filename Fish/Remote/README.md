@@ -19,9 +19,12 @@
 
 * [X] update legacy PlayerInterface
 * [X] extend referee to broadcast player colors
-    *  [X] test that play_with is called
+    * [X] test that play_with is called
+    * [ ] kick players that dont respond correctly
 * [ ] update manager to use generic referee
     * [ ] test interface enforcement
+* [ ] Asyncio assed to referee and manager
+    * [ ] test timeouts
 * [ ] create legacy -> course player adapter
     * [ ] test call translation
 * [ ] create course -> legacy player adapter
