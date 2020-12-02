@@ -3,11 +3,11 @@ from Fish.Common.color import Color
 from Fish.Common.constants import MIN_PLAYERS, MAX_PLAYERS
 from Fish.Common.board import Board
 from Fish.Common.state import State
-from Fish.Common.skip import Skip
 from Fish.Common.game_tree import GameTree
 from Fish.Common.game_setup import GameSetup
 from Fish.Common.game_ended import GameEnded
-from Fish.Common.util import get_max_penguin_count
+from Fish.Common.util import get_max_penguin_count, safe_call
+
 """
 Data representation for the referee. Keeps track of the current game,
 the list of players in the order they play, and kicked players.
@@ -28,17 +28,20 @@ A BoardConfiguration is a dictionary with keys "row", "col", and "fish", where:
     - "column" is a Natural in [2,5]
     - "fish" is a Natural in [1,5]
 The BoardConfiguration describes the board dimensions and the default number of fish
-on each tile.  
+on each tile.
 """
+
+
 class Referee:
 
     default_board_config = {"row": 4, "col": 3, "fish": 3}
 
-    def __init__(self, board_config=default_board_config):
+    def __init__(self, board_config=default_board_config, timeout=1):
         """
-        Constructor for a Referee who supervises one game. 
+        Constructor for a Referee who supervises one game.
 
-        __board_config: BoardConfiguration        a python dictionary that describes how a board should be created
+        __board_config: BoardConfiguration        A python dictionary that describes how a board should be created
+        __timeout: Positive                       Time in seconds to wait for each call to a player
         __players: {Color : PlayerInterface}      Mapping of player's Color to the external player object
         __kicked_players: [Set PlayerInterface]   Players who have cheated, and cannot play anymore
         __game: Game                              Current Game, initialized to GameSetup
@@ -47,6 +50,7 @@ class Referee:
         self.__players = {}
         self.__kicked_players = set()
         self.__game = GameSetup()
+        self.__timeout = timeout
 
     def play_game(self, players):
         """
@@ -57,7 +61,6 @@ class Referee:
         self.initialize_game(players)
         self.run_game()
         game_result = self.__get_game_result()
-        # TODO catch exceptions or timeout when alerting players, delete winners from winners if they do not respond
         self.alert_players(game_result)
         return game_result
 
@@ -92,9 +95,12 @@ class Referee:
     def __assign_player_colors(self, players):
         internal_players = []
         for p in range(0, len(players)):
-            color = self.__assign_color_to_player(p, players[p])
-            self.__players[color] = players[p]
-            internal_players.append(PlayerData(color))
+            maybe_color = self.__assign_color_to_player(p, players[p])
+            if not maybe_color:
+                self.__kicked_players.add(players[p])
+            else:
+                self.__players[maybe_color] = players[p]
+                internal_players.append(PlayerData(maybe_color))
         return internal_players
 
     def run_game(self):
@@ -104,14 +110,15 @@ class Referee:
         while not self.has_game_ended():
             color = self.__game.get_current_player_color()
             current_player = self.get_player_with_color(color)
-            action = current_player.choose_next_move()
-            maybe_game_tree =  self.check_move_validity(action)
-            if maybe_game_tree is False:
+            maybe_action = safe_call(self.__timeout, current_player.choose_next_move)
+            if maybe_action:
+                maybe_game_tree = self.check_move_validity(maybe_action)
+            if maybe_action is False or maybe_game_tree is False:
                 self.__kick_player(color)
                 self.__broadcast_current_state()
             else:
                 self.__game = maybe_game_tree
-                self.__broadcast_player_action(action)
+                self.__broadcast_player_action(maybe_action)
 
     def check_move_validity(self, action):
         """
@@ -162,7 +169,7 @@ class Referee:
         """
         if not self.has_game_ended():
             return False
-        internal_winners =  self.__game.get_winners()
+        internal_winners = self.__game.get_winners()
         ext_winners = []
         for p in internal_winners:
             color = p.get_color()
@@ -192,7 +199,6 @@ class Referee:
         void -> [List-of PlayerInterface]
         """
         return [self.get_player_with_color(color) for color in self.get_players_as_colors()]
-    
 
     def alert_players(self, game_result):
         """
@@ -200,7 +206,7 @@ class Referee:
         """
         if type(self.__game) is GameEnded:
             for player in self.get_players():
-                player.game_over(game_result)
+                safe_call(self.__timeout, player.game_over, [game_result])
 
     def reset_game(self):
         """
@@ -222,14 +228,14 @@ class Referee:
         void -> GameResult
         """
         winners = self.get_winners()
-        return {"state": self.__game.get_state().print_json(), 
-                "winners": winners, 
+        return {"state": self.__game.get_state().print_json(),
+                "winners": winners,
                 "losers": [player for player in self.get_players() if player not in winners],
                 "kicked_players": self.__kicked_players}
 
     def __run_penguin_placement(self):
         """
-        Run as many penguin placement rounds as necessary. 
+        Run as many penguin placement rounds as necessary.
         Call on Players to place their penguins.
 
         EFFECT: Updates the current GameTree when penguins are placed
@@ -241,13 +247,13 @@ class Referee:
             for color in self.get_players_as_colors():
                 state = self.__game.get_state()
                 player = self.get_player_with_color(color)
-                posn = player.choose_placement(state)
-                maybe_state = state.place_penguin_for_player(color, posn)
-                if maybe_state is False:
+                maybe_posn = safe_call(self.__timeout, player.choose_placement, [state])
+                if maybe_posn:
+                    maybe_state = state.place_penguin_for_player(color, maybe_posn)
+                if maybe_posn is False or maybe_state is False:
                     self.__kick_player(color)
                 else:
                     self.__game = GameTree(maybe_state)
-
 
     def __assign_color_to_player(self, index, ext_player):
         """
@@ -255,12 +261,14 @@ class Referee:
 
         :index: int		Index of color
         :ext_player: PlayerInterface	Player to assign color to
-        :returns: Color		Color assigned
+        :returns: Maybe Color		Color assigned, False if color assignment call failed
         """
         colors = Color.get_all_colors()
         assign_color = colors[index]
-        ext_player.assign_color(assign_color)
-        return assign_color
+        if safe_call(self.__timeout, ext_player.assign_color, [assign_color]) is False:
+            return False
+        else:
+            return assign_color
 
     def __create_board(self):
         board = Board(self.__board_config["row"], self.__board_config["col"])
@@ -272,14 +280,14 @@ class Referee:
         Update players who have not been kicked on ongoing game actions.
         """
         for player in self.get_players():
-            player.update_with_action(action)
+            safe_call(self.__timeout, player.update_with_action, [action])
 
     def __broadcast_current_state(self):
         """
         Update players with new state. Called when a player has been kicked.
         """
         for player in self.get_players():
-            player.set_state(self.__game.get_state())
+            safe_call(self.__timeout, player.set_state, [self.__game.get_state()])
 
     def __kick_player(self, color):
         """
@@ -291,4 +299,5 @@ class Referee:
         Color -> void
         """
         self.__kicked_players.add(self.get_player_with_color(color))
-        self.__game = self.__game.remove_player(color)
+        if type(self.__game) is not GameSetup:
+            self.__game = self.__game.remove_player(color)

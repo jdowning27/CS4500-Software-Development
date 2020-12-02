@@ -1,6 +1,7 @@
 import unittest
 from unittest import mock
 from unittest.mock import patch, MagicMock
+from time import sleep
 from Fish.Admin.referee import Referee
 from Fish.Common.game_tree import GameTree
 from Fish.Common.color import Color
@@ -95,3 +96,24 @@ class RefereeTestCase(unittest.TestCase):
         self.referee.play_game(self.ext_players)
         self.assertTrue(self.referee.has_game_ended())
 
+    def test_player_timeout(self):
+        def slow_func():
+            sleep(10)
+
+        self.player1.choose_placement = slow_func
+        self.player2.choose_next_move = slow_func
+        game_result = self.referee.play_game([self.player1, self.player2, self.player5])
+        self.assertEqual(type(game_result), dict)
+        self.assertEqual(game_result["winners"], [self.player5])
+        self.assertEqual(game_result["kicked_players"], set([self.player1, self.player2]))
+
+    def test_player_exception(self):
+        def bad_func():
+            raise Exception
+
+        self.player1.choose_placement = bad_func
+        self.player2.choose_next_move = bad_func
+        game_result = self.referee.play_game([self.player1, self.player2, self.player5])
+        self.assertEqual(type(game_result), dict)
+        self.assertEqual(game_result["winners"], [self.player5])
+        self.assertEqual(game_result["kicked_players"], set([self.player1, self.player2]))
