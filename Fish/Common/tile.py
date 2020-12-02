@@ -1,5 +1,5 @@
-from util import is_even
-from constants import GUI_UNIT, MAX_FISH, TILE_COLOR, TILE_OUTLINE, FISH_COLOR, HOLE_COLOR
+from Fish.Common.util import is_even
+from Fish.Common.constants import GUI_UNIT, MAX_FISH, TILE_COLOR, TILE_OUTLINE, FISH_COLOR, HOLE_COLOR
 
 """
 Represents a single hexagonal tile.

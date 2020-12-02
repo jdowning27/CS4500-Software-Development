@@ -1,11 +1,6 @@
-import os
-import sys
-os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
-sys.path.append(os_path)
-
 import unittest
-from move import Move
-from skip import Skip
+from Fish.Common.move import Move
+from Fish.Common.skip import Skip
 
 class ActionTestCase(unittest.TestCase):
     def setUp(self):

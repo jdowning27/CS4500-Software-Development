@@ -145,6 +145,12 @@ board.remove_tile(0, 0)
 board.draw_board()
 ```
 
+## Building
+Run make inside the `Fish` directory to install the package before running tests:
+```
+elkhart/Fish/$ make
+```
+
 
 ## Testing
 Run all unit tests for Fish:

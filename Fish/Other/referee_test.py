@@ -1,20 +1,12 @@
-import os
-import sys
-os_path = os.path.dirname(os.getcwd()) + '/Fish/Player'
-sys.path.append(os_path)
-os_path = os.path.dirname(os.getcwd()) + '/Fish/Admin'
-sys.path.append(os_path)
-
-
 import unittest
 from unittest import mock
 from unittest.mock import patch, MagicMock
-from player import Player
-from referee import Referee
-from game_tree import GameTree
-from color import Color
-from move import Move
-from game_ended import GameEnded
+from Fish.Admin.referee import Referee
+from Fish.Common.game_tree import GameTree
+from Fish.Common.color import Color
+from Fish.Common.move import Move
+from Fish.Common.game_ended import GameEnded
+from Fish.Player.player import Player
 
 class RefereeTestCase(unittest.TestCase):
     def setUp(self):

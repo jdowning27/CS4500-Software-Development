@@ -1,11 +1,9 @@
 from tkinter import *
 from copy import deepcopy
-from constants import MAX_FISH, GUI_UNIT, MIN_PLAYERS, MAX_PLAYERS
-from move import Move
-from skip import Skip
-
-master = Tk()
-
+from Fish.Common.constants import MAX_FISH, GUI_UNIT, MIN_PLAYERS, MAX_PLAYERS
+from Fish.Common.move import Move
+from Fish.Common.skip import Skip
+master = None
 
 """
 Represents a snapshot of the state of the game, which includes:
@@ -174,6 +172,9 @@ class State:
         """
         Draw the current game state with tiles, fish, holes in board, and penguins
         """
+        if master == None:
+            master = Tk()
+
         w, h = self.board.get_dimensions()
         canvas = Canvas(master, width=w, height=h)
         self.board.draw_board(canvas)

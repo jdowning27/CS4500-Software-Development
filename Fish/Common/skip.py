@@ -1,4 +1,4 @@
-from action import Action
+from Fish.Common.action import Action
 """
 Represents an action by a Player where no move is possible.
 Skip this player's turn, and the game state remains the same.

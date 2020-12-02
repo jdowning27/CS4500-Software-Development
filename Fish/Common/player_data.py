@@ -1,5 +1,5 @@
-from util import validate_non_neg_int, print_error
-from color import Color
+from Fish.Common.util import validate_non_neg_int, print_error
+from Fish.Common.color import Color
 
 """
 The internal representation of a player which keeps track of its

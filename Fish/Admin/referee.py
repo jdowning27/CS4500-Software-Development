@@ -1,13 +1,13 @@
-from player_data import PlayerData
-from color import Color
-from constants import MIN_PLAYERS, MAX_PLAYERS
-from board import Board
-from state import State
-from skip import Skip
-from game_tree import GameTree
-from game_setup import GameSetup
-from game_ended import GameEnded
-from util import get_max_penguin_count
+from Fish.Common.player_data import PlayerData
+from Fish.Common.color import Color
+from Fish.Common.constants import MIN_PLAYERS, MAX_PLAYERS
+from Fish.Common.board import Board
+from Fish.Common.state import State
+from Fish.Common.skip import Skip
+from Fish.Common.game_tree import GameTree
+from Fish.Common.game_setup import GameSetup
+from Fish.Common.game_ended import GameEnded
+from Fish.Common.util import get_max_penguin_count
 """
 Data representation for the referee. Keeps track of the current game,
 the list of players in the order they play, and kicked players.

@@ -1,12 +1,8 @@
 from operator import le, ge
 import math
-import os
-import sys
-os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
-sys.path.append(os_path)
 
-from game_tree import GameTree
-from game_ended import GameEnded
+from Fish.Common.game_tree import GameTree
+from Fish.Common.game_ended import GameEnded
 
 """
 Represents a strategy to play the game.

@@ -1,14 +1,9 @@
-import os
-import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../Common'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../Player'))
 import unittest
 from unittest.mock import MagicMock
 
-from Remote.Adapters.extended_referee import ExtendedReferee
-from player import Player
-from color import Color
+from Fish.Remote.Adapters.extended_referee import ExtendedReferee
+from Fish.Player.player import Player
+from Fish.Common.color import Color
 
 class TestExtendedReferee(unittest.TestCase):
 

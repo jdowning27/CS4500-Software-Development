@@ -1,4 +1,4 @@
-from game import Game
+from Fish.Common.game import Game
 """
 Represents a game that has not started yet.
 """

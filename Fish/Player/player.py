@@ -1,13 +1,8 @@
-import os
-import sys
-os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
-sys.path.append(os_path)
-
-from player_interface import PlayerInterface
-from strategy import Strategy
-from game_setup import GameSetup
-from game_tree import GameTree
-from game_ended import GameEnded
+from Fish.Common.player_interface import PlayerInterface
+from Fish.Player.strategy import Strategy
+from Fish.Common.game_setup import GameSetup
+from Fish.Common.game_tree import GameTree
+from Fish.Common.game_ended import GameEnded
 
 """
 Implementation of a player for Fish game.

@@ -1,11 +1,6 @@
-import os
-import sys
-os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
-sys.path.append(os_path)
-
 import unittest
-from color import *
-from player_data import PlayerData
+from Fish.Common.color import *
+from Fish.Common.player_data import PlayerData
 
 class PlayerTestCase(unittest.TestCase):
     def setUp(self):

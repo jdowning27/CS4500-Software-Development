@@ -1,12 +1,8 @@
-from constants import MIN_PLAYERS, MAX_PLAYERS
-from manager_interface import ManagerInterface
-from player_interface import PlayerInterface
-from referee import Referee
-
-import os
-import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), '../Remote/Adapters'))
-from extended_referee import ExtendedReferee
+from Fish.Admin.manager_interface import ManagerInterface
+from Fish.Admin.referee import Referee
+from Fish.Common.constants import MIN_PLAYERS, MAX_PLAYERS
+from Fish.Common.player_interface import PlayerInterface
+from Fish.Remote.Adapters.extended_referee import ExtendedReferee
 """
 A Manager runs a Fish game tournament. A tournament are many games which are run
 in succession for a collection of PlayerInterface (sorted by age), where each

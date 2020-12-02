@@ -1,18 +1,13 @@
-import os
-import sys
-os_path = os.path.dirname(os.getcwd()) + '/Fish/Player'
-sys.path.append(os_path)
-
 import unittest
 from operator import le, ge
 
-from strategy import *
-from game_tree import *
-from state import *
-from board import *
-from player_data import PlayerData
-from color import *
-from move import *
+from Fish.Player.strategy import *
+from Fish.Common.game_tree import *
+from Fish.Common.state import *
+from Fish.Common.board import *
+from Fish.Common.player_data import PlayerData
+from Fish.Common.color import *
+from Fish.Common.move import *
 
 
 class StrategyTestCase(unittest.TestCase):

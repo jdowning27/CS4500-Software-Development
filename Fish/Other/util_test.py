@@ -1,10 +1,5 @@
-import os
-import sys
-os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
-sys.path.append(os_path)
-
 import unittest
-from util import *
+from Fish.Common.util import *
 
 class UtilTestCase(unittest.TestCase):
     def test_validate_int_valid(self):

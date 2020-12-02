@@ -1,16 +1,11 @@
-import os
-import sys
-os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
-sys.path.append(os_path)
-
 import unittest
-from game_tree import GameTree
-from game_ended import GameEnded
-from state import *
-from board import *
-from player_data import PlayerData
-from color import *
-from move import *
+from Fish.Common.game_tree import GameTree
+from Fish.Common.game_ended import GameEnded
+from Fish.Common.state import *
+from Fish.Common.board import *
+from Fish.Common.player_data import PlayerData
+from Fish.Common.color import *
+from Fish.Common.move import *
 
 
 class GameTreeTestCase(unittest.TestCase):

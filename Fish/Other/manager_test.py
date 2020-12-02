@@ -1,12 +1,8 @@
-import os
-import sys
-os_path = os.path.dirname(os.getcwd()) + '/Fish/Player'
-sys.path.append(os_path)
-os_path = os.path.dirname(os.getcwd()) + '/Fish/Admin'
-sys.path.append(os_path)
-from player import Player
-from manager import Manager
-from move import Move
+from Fish.Admin.manager import Manager
+from Fish.Admin.referee import Referee
+from Fish.Common.move import Move
+from Fish.Player.player import Player
+from Fish.Remote.Adapters.extended_referee import ExtendedReferee
 
 import unittest
 from unittest.mock import patch, MagicMock
@@ -23,6 +19,14 @@ class RefereeTestCase(unittest.TestCase):
         self.players = [self.player1, self.player2, self.player3, self.player4, self.player5, self.player6]
 
         self.manager = Manager()
+
+    ## TESTING TOURNAMENT CREATION ###########################################################
+
+    def test_constructor(self):
+        Manager(Referee)
+        Manager(ExtendedReferee)
+        with self.assertRaisesRegex(ValueError, "referee_type must be Referee or a subclass of Referee"):
+            Manager(Move)
 
     ## TESTING RUN TOURNAMENT ################################################################
 

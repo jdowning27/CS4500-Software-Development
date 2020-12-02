@@ -1,5 +1,5 @@
-from action import Action
-from skip import Skip
+from Fish.Common.action import Action
+from Fish.Common.skip import Skip
 """
 Represents a game action when the penguin is moved.
 - Holds the starting coordinate of penguin being moved

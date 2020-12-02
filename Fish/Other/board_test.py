@@ -1,13 +1,9 @@
-import os
-import sys
-os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
-sys.path.append(os_path)
 import unittest
 from unittest import mock
 import random
-from board import *
-from tile import *
-from skip import Skip
+from Fish.Common.board import *
+from Fish.Common.tile import *
+from Fish.Common.skip import Skip
 
 class BoardTestCase(unittest.TestCase):
 

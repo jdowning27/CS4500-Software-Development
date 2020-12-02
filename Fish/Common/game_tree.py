@@ -1,8 +1,8 @@
-from state import State
-from move import Move
-from util import validate_pos_int
-from game import Game
-from game_ended import GameEnded
+from Fish.Common.state import State
+from Fish.Common.move import Move
+from Fish.Common.util import validate_pos_int
+from Fish.Common.game import Game
+from Fish.Common.game_ended import GameEnded
 """
 Represents a game tree that shows all possible trees from
 one state, The children of a GameTree are all Games.

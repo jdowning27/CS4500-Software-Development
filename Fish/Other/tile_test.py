@@ -1,11 +1,6 @@
-import os
-import sys
-os_path = os.path.dirname(os.getcwd()) + '/Fish/Common'
-sys.path.append(os_path)
-
 import unittest
-from tile import *
-from constants import MAX_FISH, GUI_UNIT
+from Fish.Common.tile import *
+from Fish.Common.constants import MAX_FISH, GUI_UNIT
 
 
 class TileTestCase(unittest.TestCase):
