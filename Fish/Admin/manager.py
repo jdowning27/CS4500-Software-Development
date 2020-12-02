@@ -1,7 +1,11 @@
 from constants import MIN_PLAYERS, MAX_PLAYERS
 from manager_interface import ManagerInterface
-from referee import Referee
 from player_interface import PlayerInterface
+
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '../Remote/Adapters'))
+from extended_referee import ExtendedReferee
 """
 A Manager runs a Fish game tournament. A tournament are many games which are run
 in succession for a collection of PlayerInterface (sorted by age), where each
@@ -17,7 +21,8 @@ Class fields of the Manager are:
         represents the number of games that were run in the previous round, this is used for checking tournament completion
     - kicked_players: [Set PlayerInterface]
         represents players who have either cheated or failed (did not respond to messages)
-
+    - referee_type: [Type Referee] or [Type Referee subclass]
+        this is the type of the referee that will be used to run the games
 
 A RoundResult is a Dictionary with keys: "winners", "losers", "kicked_players", where
     - "winners" is a [Set PlayerInterface]
@@ -30,12 +35,13 @@ and the number of games played in this round is represented by "games_played".
 """
 class Manager(ManagerInterface):
 
-    def __init__(self):
+    def __init__(self, referee_type=ExtendedReferee):
         self.__queue = []
         self.__active_players = set()
         self.__previous_winners = set() # winners from round n - 1
         self.__games_in_previous_round = 0
         self.__kicked_players = set()
+        self.__referee_type = referee_type
 
 
     def run_tournament(self, players):
@@ -96,7 +102,7 @@ class Manager(ManagerInterface):
         }
         board_config = { "row": 5, "col": 3, "fish": 3 }
         for players in match_players:
-            ref = Referee(board_config)
+            ref = self.__referee_type(board_config)
             game_result = ref.play_game(players)
             round_result["winners"].update(game_result["winners"])
             round_result["losers"].update(game_result["losers"])
