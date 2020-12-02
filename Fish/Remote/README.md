@@ -11,27 +11,25 @@
 ├── Proxies/                        # Holds remote proxy classes
 │   ├── remote_player_proxy.py      # RemotePlayerProxy class, handles TCP communication with remote players
 │   └── server_proxy.py             # ServerProxy class, handles TCP communication with Fish.com servers
-├── Proxies/                        # Holds remote proxy classes
-│   ├── remote_player_proxy.py      # RemotePlayerProxy class, handles TCP communication with remote players
-│   └── server_proxy.py             # ServerProxy class, handles TCP communication with Fish.com servers
+├── Other/                          # Holds the test classes for adapter and proxy classes
 └── README.md                       # This README file
 ```
 
 ## TODO
 
-* update legacy PlayerInterface
-* extend referee to broadcast player colors
-    * test that play_with is called
-* update manager to use generic referee
-    * test interface enforcement
-* create legacy -> course player adapter
-    * test call translation
-* create course -> legacy player adapter
-    * test call translation
-* create remote player proxy
-    * test
-* create server proxy
-    * test
-* create xclient that connects to server and creates server proxy / player
-* create xserver that signs up players and makes the tournament using player proxies
-* create integration tests
+* [X] update legacy PlayerInterface
+* [X] extend referee to broadcast player colors
+    *  [X] test that play_with is called
+* [ ] update manager to use generic referee
+    * [ ] test interface enforcement
+* [ ] create legacy -> course player adapter
+    * [ ] test call translation
+* [ ] create course -> legacy player adapter
+    * [ ] test call translation
+* [ ] create remote player proxy
+    * [ ] test
+* [ ] create server proxy
+    * [ ] test
+* [ ] create xclient that connects to server and creates server proxy / player
+* [ ] create xserver that signs up players and makes the tournament using player proxies
+* [ ] create integration tests

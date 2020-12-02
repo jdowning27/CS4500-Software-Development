@@ -80,11 +80,7 @@ class Referee:
         if type(self.__game) is not GameSetup:
             raise ValueError("Cannot initialize game: Game already started")
 
-        internal_players = []
-        for p in range(0, len(players)):
-            color = self.__assign_color_to_player(p, players[p])
-            self.__players[color] = players[p]
-            internal_players.append(PlayerData(color))
+        internal_players = self.__assign_player_colors(players)
 
         board = self.__create_board()
         state = State(internal_players, board)
@@ -92,6 +88,14 @@ class Referee:
         self.__run_penguin_placement()
         self.__broadcast_current_state()
         return self.__game
+
+    def __assign_player_colors(self, players):
+        internal_players = []
+        for p in range(0, len(players)):
+            color = self.__assign_color_to_player(p, players[p])
+            self.__players[color] = players[p]
+            internal_players.append(PlayerData(color))
+        return internal_players
 
     def run_game(self):
         """

@@ -41,6 +41,14 @@ class PlayerInterface:
         """
         pass
 
+    def play_with(self, player_colors):
+        """
+        Sends the colors of the other players in the game to the player
+
+        [List-of Color] -> void 
+        """
+        pass
+
     def game_over(self, game_result):
         """
         Let the Player know that the game has ended.
