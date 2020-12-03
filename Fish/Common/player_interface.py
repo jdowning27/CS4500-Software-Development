@@ -1,10 +1,9 @@
-
-"""
-Represents a player interface. Different kinds of players
-may implement this interface, such as AI or Remote players.
-Classes that implement this interface must override these methods.
-"""
 class PlayerInterface:
+    """
+    Represents a player interface. Different kinds of players
+    may implement this interface, such as AI or Remote players.
+    Classes that implement this interface must override these methods.
+    """
 
     def set_state(self, state):
         """
@@ -23,7 +22,7 @@ class PlayerInterface:
         void -> Action
         """
         pass
-    
+
     def choose_placement(self, state):
         """
         Return the position (row, col) of where to place a penguin for this player.
@@ -45,7 +44,7 @@ class PlayerInterface:
         """
         Sends the colors of the other players in the game to the player
 
-        [List-of Color] -> void 
+        [List-of Color] -> void
         """
         pass
 
@@ -84,8 +83,8 @@ class PlayerInterface:
     def tournament_end(self, result):
         """
         Used by the tournament manager to notify the players that the tournament is over and if they
-        have won or lost.
+        have won or lost (True if won, False if lost).
         Players must return True to indicate they they have received the message.
-        String -> Boolean
+        Boolean -> Boolean
         """
         pass
