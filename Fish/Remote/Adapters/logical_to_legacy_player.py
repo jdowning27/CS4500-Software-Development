@@ -16,7 +16,7 @@ class LogicalToLegacyPlayer(LogicalPlayerInterface):
 
         PlayerInterface -> LogicalPlayerInterface
         """
-        if not issubclass(type(legacy_player), PlayerInterface):
+        if not isinstance(legacy_player, PlayerInterface):
             raise ValueError("legacy_player must be a subclass of PlayerInterface")
         self.__legacy_player = legacy_player
 

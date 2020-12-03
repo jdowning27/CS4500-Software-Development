@@ -4,6 +4,7 @@ from unittest.mock import MagicMock, call
 from Fish.Common.action import Action
 from Fish.Common.board import Board
 from Fish.Common.color import Color
+from Fish.Common.player_data import PlayerData
 from Fish.Common.player_interface import PlayerInterface
 from Fish.Common.state import State
 from Fish.Player.player import Player
@@ -52,17 +53,22 @@ class TestLogicalToLegacyPlayer(unittest.TestCase):
         self.legacy_player.play_with.assert_has_calls([call(list(Color)), call([])])
 
     def test_setup(self):
-        self.legacy_player.choose_placement = MagicMock()
+        self.legacy_player.choose_placement = MagicMock(wraps=self.legacy_player.choose_placement)
         state = State([], Board(3, 3))
-        self.adapter.setup(state)
+        self.assertEqual(self.adapter.setup(state), (0, 0))
         self.legacy_player.choose_placement.assert_called_once_with(state)
 
     def test_tt(self):
-        self.legacy_player.set_state = MagicMock()
-        self.legacy_player.choose_next_move = MagicMock()
-        state = State([], Board(3, 3))
+        self.legacy_player.set_state = MagicMock(wraps=self.legacy_player.set_state)
+        self.legacy_player.choose_next_move = MagicMock(wraps=self.legacy_player.choose_next_move)
+        board = Board(3, 3)
+        board.create_board_without_holes(1)
+        state = State([PlayerData(Color.RED)], board)
+        state = state.place_penguin_for_player(Color.RED, (0, 0))
+        self.adapter.play_as(Color.RED)
+
         actions = [Action(), Action(), Action()]
-        self.adapter.tt(state, actions)
+        self.assertIsInstance(self.adapter.tt(state, actions), Action)
         self.legacy_player.set_state.assert_called_once_with(state)
         self.legacy_player.choose_next_move.assert_called_once_with()
 

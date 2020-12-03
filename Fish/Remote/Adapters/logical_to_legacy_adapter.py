@@ -12,11 +12,11 @@ class LogicalToLegacyPlayer(LogicalPlayerInterface):
     """
 
     def __init__(self, legacy_player):
-        """Initializes a LogicalToLegacyAdapter that will make calls to legacy_player.
+        """Initializes a LogicalToLegacyPlayer that will make calls to legacy_player.
 
         PlayerInterface -> LogicalPlayerInterface
         """
-        if not issubclass(legacy_player, PlayerInterface):
+        if not issubclass(type(legacy_player), PlayerInterface):
             raise ValueError("legacy_player must be a subclass of PlayerInterface")
         self.__legacy_player = legacy_player
 

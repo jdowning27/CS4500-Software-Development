@@ -4,15 +4,16 @@ from Fish.Common.game_setup import GameSetup
 from Fish.Common.game_tree import GameTree
 from Fish.Common.game_ended import GameEnded
 
-"""
-Implementation of a player for Fish game.
-This player chooses to place penguins and make moves according to the following strategy:
-    - Places penguins across rows, see purpose in strategy.py `place_penguins_across`
-    - Moves according to maximal gain strategy, see purpose in strategy.py `choose_action_minimax`
-Keeps track of their penguins, a color (assigned by the Referee), its strategy,
-depth to look ahead in the game tree, and number of fish (the score)
-"""
+
 class Player(PlayerInterface):
+    """
+    Implementation of a player for Fish game.
+    This player chooses to place penguins and make moves according to the following strategy:
+        - Places penguins across rows, see purpose in strategy.py `place_penguins_across`
+        - Moves according to maximal gain strategy, see purpose in strategy.py `choose_action_minimax`
+    Keeps track of their penguins, a color (assigned by the Referee), its strategy,
+    depth to look ahead in the game tree, and number of fish (the score)
+    """
 
     def __init__(self, look_ahead=2):
         """
@@ -21,7 +22,7 @@ class Player(PlayerInterface):
         __color: Color                      Assigned by referee, one of red, white, brown, or black
         __strategy: Strategy                Strategy class to use when making decisions
         __look_ahead: PositiveInteger       Depth of turns to look ahead in game tree, default = 3
-        __fish: Natural                     Player's current score                   
+        __fish: Natural                     Player's current score
         """
         self.__color = None
         self.__strategy = Strategy()

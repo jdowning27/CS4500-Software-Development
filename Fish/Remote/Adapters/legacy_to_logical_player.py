@@ -14,7 +14,7 @@ class LegacyToLogicalPlayer(PlayerInterface):
         self.__color = None
 
     def __is_valid_logical_player_type(self, logical_player):
-        if not issubclass(type(logical_player), LogicalPlayerInterface):
+        if not isinstance(logical_player, LogicalPlayerInterface):
             raise ValueError("logical_player must a subclass of LogicalPlayerInterface")
 
     def set_state(self, state):
