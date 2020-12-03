@@ -21,10 +21,10 @@ class LegacyToLogicalPlayer(PlayerInterface):
         self.__state = state
 
     def choose_next_move(self):
-        self.__logical_player.tt(self.__state, [])
+        return self.__logical_player.tt(self.__state, [])
     
     def choose_placement(self, state):
-        self.__logical_player.setup(state)
+        return self.__logical_player.setup(state)
 
     def assign_color(self, player_color):
         self.__color = player_color
