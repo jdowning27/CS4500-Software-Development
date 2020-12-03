@@ -2,8 +2,9 @@ from Fish.Common.player_interface import PlayerInterface
 from Fish.Common.game_tree import GameTree
 from Fish.Remote.Adapters.logical_player_interface import LogicalPlayerInterface
 
+
 class LegacyToLogicalPlayer(PlayerInterface):
-    
+
     def __init__(self, logical_player):
 
         self.__is_valid_logical_player_type(logical_player)
@@ -13,16 +14,15 @@ class LegacyToLogicalPlayer(PlayerInterface):
         self.__color = None
 
     def __is_valid_logical_player_type(self, logical_player):
-        if not issubclass(logical_player, LogicalPlayerInterface):
+        if not issubclass(type(logical_player), LogicalPlayerInterface):
             raise ValueError("logical_player must a subclass of LogicalPlayerInterface")
-
 
     def set_state(self, state):
         self.__state = state
 
     def choose_next_move(self):
         return self.__logical_player.tt(self.__state, [])
-    
+
     def choose_placement(self, state):
         return self.__logical_player.setup(state)
 
