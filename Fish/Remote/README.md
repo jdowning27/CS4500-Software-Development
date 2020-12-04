@@ -31,8 +31,8 @@
     * [X] test call translation
 * [X] create course -> legacy player adapter
     * [X] test call translation
-* [ ] create remote player proxy
-    * [ ] test
+* [X] create remote player proxy
+    * [X] test
 * [ ] create server proxy
     * [ ] test
 * [ ] create JsonSocket that sends an receives JSONs

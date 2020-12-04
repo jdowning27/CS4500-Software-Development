@@ -53,6 +53,6 @@ class LogicalPlayerInterface:
         they were last called and asked to make a move. The player must return
         an action that represents their move. If no move is available a skip is returned
 
-        State, Actions[] -> Move | Skip
+        State, Actions[] -> Action
         """
         pass

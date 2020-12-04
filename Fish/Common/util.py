@@ -69,6 +69,12 @@ def get_max_penguin_count(player_count):
     """
     return 6 - player_count
 
+def is_posn(obj):
+    return ( isinstance(obj, tuple) and 
+        len(obj) == 2 and
+        isinstance(obj[0], int) and 
+        isinstance(obj[1], int) )
+
 
 def safe_call(timeout, func, args=[]):
     """

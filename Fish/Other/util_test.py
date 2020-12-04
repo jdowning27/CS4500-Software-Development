@@ -59,3 +59,29 @@ class UtilTestCase(unittest.TestCase):
         def bad_func():
             raise Exception
         self.assertFalse(safe_call(0.5, bad_func))
+
+    # Testing is_posn ######################################################
+    def test_is_posn_vaild(self):
+        good_posns = [
+            (0, 0),
+            (1, 1),
+            (-1, 0),
+            (0, -1),
+            (1234, 5678)
+        ] 
+        for posn in good_posns:
+            self.assertTrue(is_posn(posn))
+
+    def test_is_posn_invalid(self):
+        not_posns = [
+            "test",
+            1234,
+            (1, 2, 3),
+            (1),
+            None,
+            (" ", -1234),
+            ((1, 2), 5),
+            (0, "string")
+        ]
+        for posn in not_posns:
+            self.assertFalse(is_posn(posn))
