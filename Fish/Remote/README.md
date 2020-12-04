@@ -10,6 +10,7 @@
 │   ├── logical_to_legacy_player.py # CoursePlayerInterface to PlayerInterface adapter class
 │   └── legacy_to_logical_player.py # PlayerInterface to CoursePlayerInterface adapter class
 ├── Proxies/                        # Holds remote proxy classes
+│   ├── json_stream.py              # JSONSocket class, handles sending and receiving JSONs through a socket
 │   ├── remote_player_proxy.py      # RemotePlayerProxy class, handles TCP communication with remote players
 │   └── server_proxy.py             # ServerProxy class, handles TCP communication with Fish.com servers
 ├── Other/                          # Holds the test classes for adapter and proxy classes
@@ -27,9 +28,9 @@
 * [X] Asyncio passed to referee and manager
     * [X] test timeouts
 * [X] create legacy -> course player adapter
-    * [ ] test call translation
+    * [X] test call translation
 * [X] create course -> legacy player adapter
-    * [ ] test call translation
+    * [X] test call translation
 * [ ] create remote player proxy
     * [ ] test
 * [ ] create server proxy
