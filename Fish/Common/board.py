@@ -7,10 +7,11 @@ from Fish.Common.util import validate_non_neg_int, validate_pos_int, print_error
 from Fish.Common.constants import MAX_FISH, GUI_UNIT
 
 
-
 """
 Represents the Fish Game board that is made up of hexagonal tiles.
 """
+
+
 class Board:
 
     def __init__(self, row, col):
@@ -35,7 +36,8 @@ class Board:
 
         :returns:Board		Copy of this board
         """
-        new_tiles = [[self.tiles[c][r].copy() for r in range(0, self.row)] for c in range(0, self.col)]
+        new_tiles = [[self.tiles[c][r].copy() for r in range(0, self.row)]
+                     for c in range(0, self.col)]
         new_board = Board(self.row, self.col)
         new_board.tiles = new_tiles
         return new_board
@@ -50,7 +52,8 @@ class Board:
         if min_fish < 0:
             raise ValueError("the number of tiles with one fish cannot be negative")
         if len(holes) + min_fish > (self.row * self.col):
-            raise ValueError("holes and number of one fish tiles cannot be greater than the total number of tiles")
+            raise ValueError(
+                "holes and number of one fish tiles cannot be greater than the total number of tiles")
         self.set_all(1)
         for h in holes:
             r, c = h
@@ -73,7 +76,7 @@ class Board:
         """
         Create a board with fish and holes when the number of fish is 0.
         If the nested list of fish values is shorter than the row length,
-        the remaining tiles are holes. 
+        the remaining tiles are holes.
         The given 2d-array is structed as follows, where each int represents
         the number of fish:
         [
@@ -91,7 +94,6 @@ class Board:
                 else:
                     self.tiles[c][r].set_fish(fish)
 
-
     def __get_fish(self, board_array, r, c):
         """
         Helper function for translating 2D array to board tiles.
@@ -103,7 +105,6 @@ class Board:
             return 0
         else:
             return board_array[r][c]
-
 
     def get_all_reachable_posn(self, row, col, penguin_places=[]):
         """
@@ -244,7 +245,6 @@ class Board:
                 self.tiles[c][r].draw_tile_fish(canvas, offset)
         return canvas
 
-
     def draw_penguin(self, canvas, color, posn):
         """
         Draw the penguin at on the canvas at given positions with given color.
@@ -274,4 +274,16 @@ class Board:
             for c in range(0, self.col):
                 row.append(self.tiles[c][r].get_fish())
             board.append(row)
+        return board
+
+    def from_json(value):
+        """
+        Class method to create a Board from a JSON value.
+
+        JSON value -> Board
+        """
+        num_rows = len(value)
+        num_cols = max(len(row) for row in value)
+        board = Board(num_rows, num_cols)
+        board.create_board_from_json(value)
         return board

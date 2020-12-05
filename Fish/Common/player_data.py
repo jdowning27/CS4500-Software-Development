@@ -5,6 +5,8 @@ from Fish.Common.color import Color
 The internal representation of a player which keeps track of its
 penguin color, age, and an array of penguins.
 """
+
+
 class PlayerData:
     def __init__(self, color, age=0, score=0):
         if type(color) is not Color:
@@ -17,13 +19,13 @@ class PlayerData:
     def __eq__(self, other):
         return type(other) is PlayerData and self.__color == other.get_color() and \
             self.__age == other.get_age() and self.__penguins.sort() == other.get_penguins().sort()
-        
+
     def get_penguins(self):
         """
         Getter for list of penguins for this player
         """
         return self.__penguins
-        
+
     def copy(self):
         """
         Makes a deep copy of this player
@@ -48,7 +50,7 @@ class PlayerData:
         """
         Getter for this Player's assigned color
 
-        :returns: enum Color    
+        :returns: enum Color
         """
         return self.__color
 
@@ -88,3 +90,14 @@ class PlayerData:
             places.append([penguin[0], penguin[1]])
         player['places'] = places
         return player
+
+    def from_json(value):
+        """
+        Class method to create a PlayerData from a JSON value.
+
+        JSON value -> PlayerData
+        """
+        pd = PlayerData(Color(value['color']), score=value['score'])
+        for place in value['places']:
+            pd.add_penguin(tuple(place))
+        return pd

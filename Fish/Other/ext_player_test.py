@@ -46,7 +46,7 @@ class PlayerTestCase(unittest.TestCase):
         next_state = next_state.place_penguin_for_player(Color.WHITE, (1, 0))
         next_state = next_state.place_penguin_for_player(Color.WHITE, (2, 0))
         self.player1.set_state(next_state)
-        self.assertEqual(self.player1.choose_next_move().print_json(), "Skip")
+        self.assertEqual(self.player1.choose_next_move().print_json(), False)
 
     def test_assign_color(self):
         self.assertEqual(self.player1.get_color(), None)
@@ -59,3 +59,32 @@ class PlayerTestCase(unittest.TestCase):
         self.assertEqual(self.player1.get_color(), Color.RED)
         self.player1.assign_color(Color.WHITE)
         self.assertEqual(self.player1.get_color(), Color.WHITE)
+
+    def test_from_json(self):
+        jsons = [
+            {
+                'color': "red",
+                'score': 0,
+                'places': []
+            },
+            {
+                'color': "black",
+                'score': 123,
+                'places': [[2, 3]]
+            },
+            {
+                'color': "white",
+                'score': 321,
+                'places': [[0, 0], [4, 5]]
+            },
+            {
+                'color': "brown",
+                'score': 7,
+                'places': [[0, 1], [321, 123]]
+            },
+        ]
+        for json in jsons:
+            p = PlayerData.from_json(json)
+            self.assertEqual(Color(json['color']), p.get_color())
+            self.assertEqual(json['score'], p.get_score())
+            self.assertEqual([tuple(place) for place in json['places']], p.get_penguins())

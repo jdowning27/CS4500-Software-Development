@@ -1,11 +1,13 @@
 from Fish.Common.action import Action
 from Fish.Common.skip import Skip
-"""
-Represents a game action when the penguin is moved.
-- Holds the starting coordinate of penguin being moved
-- Holds where it is moved to
-"""
+
+
 class Move(Action):
+    """
+    Represents a game action when the penguin is moved.
+    - Holds the starting coordinate of penguin being moved
+    - Holds where it is moved to
+    """
 
     def __init__(self, from_posn, to_posn):
         self.__from_posn = from_posn
@@ -55,4 +57,11 @@ class Move(Action):
 
     def print_json(self):
         return [self.__from_posn, self.__to_posn]
-        
+
+    def from_json(value):
+        """
+        Class method to create a Move from a JSON value.
+
+        JSON value -> Move
+        """
+        return Move(*[tuple(place) for place in value])

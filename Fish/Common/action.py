@@ -26,3 +26,11 @@ class Action:
         :returns: Move        The action with the lowest row/col number
         """
         pass
+
+    def print_json(self):
+        """
+        Return a JSON value representation of this move.
+
+        "return" JSON value
+        """
+        pass

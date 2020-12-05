@@ -31,11 +31,11 @@ class RemotePlayerProxyTest(unittest.TestCase):
     def test_start_fail(self):
         self.stream.recv_json.return_value = False
         self.assertRaisesRegex(
-            RuntimeError, "Player did not return 'void' to start method", 
+            RuntimeError, "Player did not return 'void' to start method",
             self.proxy_player.start, True)
         self.stream.send_json.assert_called_once_with(["start", [True]])
         self.stream.recv_json.assert_called_once()
-    
+
     # end() ##############################################################
     def test_end_pass(self):
         self.stream.recv_json.return_value = "void"
@@ -46,11 +46,11 @@ class RemotePlayerProxyTest(unittest.TestCase):
     def test_end_fail(self):
         self.stream.recv_json.return_value = False
         self.assertRaisesRegex(
-            RuntimeError, "Player did not return 'void' to end method", 
+            RuntimeError, "Player did not return 'void' to end method",
             self.proxy_player.end, True)
         self.stream.send_json.assert_called_once_with(["end", [True]])
         self.stream.recv_json.assert_called_once()
-    
+
     # play_as() ##############################################################
     def test_play_as_pass(self):
         self.stream.recv_json.return_value = "void"
@@ -61,26 +61,28 @@ class RemotePlayerProxyTest(unittest.TestCase):
     def test_play_as_fail(self):
         self.stream.recv_json.return_value = False
         self.assertRaisesRegex(
-            RuntimeError, "Player did not return 'void' to play_as method", 
+            RuntimeError, "Player did not return 'void' to play_as method",
             self.proxy_player.play_as, Color.RED)
         self.stream.send_json.assert_called_once_with(["playing-as", [Color.RED]])
         self.stream.recv_json.assert_called_once()
-    
+
     # play_with() ##############################################################
     def test_play_with_pass(self):
         self.stream.recv_json.return_value = "void"
         self.proxy_player.play_with([Color.BROWN, Color.WHITE])
-        self.stream.send_json.assert_called_once_with(["playing-with", [[Color.BROWN, Color.WHITE]]])
+        self.stream.send_json.assert_called_once_with(
+            ["playing-with", [[Color.BROWN, Color.WHITE]]])
         self.stream.recv_json.assert_called_once()
 
     def test_play_with_fail(self):
         self.stream.recv_json.return_value = False
         self.assertRaisesRegex(
-            RuntimeError, "Player did not return 'void' to play_with method", 
+            RuntimeError, "Player did not return 'void' to play_with method",
             self.proxy_player.play_with, [Color.BROWN, Color.WHITE])
-        self.stream.send_json.assert_called_once_with(["playing-with", [[Color.BROWN, Color.WHITE]]])
+        self.stream.send_json.assert_called_once_with(
+            ["playing-with", [[Color.BROWN, Color.WHITE]]])
         self.stream.recv_json.assert_called_once()
-    
+
     # setup() ##############################################################
     def test_setup_pass(self):
         self.stream.recv_json.return_value = (0, 0)
@@ -92,11 +94,11 @@ class RemotePlayerProxyTest(unittest.TestCase):
     def test_setup_fail(self):
         self.stream.recv_json.return_value = ("1", "0")
         self.assertRaisesRegex(
-            RuntimeError, "Player did not return a int, int tuple to setup method", 
+            RuntimeError, "Player did not return a int, int tuple to setup method",
             self.proxy_player.setup, self.state)
         self.stream.send_json.assert_called_once_with(["setup", [self.state]])
         self.stream.recv_json.assert_called_once()
-    
+
     # tt() ##############################################################
     def test_tt_move_pass(self):
         self.stream.recv_json.return_value = Move((0, 0), (0, 2))
@@ -115,8 +117,7 @@ class RemotePlayerProxyTest(unittest.TestCase):
     def test_tt_fail(self):
         self.stream.recv_json.return_value = ((0, 0), ("1", "0"))
         self.assertRaisesRegex(
-            RuntimeError, "Player did not return an Action to tt method", 
+            RuntimeError, "Player did not return an Action to tt method",
             self.proxy_player.tt, self.state, [])
         self.stream.send_json.assert_called_once_with(["take-turn", [self.state, []]])
         self.stream.recv_json.assert_called_once()
-    

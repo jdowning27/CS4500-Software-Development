@@ -122,13 +122,13 @@ class StrategyTestCase(unittest.TestCase):
         self.player2.add_penguin((3, 0))
         self.player2.add_penguin((2, 1))
         action = self.strategy.choose_action_minimax(self.game_tree_holes, 3)
-        self.assertEqual(action.print_json(), "Skip")
+        self.assertEqual(action.print_json(), False)
 
     def test_choose_action_minimax_more_layers(self):
         self.player1.add_penguin((1, 0))
         action = self.strategy.choose_action_minimax(self.mini_tree, 10)
         self.assertEqual(action.print_json(), [(1, 0), (0, 1)])
-        self.assertNotEqual(action.print_json(), "Skip")
+        self.assertNotEqual(action.print_json(), False)
 
     def test_choose_action_minimax_subtree(self):
         self.player1.add_penguin((0, 0))

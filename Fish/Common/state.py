@@ -1,7 +1,7 @@
 from tkinter import *
-from copy import deepcopy
-from Fish.Common.constants import MAX_FISH, GUI_UNIT, MIN_PLAYERS, MAX_PLAYERS
+from Fish.Common.board import Board
 from Fish.Common.move import Move
+from Fish.Common.player_data import PlayerData
 from Fish.Common.skip import Skip
 master = None
 
@@ -9,14 +9,17 @@ master = None
 Represents a snapshot of the state of the game, which includes:
     - the state of the board, using Board class
     - a sorted list of PlayerData, in order of turns
-        - PlayerData keeps track of its penguins, represented as a list of (row, col) tuples, score, and color
+    - PlayerData keeps track of its penguins, represented as a list of (row, col) tuples, score,
+      and color
 """
+
+
 class State:
 
     def __init__(self, players, board):
         """
         Constructor for State which constructs a game state
-        with the given number of players. 
+        with the given number of players.
         Must have between MIN_PLAYERS and MAX_PLAYERS.
         Player's Colors must be unique.
 
@@ -28,7 +31,7 @@ class State:
             if player.get_color() in seen_colors:
                 raise ValueError("Players cannot have duplicate colors")
             seen_colors.append(player.get_color())
-        
+
         self.players = players
         self.board = board
 
@@ -37,7 +40,7 @@ class State:
 
     def place_penguin_for_player(self, player_color, posn):
         """
-        Place a penguin at posn (row, col) for the give player if the 
+        Place a penguin at posn (row, col) for the give player if the
         tile exists, and it is available. If a Player does not exist
         with the given Color, print a message and ignore the instruction
 
@@ -69,7 +72,6 @@ class State:
         board = self.board.copy()
         return State(players, board)
 
-
     def move_penguin(self, from_posn, to_posn):
         """
         Move the penguin for the current player if it is a vaid move.
@@ -93,12 +95,11 @@ class State:
             print("Not a valid move")
             return False
 
-
     def valid_move(self, from_posn, to_posn):
         """
         Is this a valid move for a penguin? Check if from_posn contains
         a penguin, and also check if to_posn is available to move to from the
-        origin. 
+        origin.
 
         :from_posn: tuple       The (row, col) origin position
         :to_posn: tuple         The (row, col) position to move to
@@ -119,7 +120,6 @@ class State:
                 if self.valid_move(penguin, reachable):
                     return True
         return False
-
 
     def get_player_from_penguin(self, penguin):
         """
@@ -149,14 +149,14 @@ class State:
         """
         Gets Player object with the given color. If none exists,
         return False
-        
+
         :player_color: Color            Player's color to get
         :returns: [Maybe Player]      returns a maybe Player
         """
         for player in self.players:
             if player.get_color() == player_color:
                 return player
-        return False 
+        return False
 
     def is_tile_available(self, posn):
         """
@@ -196,7 +196,7 @@ class State:
             for reachable in self.board.get_all_reachable_posn(*p, self.get_all_penguins()):
                 if self.valid_move(p, reachable):
                     possible_moves.append(Move(p, reachable))
-        if len(possible_moves) == 0: # there are no possible moves for player
+        if len(possible_moves) == 0:  # there are no possible moves for player
             possible_moves = [Skip()]
         return possible_moves
 
@@ -228,8 +228,8 @@ class State:
 
     def remove_player(self, color):
         """
-        Removes the player with given color and their penguins from the board without creating holes.
-        If player with given color is not found, return the same state.
+        Removes the player with given color and their penguins from the board without creating
+        holes. If player with given color is not found, return the same state.
 
         Color -> State
         """
@@ -238,7 +238,7 @@ class State:
         if player is not False:
             new_state.players.remove(player)
         return new_state
-        
+
     def get_winners(self):
         max_score = 0
         winning_players = []
@@ -250,4 +250,13 @@ class State:
                 max_score = score
                 winning_players = [p]
         return winning_players
-                
+
+    def from_json(value):
+        """
+        Class method to create a State from a JSON value.
+
+        JSON value -> State
+        """
+        players = [PlayerData.from_json(player) for player in value['players']]
+        board = Board.from_json(value['board'])
+        return State(players, board)

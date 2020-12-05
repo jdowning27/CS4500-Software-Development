@@ -31,4 +31,4 @@ class Skip(Action):
         return other
     
     def print_json(self):
-        return "Skip"
+        return False
