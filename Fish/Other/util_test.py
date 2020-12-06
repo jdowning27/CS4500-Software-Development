@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 from time import sleep
 from Fish.Common.util import *
 
+
 class UtilTestCase(unittest.TestCase):
     def test_validate_int_valid(self):
         validate_int(5)
@@ -68,7 +69,7 @@ class UtilTestCase(unittest.TestCase):
             (-1, 0),
             (0, -1),
             (1234, 5678)
-        ] 
+        ]
         for posn in good_posns:
             self.assertTrue(is_posn(posn))
 

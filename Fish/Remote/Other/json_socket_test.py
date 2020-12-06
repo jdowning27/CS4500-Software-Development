@@ -1,19 +1,24 @@
+import socket
 import unittest
 from unittest.mock import MagicMock
-
 
 from Fish.Remote.Proxies.json_socket import JSONSocket
 
 
-class Dummy():
-    pass
+class DummySocket(socket.socket):
+
+    def sendall(self, whatever):
+        pass
 
 
 class ServerProxyTest(unittest.TestCase):
 
     def setUp(self):
-        self.sock = Dummy()
+        self.sock = DummySocket()
         self.json_sock = JSONSocket(self.sock)
+
+    def tearDown(self):
+        self.sock.close()
 
     def test_send_json(self):
         self.sock.sendall = MagicMock()

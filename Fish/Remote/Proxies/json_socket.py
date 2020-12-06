@@ -22,6 +22,9 @@ class JSONSocket():
 
         socket -> JSONSocket
         """
+        if not isinstance(sock, socket.socket):
+            raise ValueError("sock must be an instance of socket")
+
         sock.settimeout(0.1)
         self.__sock = sock
         self.__json_decoder = json.JSONDecoder()
@@ -44,7 +47,7 @@ class JSONSocket():
                 byte = self.__sock.recv(1)
                 buffer += byte.decode()
                 val = self.__json_decoder.raw_decode(buffer)[0]
-                print(val)
+                # print(val)
                 break
             except (json.decoder.JSONDecodeError, socket.timeout):
                 pass

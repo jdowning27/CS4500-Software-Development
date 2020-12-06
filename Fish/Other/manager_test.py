@@ -4,6 +4,7 @@ from Fish.Common.move import Move
 from Fish.Player.player import Player
 from Fish.Remote.Adapters.extended_referee import ExtendedReferee
 
+from pprint import pprint
 import unittest
 from unittest.mock import patch, MagicMock
 

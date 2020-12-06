@@ -49,7 +49,8 @@ class Player(PlayerInterface):
         self.__game = self.__game.attempt_move(action)
 
     def game_over(self, game_result):
-        print("Player received game over")
+        # print("Player received game over")
+        pass
 
     def get_color(self):
         return self.__color

@@ -97,7 +97,6 @@ class Referee:
         for p in range(0, len(players)):
             maybe_color = self.__assign_color_to_player(p, players[p])
             if maybe_color is False:
-                print("assign kick", players[p])
                 self.__kicked_players.add(players[p])
             else:
                 self.__players[maybe_color] = players[p]
@@ -115,7 +114,6 @@ class Referee:
             if maybe_action is not False:
                 maybe_game_tree = self.check_move_validity(maybe_action)
             if maybe_action is False or maybe_game_tree is False:
-                print("action kick", color)
                 self.__kick_player(color)
                 self.__broadcast_current_state()
             else:
@@ -253,7 +251,6 @@ class Referee:
                 if maybe_posn is not False:
                     maybe_state = state.place_penguin_for_player(color, maybe_posn)
                 if maybe_posn is False or maybe_state is False:
-                    print("setup kick", color)
                     self.__kick_player(color)
                 else:
                     self.__game = GameTree(maybe_state)

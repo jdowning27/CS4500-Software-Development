@@ -8,14 +8,14 @@ import sys
 import uuid
 
 
-def main(port):
+def main(address):
     """
     Create a remote Fish.com player and connect it to a
-    Fish.com server on localhost through the given port.
+    Fish.com server at the given address.
     """
     name = '"' + uuid.uuid4().hex[:6].upper() + '"'
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect(('localhost', port))
+    sock.connect(address)
     sock.sendall(name.encode())
 
     depth = 2
@@ -27,4 +27,4 @@ def main(port):
 
 
 if __name__ == '__main__':
-    main(int(sys.argv[1]))
+    main((sys.argv[1], int(sys.argv[2])))

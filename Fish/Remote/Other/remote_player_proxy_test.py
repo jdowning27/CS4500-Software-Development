@@ -1,3 +1,4 @@
+import socket
 import unittest
 from unittest.mock import MagicMock
 
@@ -16,10 +17,14 @@ class RemotePlayerProxyTest(unittest.TestCase):
         self.state = State(
             [PlayerData(Color.RED), PlayerData(Color.BROWN), PlayerData(Color.WHITE)],
             Board(4, 4))
-        self.json_sock = JSONSocket(None)
+        self.sock = socket.socket()
+        self.json_sock = JSONSocket(self.sock)
         self.json_sock.send_json = MagicMock()
         self.json_sock.recv_json = MagicMock()
         self.proxy_player = RemotePlayerProxy(self.json_sock)
+
+    def tearDown(self):
+        self.sock.close()
 
     # __init__() ##########################################################
     def test_constructor(self):
@@ -61,7 +66,7 @@ class RemotePlayerProxyTest(unittest.TestCase):
     def test_play_as_pass(self):
         self.json_sock.recv_json.return_value = "void"
         self.proxy_player.play_as(Color.RED)
-        self.json_sock.send_json.assert_called_once_with(["playing-as", [Color.RED]])
+        self.json_sock.send_json.assert_called_once_with(["playing-as", [Color.RED.value]])
         self.json_sock.recv_json.assert_called_once()
 
     def test_play_as_fail(self):
@@ -69,7 +74,7 @@ class RemotePlayerProxyTest(unittest.TestCase):
         self.assertRaisesRegex(
             RuntimeError, "Player did not return 'void' to play_as method",
             self.proxy_player.play_as, Color.RED)
-        self.json_sock.send_json.assert_called_once_with(["playing-as", [Color.RED]])
+        self.json_sock.send_json.assert_called_once_with(["playing-as", [Color.RED.value]])
         self.json_sock.recv_json.assert_called_once()
 
     # play_with() ##############################################################
@@ -77,7 +82,7 @@ class RemotePlayerProxyTest(unittest.TestCase):
         self.json_sock.recv_json.return_value = "void"
         self.proxy_player.play_with([Color.BROWN, Color.WHITE])
         self.json_sock.send_json.assert_called_once_with(
-            ["playing-with", [[Color.BROWN, Color.WHITE]]])
+            ["playing-with", [[Color.BROWN.value, Color.WHITE.value]]])
         self.json_sock.recv_json.assert_called_once()
 
     def test_play_with_fail(self):
@@ -86,7 +91,7 @@ class RemotePlayerProxyTest(unittest.TestCase):
             RuntimeError, "Player did not return 'void' to play_with method",
             self.proxy_player.play_with, [Color.BROWN, Color.WHITE])
         self.json_sock.send_json.assert_called_once_with(
-            ["playing-with", [[Color.BROWN, Color.WHITE]]])
+            ["playing-with", [[Color.BROWN.value, Color.WHITE.value]]])
         self.json_sock.recv_json.assert_called_once()
 
     # setup() ##############################################################
@@ -94,30 +99,30 @@ class RemotePlayerProxyTest(unittest.TestCase):
         self.json_sock.recv_json.return_value = (0, 0)
         result = self.proxy_player.setup(self.state)
         self.assertEqual((0, 0), result)
-        self.json_sock.send_json.assert_called_once_with(["setup", [self.state]])
+        self.json_sock.send_json.assert_called_once_with(["setup", [self.state.print_json()]])
         self.json_sock.recv_json.assert_called_once()
 
     def test_setup_fail(self):
         self.json_sock.recv_json.return_value = ("1", "0")
         self.assertRaisesRegex(
-            RuntimeError, "Player did not return a int, int tuple to setup method",
+            RuntimeError, "Player did not return an int, int 2-tuple to setup method",
             self.proxy_player.setup, self.state)
-        self.json_sock.send_json.assert_called_once_with(["setup", [self.state]])
+        self.json_sock.send_json.assert_called_once_with(["setup", [self.state.print_json()]])
         self.json_sock.recv_json.assert_called_once()
 
     # tt() ##############################################################
     def test_tt_move_pass(self):
-        self.json_sock.recv_json.return_value = Move((0, 0), (0, 2))
+        self.json_sock.recv_json.return_value = [[0, 0], [0, 2]]
         result = self.proxy_player.tt(self.state, [])
         self.assertEqual(Move((0, 0), (0, 2)), result)
-        self.json_sock.send_json.assert_called_once_with(["take-turn", [self.state, []]])
+        self.json_sock.send_json.assert_called_once_with(["take-turn", [self.state.print_json(), []]])
         self.json_sock.recv_json.assert_called_once()
 
     def test_tt_skip_pass(self):
-        self.json_sock.recv_json.return_value = Skip()
+        self.json_sock.recv_json.return_value = False
         result = self.proxy_player.tt(self.state, [])
         self.assertEqual(Skip(), result)
-        self.json_sock.send_json.assert_called_once_with(["take-turn", [self.state, []]])
+        self.json_sock.send_json.assert_called_once_with(["take-turn", [self.state.print_json(), []]])
         self.json_sock.recv_json.assert_called_once()
 
     def test_tt_fail(self):
@@ -125,5 +130,5 @@ class RemotePlayerProxyTest(unittest.TestCase):
         self.assertRaisesRegex(
             RuntimeError, "Player did not return an Action to tt method",
             self.proxy_player.tt, self.state, [])
-        self.json_sock.send_json.assert_called_once_with(["take-turn", [self.state, []]])
+        self.json_sock.send_json.assert_called_once_with(["take-turn", [self.state.print_json(), []]])
         self.json_sock.recv_json.assert_called_once()

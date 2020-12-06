@@ -38,7 +38,10 @@ and the number of games played in this round is represented by "games_played".
 
 class Manager(ManagerInterface):
 
-    def __init__(self, referee_type=ExtendedReferee, timeout=TIMEOUT):
+    DEFAULT_BOARD_CONFIG = {"row": 5, "col": 3, "fish": 3}
+
+    def __init__(self, referee_type=ExtendedReferee, board_config=DEFAULT_BOARD_CONFIG,
+                 timeout=TIMEOUT):
         """
         Constructor for a Referee who supervises one game.
 
@@ -54,6 +57,7 @@ class Manager(ManagerInterface):
         self.__kicked_players = set()
         self.__referee_type = referee_type
         self.__timeout = timeout
+        self.__board_config = board_config
 
     def __is_valid_referee_type(self, referee_type):
         if not issubclass(referee_type, Referee):
@@ -83,7 +87,6 @@ class Manager(ManagerInterface):
         RoundResult -> void
         """
         kicked_players = round_result["kicked_players"]
-        print("update bracket")
         self.__kick_players(kicked_players)
         self.__games_in_previous_round = round_result["games_played"]
 
@@ -97,7 +100,6 @@ class Manager(ManagerInterface):
                 adds the bad_players to the set of kicked_players
         [Set PlayerInterface] -> void
         """
-        print("kicking", bad_players)
         self.__active_players = self.__active_players.difference(bad_players)
         self.__kicked_players.update(bad_players)
         self.__queue = list(filter(lambda p: p not in bad_players, self.__queue))
@@ -115,9 +117,8 @@ class Manager(ManagerInterface):
             "kicked_players": set(),
             "games_played": len(match_players)
         }
-        board_config = {"row": 5, "col": 5, "fish": 2}
         for players in match_players:
-            ref = self.__referee_type(board_config)
+            ref = self.__referee_type(self.__board_config)
             game_result = ref.play_game(players)
             round_result["winners"].update(game_result["winners"])
             round_result["losers"].update(game_result["losers"])
@@ -195,10 +196,9 @@ class Manager(ManagerInterface):
         bad_players = set()
         for player in self.__active_players:
             response = safe_call(self.__timeout, player.tournament_start)
-            if response is False:
+            if response is not True:
                 bad_players.add(player)
 
-        print("broadcast start")
         self.__kick_players(bad_players)
 
     def __broadcast_tournament_end(self):
@@ -215,10 +215,9 @@ class Manager(ManagerInterface):
         for player in self.__active_players:
             did_win = player in self.__queue
             response = safe_call(self.__timeout, player.tournament_end, [did_win])
-            if response is False:
+            if response is not True:
                 bad_players.add(player)
 
-        print("broadcast end")
         self.__kick_players(bad_players)
 
     def __get_tournament_result(self):

@@ -76,7 +76,8 @@ def is_posn(obj):
 
     Object -> Boolean
     """
-    return (len(obj) == 2 and
+    return (isinstance(obj, (list, tuple)) and
+            len(obj) == 2 and
             isinstance(obj[0], int) and
             isinstance(obj[1], int))
 
@@ -116,8 +117,7 @@ def safe_call(timeout, func, args=[]):
         """
         try:
             queue.put(func(*args))
-        except Exception as exc:
-            print(exc)
+        except Exception:
             queue.put(False)
 
     queue = Queue()
@@ -126,7 +126,6 @@ def safe_call(timeout, func, args=[]):
     thread.join(timeout)
 
     if thread.is_alive():
-        print("timeout")
         return False
 
     return queue.get()

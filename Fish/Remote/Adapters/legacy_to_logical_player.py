@@ -45,6 +45,8 @@ class LegacyToLogicalPlayer(PlayerInterface):
 
     def tournament_start(self):
         self.__logical_player.start(True)
+        return True
 
     def tournament_end(self, result):
         self.__logical_player.end(result)
+        return True

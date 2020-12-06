@@ -1,0 +1,16 @@
+#!/bin/bash
+NUM_CLIENTS=$1
+PORT=$2
+IP=$3
+if [[ -z $IP ]]; then
+    IP="localhost"
+fi
+
+for ((i = 0; i < $NUM_CLIENTS; i++)); do
+    python3 client.py $IP $PORT &
+    CLIENTS="$CLIENTS $!"
+done
+
+#for client in $CLIENTS; do
+    #kill $client
+#done

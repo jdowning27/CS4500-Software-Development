@@ -1,3 +1,4 @@
+import socket
 import unittest
 from unittest.mock import MagicMock, call
 
@@ -18,7 +19,8 @@ class ServerProxyTest(unittest.TestCase):
             [PlayerData(Color.RED), PlayerData(Color.BROWN), PlayerData(Color.WHITE)],
             Board(4, 4))
 
-        self.json_sock = JSONSocket(None)
+        self.sock = socket.socket()
+        self.json_sock = JSONSocket(self.sock)
 
         self.player = LogicalPlayerInterface()
 
@@ -34,6 +36,9 @@ class ServerProxyTest(unittest.TestCase):
         self.player.tt = MagicMock(return_value=self.move)
 
         self.server_proxy = ServerProxy(self.player, self.json_sock)
+
+    def tearDown(self):
+        self.sock.close()
 
     def test_constructor(self):
         ServerProxy(self.player, self.json_sock)

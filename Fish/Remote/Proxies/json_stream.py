@@ -36,8 +36,6 @@ class JSONStream():
         while True:
             try:
                 buffer += self.__rfile.read(1)
-                if len(buffer) > 0:
-                    print(buffer)
                 return self.__decoder.raw_decode(buffer)[0]
             except json.decoder.JSONDecodeError:
                 pass

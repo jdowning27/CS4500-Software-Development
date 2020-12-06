@@ -19,8 +19,9 @@ class FishServer():
 
     MIN_PLAYERS = 5
     MAX_PLAYERS = 10
-    WAITING_PERIOD = 30
+    WAITING_PERIOD = 5  # 30
     NUM_WAITING_PERIODS = 2
+    BOARD_CONFIG = {"row": 5, "col": 5, "fish": 2}
 
     def __init__(self, address):
         """
@@ -49,7 +50,7 @@ class FishServer():
 
         Void -> Void
         """
-        ready_to_read, ready_to_write, in_error = select.select([self.lsock], [], [])
+        ready_to_read, ready_to_write, in_error = select.select([self.lsock], [], [], 0.1)
         if self.lsock in ready_to_read:
             csock, addr = self.lsock.accept()
             json_sock = JSONSocket(csock)
@@ -75,6 +76,7 @@ class FishServer():
             if len(self.players) >= FishServer.MAX_PLAYERS:
                 return True
             if time() - start_time >= FishServer.WAITING_PERIOD:
+                # print('period')
                 if len(self.players) >= FishServer.MIN_PLAYERS:
                     return True
                 elif waiting_periods >= FishServer.NUM_WAITING_PERIODS:
@@ -89,7 +91,7 @@ class FishServer():
 
         Void -> Void
         """
-        winners, cheaters = Manager().run_tournament(self.players)
+        winners, cheaters = Manager().run_tournament(self.players, FishServer.BOARD_CONFIG)
         print(f"[{len(winners)}, {len(cheaters)}]")
 
     def shutdown(self):
