@@ -8,7 +8,7 @@ from Fish.Common.board import Board
 from Fish.Common.move import Move
 from Fish.Remote.Adapters.logical_player_interface import LogicalPlayerInterface
 from Fish.Remote.Proxies.server_proxy import ServerProxy
-from Fish.Remote.Proxies.json_sock import JSONSocket
+from Fish.Remote.Proxies.json_socket import JSONSocket
 
 
 class ServerProxyTest(unittest.TestCase):
@@ -18,7 +18,7 @@ class ServerProxyTest(unittest.TestCase):
             [PlayerData(Color.RED), PlayerData(Color.BROWN), PlayerData(Color.WHITE)],
             Board(4, 4))
 
-        self.json_sock = JSONSocket(None, None)
+        self.json_sock = JSONSocket(None)
 
         self.player = LogicalPlayerInterface()
 

@@ -8,7 +8,7 @@ from Fish.Common.board import Board
 from Fish.Common.move import Move
 from Fish.Common.skip import Skip
 from Fish.Remote.Proxies.remote_player_proxy import RemotePlayerProxy
-from Fish.Remote.Proxies.json_sock import JSONSocket
+from Fish.Remote.Proxies.json_socket import JSONSocket
 
 
 class RemotePlayerProxyTest(unittest.TestCase):
@@ -24,7 +24,7 @@ class RemotePlayerProxyTest(unittest.TestCase):
     # __init__() ##########################################################
     def test_constructor(self):
         self.assertRaisesRegex(
-            ValueError, "json_json_sock must be an instance of JSONStream",
+            ValueError, "json_sock must be an instance of JSONSocket",
             RemotePlayerProxy, None)
 
     # start() ##############################################################
