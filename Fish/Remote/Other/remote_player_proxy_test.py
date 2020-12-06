@@ -21,6 +21,12 @@ class RemotePlayerProxyTest(unittest.TestCase):
         self.stream.recv_json = MagicMock()
         self.proxy_player = RemotePlayerProxy(self.stream)
 
+    # __init__() ##########################################################
+    def test_constructor(self):
+        self.assertRaisesRegex(
+            ValueError, "json_stream must be an instance of JSONStream",
+            RemotePlayerProxy, None)
+
     # start() ##############################################################
     def test_start_pass(self):
         self.stream.recv_json.return_value = "void"

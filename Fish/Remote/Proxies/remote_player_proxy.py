@@ -18,7 +18,9 @@ class RemotePlayerProxy(LogicalPlayerInterface):
 
         JSONstream -> RemotePlayerProxy
         """
-
+        if not isinstance(json_stream, JSONStream):
+            raise ValueError("json_stream must be an instance of JSONStream")
+        
         self.__json_stream = json_stream
 
     def __send_request(self, name, args, validate, error):
