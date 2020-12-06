@@ -22,6 +22,46 @@
 └── README.md                       # This README file
 ```
 
+## Changes To Old Code
+### Most Code
+We reworked our import system to mitigate strange importing errors we saw relating to altering the Python import path. This resulted in a change in most of the module level import statements. We also added a Makefile for setting up and installing our project as a Python package. Some files also had their formatting fixed.
+
+### Manager
+We altered out manager to take a timeout attribute and abstracted out our `safe_call` function, which moved into `util.py`. We needed to rework all calls to the player in order to support handling player calls that take too long, a functionality that was missing. In addition the manager now returns a set of failing players from `run_tournament` so that our server can output the proper statistics.
+
+### PlayerInterface
+Our original PlayerInterface lacked `play_with` functionality, so this was added in in order to allow our referee to notify a player of his opponents. We also corrected some incorrect documentation.
+
+### Referee
+Referee was also changed to support our abstracted `safe_call` and thus player call timeout handling. We also added play-with functionality by extending the referee into our `ExtendedReferee` class.
+
+### Action (Interface)
+We added a `print_json` function to enable the serialization of Actions.
+
+### Board
+We added a `from_json` class method to enable the deserialization of Boards.
+
+### constants.py
+We added a default timeout constant for both our manager and referee to use. This is used primarily for `safe_call` calls to the player, again to implement missing functionality.
+
+### Move
+We implemented the `from_json` function. We also consolidated some documentation into the Action interface.
+
+### PlayerData
+We added a `from_json` class method to enable the deserialization of PlayerData (the player representation used by States).
+
+### Skip
+We altered the JSON representation of a Skip Action to match the correct course definition.
+
+### State
+We added a `from_json` class method to enable the deserialization of States.
+
+### util.py
+We added `is_posn` and `is_json_action` functions for validating JSONs sent by remote players. We also put our new `safe_call` functionality here.
+
+### Player
+We updated the return value of `tournament_end` to match the correct value defined by our original PlayerInterface.
+
 ## TODO
 
 * [X] update legacy PlayerInterface
@@ -49,7 +89,7 @@
 * [X] ensure that clients are shutdown properly
 * [X] make sure default board parameters are correct
 * [X] create xclient that creates multiple clients
-* [ ] ensure runnables are executable
-* [ ] test on khoury servers
+* [X] ensure runnables are executable
+* [X] test on khoury servers
 * [ ] write about changes to old code
 * [ ] create integration tests

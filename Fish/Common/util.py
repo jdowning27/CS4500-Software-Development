@@ -85,14 +85,15 @@ def is_posn(obj):
 def is_json_action(obj):
     """
     Test if an object is a json representation of an Action
-    (False or a list of two Posns).
+    (False or a list or tuple of two Posns).
 
     Object -> Boolean
     """
-    return (obj is False or
-            (len(obj) == 2 and
-             is_posn(obj[0]) and
-             is_posn(obj[1])))
+    return (isinstance(obj, (list, tuple, bool)) and
+            (obj is False or
+             (len(obj) == 2 and
+              is_posn(obj[0]) and
+              is_posn(obj[1]))))
 
 
 def safe_call(timeout, func, args=[]):

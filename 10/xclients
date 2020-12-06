@@ -7,7 +7,7 @@ if [[ -z $IP ]]; then
 fi
 
 for ((i = 0; i < $NUM_CLIENTS; i++)); do
-    python3 client.py $IP $PORT &
+    python3 ../Fish/Remote/client.py $IP $PORT &
     CLIENTS="$CLIENTS $!"
 done
 

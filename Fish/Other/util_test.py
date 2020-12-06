@@ -86,3 +86,26 @@ class UtilTestCase(unittest.TestCase):
         ]
         for posn in not_posns:
             self.assertFalse(is_posn(posn))
+
+    def test_is_json_action_vaild(self):
+        good_actions = [
+            ((0, 0), (1, 0)),
+            [[0, 0], [1, 0]],
+            False
+        ]
+        for action in good_actions:
+            self.assertTrue(is_json_action(action))
+
+    def test_is_json_action_invalid(self):
+        not_actions = [
+            "test",
+            1234,
+            (1, 2, 3),
+            (1),
+            None,
+            (" ", -1234),
+            ((1, 2), 5),
+            (0, "string")
+        ]
+        for action in not_actions:
+            self.assertFalse(is_json_action(action))
