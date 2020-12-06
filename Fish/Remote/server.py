@@ -91,7 +91,7 @@ class FishServer():
 
         Void -> Void
         """
-        winners, cheaters = Manager().run_tournament(self.players, FishServer.BOARD_CONFIG)
+        winners, cheaters = Manager(board_config=FishServer.BOARD_CONFIG).run_tournament(self.players)
         print(f"[{len(winners)}, {len(cheaters)}]")
 
     def shutdown(self):

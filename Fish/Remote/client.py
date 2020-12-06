@@ -13,6 +13,7 @@ def main(address):
     Create a remote Fish.com player and connect it to a
     Fish.com server at the given address.
     """
+    print(address)
     name = '"' + uuid.uuid4().hex[:6].upper() + '"'
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect(address)
