@@ -19,7 +19,7 @@ class FishServer():
 
     MIN_PLAYERS = 5
     MAX_PLAYERS = 10
-    WAITING_PERIOD = 5  # 30
+    WAITING_PERIOD = 30
     NUM_WAITING_PERIODS = 2
     BOARD_CONFIG = {"row": 5, "col": 5, "fish": 2}
 
