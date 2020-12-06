@@ -2,7 +2,7 @@ from Fish.Common.color import Color
 from Fish.Common.move import Move
 from Fish.Common.state import State
 from Fish.Remote.Adapters.logical_player_interface import LogicalPlayerInterface
-from Fish.Remote.Proxies.json_stream import JSONStream
+from Fish.Remote.Proxies.json_socket import JSONSocket
 
 
 class ServerProxy():
@@ -14,25 +14,25 @@ class ServerProxy():
     until the tournament has ended or the connection is closed.
 
     self.__player:              A LogicalPlayerInterface object representing the player
-    self.__json_stream:         A JSONStream for sending and receiving messages
+    self.__json_sock:           A JSONSocket for sending and receiving messages
     self.__request_handlers:    A dictionary of message handler functions
                                 corresponding to each message type
     """
 
-    def __init__(self, player, json_stream):
+    def __init__(self, player, json_sock):
         """
         Initialize a ServerProxy.
 
-        LogicalPlayerInterface, JSONStream -> ServerProxy
+        LogicalPlayerInterface, JSONSocket -> ServerProxy
         """
         if not isinstance(player, LogicalPlayerInterface):
             raise ValueError("player must be an instance of LogicalPlayerInterface")
 
-        if not isinstance(json_stream, JSONStream):
-            raise ValueError("json_stream must be an instance of JSONStream")
+        if not isinstance(json_sock, JSONSocket):
+            raise ValueError("json_sock must be an instance of JSONSocket")
 
         self.__player = player
-        self.__json_stream = json_stream
+        self.__json_sock = json_sock
 
         self.__request_handlers = {
             "start":        self.__handle_start,
@@ -45,9 +45,9 @@ class ServerProxy():
 
     def listen(self):
         while True:
-            request = self.__json_stream.recv_json()
+            request = self.__json_sock.recv_json()
             response = self.__handle_request(request)
-            self.__json_stream.send_json(response)
+            self.__json_sock.send_json(response)
             if request[0] == "end":
                 break
 

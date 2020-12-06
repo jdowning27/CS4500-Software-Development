@@ -1,28 +1,28 @@
 from Fish.Remote.Adapters.logical_player_interface import LogicalPlayerInterface
-from Fish.Remote.Proxies.json_stream import JSONStream
+from Fish.Remote.Proxies.json_socket import JSONSocket
 from Fish.Common.action import Action
 from Fish.Common.util import is_posn
 
 
 class RemotePlayerProxy(LogicalPlayerInterface):
     """
-    uses a JSONstream to communicate with a remote player. The RemotePlayerProxy will write to the JSONstream to send requests to the
-    player and read from the stream to get the player response.
+    uses a JSONSocket to communicate with a remote player. The RemotePlayerProxy will write to the JSONSocket to send requests to the
+    player and read from the sock to get the player response.
 
-    self.__json_stream: the JSONstream object that we will use to make remote calls to the remote player
+    self.__json_sock: the JSONSocket object that we will use to make remote calls to the remote player
     """
 
-    def __init__(self, json_stream):
+    def __init__(self, json_sock):
         """
         Creates a RemotePlayerProxy that will act as a Proxy to a remote Player.
-        Calls to the remote player will be sent over the JSONstream object.
+        Calls to the remote player will be sent over the JSONSocket object.
 
-        JSONstream -> RemotePlayerProxy
+        JSONSocket -> RemotePlayerProxy
         """
-        if not isinstance(json_stream, JSONStream):
-            raise ValueError("json_stream must be an instance of JSONStream")
+        if not isinstance(json_sock, JSONSocket):
+            raise ValueError("json_sock must be an instance of JSONSocket")
 
-        self.__json_stream = json_stream
+        self.__json_sock = json_sock
 
     def __send_request(self, name, args, validate, error):
         """
@@ -33,9 +33,9 @@ class RemotePlayerProxy(LogicalPlayerInterface):
         String, [List-of Any] -> "void" | Position | Action
         """
 
-        self.__json_stream.send_json([name, args])
+        self.__json_sock.send_json([name, args])
         print(name)
-        response = self.__json_stream.recv_json()
+        response = self.__json_sock.recv_json()
 
         if not validate(response):
             raise RuntimeError(error)

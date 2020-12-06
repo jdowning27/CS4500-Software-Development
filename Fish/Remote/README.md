@@ -10,11 +10,13 @@
 │   ├── logical_to_legacy_player.py # CoursePlayerInterface to PlayerInterface adapter class
 │   └── legacy_to_logical_player.py # PlayerInterface to CoursePlayerInterface adapter class
 ├── Proxies/                        # Holds remote proxy classes
-│   ├── json_stream.py              # JSONSocket class, handles sending and receiving JSONs through a socket
+│   ├── json_stream.py              # JSONStream class, handles sending and receiving JSONs through file-like objects
+│   ├── json_socket.py              # JSONSocket class, handles sending and receiving JSONs through a socket
 │   ├── remote_player_proxy.py      # RemotePlayerProxy class, handles TCP communication with remote players
 │   └── server_proxy.py             # ServerProxy class, handles TCP communication with Fish.com servers
 ├── Other/                          # Holds the test classes for adapter and proxy classes
-├── client.py                       # The client class for a remote player
+├── client.py                       # A client for a remote player that connects to a server.
+├── server.py                       # The FishServer class
 ├── xclient                         # Runnable that can create multiple clients
 ├── xserver                         # Runnable that creates and runs a Fish.com sign-up server and tournament
 └── README.md                       # This README file
@@ -40,6 +42,8 @@
     * [X] test
 * [X] create JSONStream that sends an receives JSONs
     * [X] test
+* [X] create JSONSocket that sends an receives JSONs
+    * [ ] test
 * [ ] create client that connects to server and creates server proxy / player
 * [ ] create xserver that signs up players and makes the tournament using player proxies
 * [ ] create xclient that creates multiple clients

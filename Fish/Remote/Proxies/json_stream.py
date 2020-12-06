@@ -24,7 +24,6 @@ class JSONStream():
         self.__wfile = wfile
         self.__decoder = json.JSONDecoder()
         self.__encoder = json.JSONEncoder()
-        pass
 
     def recv_json(self):
         """

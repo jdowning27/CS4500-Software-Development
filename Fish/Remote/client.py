@@ -1,7 +1,7 @@
 from Fish.Player.player import Player
 from Fish.Remote.Adapters.logical_to_legacy_adapter import LogicalToLegacyPlayer
 from Fish.Remote.Proxies.server_proxy import ServerProxy
-from Fish.Remote.Proxies.json_stream import JSONStream
+from Fish.Remote.Proxies.json_socket import JSONSocket
 
 import socket
 import sys
@@ -21,7 +21,7 @@ def main(port):
     depth = 2
     player = Player(depth)
     adapter = LogicalToLegacyPlayer(player)
-    server_proxy = ServerProxy(adapter, JSONStream(sock.makefile('r'), sock.makefile('w')))
+    server_proxy = ServerProxy(adapter, JSONSocket(sock))
     server_proxy.listen()
     sock.close()
 
