@@ -107,6 +107,7 @@ def safe_call(timeout, func, args=[]):
     thread.join(timeout)
 
     if thread.is_alive():
+        print("timeout")
         return False
 
     return queue.get()

@@ -7,8 +7,9 @@ from Fish.Remote.Adapters.extended_referee import ExtendedReferee
 import unittest
 from unittest.mock import patch, MagicMock
 
+
 class RefereeTestCase(unittest.TestCase):
-    
+
     def setUp(self):
         self.player1 = Player(1)
         self.player2 = Player(1)
@@ -16,7 +17,8 @@ class RefereeTestCase(unittest.TestCase):
         self.player4 = Player(1)
         self.player5 = Player(1)
         self.player6 = Player(2)
-        self.players = [self.player1, self.player2, self.player3, self.player4, self.player5, self.player6]
+        self.players = [self.player1, self.player2, self.player3,
+                        self.player4, self.player5, self.player6]
 
         self.manager = Manager()
 
@@ -31,30 +33,34 @@ class RefereeTestCase(unittest.TestCase):
     ## TESTING RUN TOURNAMENT ################################################################
 
     def test_run_tournament(self):
-        winners = self.manager.run_tournament(self.players)
+        winners, cheaters = self.manager.run_tournament(self.players)
         self.assertEqual(winners, [self.player1, self.player4, self.player5])
+        self.assertEqual(cheaters, set())
 
     def test_run_tournament_failing_player_start(self):
         self.player5.tournament_start = MagicMock(return_value=False)
-        winners = self.manager.run_tournament(self.players)
-        
+        winners, cheaters = self.manager.run_tournament(self.players)
         self.assertEqual(winners, [self.player1, self.player3, self.player4])
+        self.assertEqual(cheaters, set([self.player5]))
 
     def test_run_tournament_failing_player_winner(self):
         self.player5.tournament_end = MagicMock(return_value=False)
-        winners = self.manager.run_tournament(self.players)
+        winners, cheaters = self.manager.run_tournament(self.players)
         self.assertEqual(winners, [self.player1, self.player4])
+        self.assertEqual(cheaters, set([self.player5]))
 
     def test_run_tournament_everyone_fails(self):
-        self.player1.choose_next_move = MagicMock(return_value=Move((0,0), (1, 1))) # illegal move
-        self.player2.choose_placement = MagicMock(return_value=(0,0)) # penguin already there
+        self.player1.choose_next_move = MagicMock(return_value=Move((0, 0), (1, 1)))  # illegal move
+        self.player2.choose_placement = MagicMock(return_value=(0, 0))  # penguin already there
         self.player3.choose_placement = MagicMock(return_value=(-1, 0))
-        self.player4.choose_next_move = MagicMock(return_value=Move((0,0), (2, 0))) # no penguin to move
-        self.player5.choose_next_move = MagicMock(return_value=Move((0,0), (1, 1))) 
-        self.player6.choose_next_move = MagicMock(return_value=Move((0,0), (1, 1)))
+        self.player4.choose_next_move = MagicMock(
+            return_value=Move((0, 0), (2, 0)))  # no penguin to move
+        self.player5.choose_next_move = MagicMock(return_value=Move((0, 0), (1, 1)))
+        self.player6.choose_next_move = MagicMock(return_value=Move((0, 0), (1, 1)))
 
-        winners = self.manager.run_tournament(self.players)
+        winners, cheaters = self.manager.run_tournament(self.players)
         self.assertEqual(winners, [])
+        self.assertEqual(cheaters, set(self.players))
 
     ## TESTING UPDATE BRACKET ################################################################
 
@@ -62,9 +68,9 @@ class RefereeTestCase(unittest.TestCase):
         self.manager._Manager__queue = self.players
         self.manager._Manager__active_players = set(self.players)
         round_result = {
-            "winners": { self.player1, self.player2 },
-            "losers": {self.player3, self.player4 },
-            "kicked_players": { self.player5, self.player6 },
+            "winners": {self.player1, self.player2},
+            "losers": {self.player3, self.player4},
+            "kicked_players": {self.player5, self.player6},
             "games_played": 2
         }
         self.assertEqual(self.manager._Manager__queue, self.players)
@@ -75,12 +81,14 @@ class RefereeTestCase(unittest.TestCase):
 
         self.manager._Manager__update_bracket(round_result)
         self.assertEqual(self.manager._Manager__queue, [self.player1, self.player2])
-        self.assertEqual(self.manager._Manager__active_players, {self.player1, self.player2, self.player3, self.player4})
-        self.assertEqual(self.manager._Manager__previous_winners, {self.player1, self.player2, self.player3, self.player4})
+        self.assertEqual(self.manager._Manager__active_players, {
+                         self.player1, self.player2, self.player3, self.player4})
+        self.assertEqual(self.manager._Manager__previous_winners, {
+                         self.player1, self.player2, self.player3, self.player4})
         self.assertEqual(self.manager._Manager__kicked_players, {self.player5, self.player6})
         self.assertEqual(self.manager._Manager__games_in_previous_round, 2)
 
-    ## TESTING KICK PLAYERS ------------------------------------------------------------
+    # TESTING KICK PLAYERS ------------------------------------------------------------
 
     def test_kick_players(self):
         self.manager._Manager__queue = self.players
@@ -101,8 +109,8 @@ class RefereeTestCase(unittest.TestCase):
         self.assertEqual(self.manager._Manager__queue, self.players)
         self.assertEqual(self.manager._Manager__active_players, set(self.players))
         self.assertEqual(self.manager._Manager__kicked_players, bad_players)
-    
-    ## TESTING RUN ROUNDS ################################################################-
+
+    # TESTING RUN ROUNDS ################################################################-
 
     def test_run_round(self):
         match_players = [
@@ -119,7 +127,8 @@ class RefereeTestCase(unittest.TestCase):
         self.assertEqual(round_result, expected)
 
     def test_run_round_failing_player(self):
-        self.player1.choose_next_move = MagicMock(return_value=Move((0,0), (4, 4))) # runs into another penguin
+        self.player1.choose_next_move = MagicMock(
+            return_value=Move((0, 0), (4, 4)))  # runs into another penguin
         match_players = [
             self.players[0:4],
             self.players[4:6]
@@ -146,7 +155,8 @@ class RefereeTestCase(unittest.TestCase):
         self.assertEqual(match_players, expected)
 
     def test_make_rounds_no_players(self):
-        self.assertRaisesRegex(ValueError, "Not enough players to run another round.", self.manager._Manager__make_rounds)
+        self.assertRaisesRegex(
+            ValueError, "Not enough players to run another round.", self.manager._Manager__make_rounds)
 
     def test_make_rounds_backtracking(self):
         self.manager._Manager__queue = self.players[0:5]
@@ -156,7 +166,7 @@ class RefereeTestCase(unittest.TestCase):
         ]
         match_players = self.manager._Manager__make_rounds()
         self.assertEqual(match_players, expected)
-    
+
     def test_make_rounds_min_players(self):
         self.manager._Manager__queue = self.players[0:2]
         expected = [
@@ -166,7 +176,7 @@ class RefereeTestCase(unittest.TestCase):
         self.assertEqual(match_players, expected)
 
     ## TESTING BALANCE GAME ################################################################
-    
+
     def test_balance_games(self):
         match_players = [
             self.players[0:4],
@@ -185,13 +195,13 @@ class RefereeTestCase(unittest.TestCase):
             self.players[4:6]
         ]
         self.assertEqual(self.manager._Manager__balance_games(match_players), match_players)
-    
+
     def test_balance_games_one_game(self):
         match_players = [
             self.players[0:2]
         ]
         self.assertEqual(self.manager._Manager__balance_games(match_players), match_players)
-    
+
     ## TESTING IS TOURNAMENT OVER ###########################################################
 
     def test_is_tournament_over_false(self):
@@ -215,7 +225,6 @@ class RefereeTestCase(unittest.TestCase):
         self.manager._Manager__games_in_previous_round = 1
         self.assertTrue(self.manager._Manager__is_tournament_over())
 
-
     ## TESTING BROADCAST TOURNAMENT START ###################################################
 
     def test_broadcast_tournament_start(self):
@@ -223,7 +232,7 @@ class RefereeTestCase(unittest.TestCase):
         self.manager._Manager__active_players = set(self.players)
 
         self.player1.tournament_start = MagicMock(return_value=True)
-        self.manager._Manager__broadcast_tournament_start() 
+        self.manager._Manager__broadcast_tournament_start()
         self.player1.tournament_start.assert_called()
         self.assertEqual(self.manager._Manager__queue, self.players)
         self.assertEqual(self.manager._Manager__active_players, set(self.players))
@@ -233,10 +242,9 @@ class RefereeTestCase(unittest.TestCase):
         self.player2.tournament_start = MagicMock(return_value="True")
         self.manager._Manager__queue = self.players
         self.manager._Manager__active_players = set(self.players)
-        self.manager._Manager__broadcast_tournament_start() 
+        self.manager._Manager__broadcast_tournament_start()
         self.assertEqual(self.manager._Manager__queue, self.players[2:6])
         self.assertEqual(self.manager._Manager__active_players, set(self.players[2:6]))
-
 
     ## TESTING BROADCAST TOURNAMENT END #####################################################
 
@@ -252,7 +260,7 @@ class RefereeTestCase(unittest.TestCase):
         self.manager._Manager__update_bracket(round_result)
         self.player1.tournament_end = MagicMock(return_value=True)
         self.player2.tournament_end = MagicMock(return_value=True)
-        self.manager._Manager__broadcast_tournament_end() 
+        self.manager._Manager__broadcast_tournament_end()
         self.player1.tournament_end.assert_called_with(True)
         self.player2.tournament_end.assert_called_with(False)
 
@@ -289,6 +297,4 @@ class RefereeTestCase(unittest.TestCase):
 
     def test_get_tournament_result(self):
         self.manager._Manager__queue = self.players
-        self.assertEqual(self.manager._Manager__get_tournament_result(), self.players)
-
-
+        self.assertEqual(self.manager._Manager__get_tournament_result(), (self.players, set()))

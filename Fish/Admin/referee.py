@@ -1,6 +1,6 @@
 from Fish.Common.player_data import PlayerData
 from Fish.Common.color import Color
-from Fish.Common.constants import MIN_PLAYERS, MAX_PLAYERS
+from Fish.Common.constants import MIN_PLAYERS, MAX_PLAYERS, TIMEOUT
 from Fish.Common.board import Board
 from Fish.Common.state import State
 from Fish.Common.game_tree import GameTree
@@ -36,7 +36,7 @@ class Referee:
 
     default_board_config = {"row": 4, "col": 3, "fish": 3}
 
-    def __init__(self, board_config=default_board_config, timeout=1):
+    def __init__(self, board_config=default_board_config, timeout=TIMEOUT):
         """
         Constructor for a Referee who supervises one game.
 

@@ -14,6 +14,9 @@
 │   ├── remote_player_proxy.py      # RemotePlayerProxy class, handles TCP communication with remote players
 │   └── server_proxy.py             # ServerProxy class, handles TCP communication with Fish.com servers
 ├── Other/                          # Holds the test classes for adapter and proxy classes
+├── client.py                       # The client class for a remote player
+├── xclient                         # Runnable that can create multiple clients
+├── xserver                         # Runnable that creates and runs a Fish.com sign-up server and tournament
 └── README.md                       # This README file
 ```
 
@@ -33,9 +36,12 @@
     * [X] test call translation
 * [X] create remote player proxy
     * [X] test
-* [ ] create server proxy
-    * [ ] test
-* [ ] create JsonSocket that sends an receives JSONs
-* [ ] create xclient that connects to server and creates server proxy / player
+* [X] create server proxy
+    * [X] test
+* [X] create JSONStream that sends an receives JSONs
+    * [X] test
+* [ ] create client that connects to server and creates server proxy / player
 * [ ] create xserver that signs up players and makes the tournament using player proxies
+* [ ] create xclient that creates multiple clients
 * [ ] create integration tests
+* [ ] test on khoury servers

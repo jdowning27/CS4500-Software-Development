@@ -3,10 +3,11 @@ from Fish.Remote.Proxies.json_stream import JSONStream
 from Fish.Common.action import Action
 from Fish.Common.util import is_posn
 
+
 class RemotePlayerProxy(LogicalPlayerInterface):
     """
-    uses a JSONstream to communicate with a remote player. The RemotePlayerProxy will write to the JSONstream to send requests to the 
-    player and read from the stream to get the player response. 
+    uses a JSONstream to communicate with a remote player. The RemotePlayerProxy will write to the JSONstream to send requests to the
+    player and read from the stream to get the player response.
 
     self.__json_stream: the JSONstream object that we will use to make remote calls to the remote player
     """
@@ -20,21 +21,22 @@ class RemotePlayerProxy(LogicalPlayerInterface):
         """
         if not isinstance(json_stream, JSONStream):
             raise ValueError("json_stream must be an instance of JSONStream")
-        
+
         self.__json_stream = json_stream
 
     def __send_request(self, name, args, validate, error):
         """
-        Sends a request to the remote player and looks for a response. 
+        Sends a request to the remote player and looks for a response.
         If the method does not return a value the string "void" is expected
         The arguments to this function are described in the Remote Interactions
 
         String, [List-of Any] -> "void" | Position | Action
         """
-        
+
         self.__json_stream.send_json([name, args])
+        print(name)
         response = self.__json_stream.recv_json()
-        
+
         if not validate(response):
             raise RuntimeError(error)
         return response
@@ -63,6 +65,6 @@ class RemotePlayerProxy(LogicalPlayerInterface):
         return self.__send_request("setup", [state], is_posn, error)
 
     def tt(self, state, actions):
-        validate = lambda resp : isinstance(resp, Action)
+        def validate(resp): return isinstance(resp, Action)
         error = "Player did not return an Action to tt method"
         return self.__send_request("take-turn", [state, actions], validate, error)

@@ -12,7 +12,8 @@ class ManagerInterface:
 
     def run_tournament(self, players):
         """
-        Run the Fish game tournament to completion. Returns a list of tournament winners.
+        Run the Fish game tournament to completion. Returns a list of tournament winners and a
+        set of players who were kicked.
 
         The tournament ends when one of the following conditions is met:
             - Two sequential rounds produce the same winners
@@ -23,7 +24,7 @@ class ManagerInterface:
         This tournament manager notifies players whether they won or lost the tournament.
         Winners who fail to accept this message become losers.
 
-        [List-of PlayerInterface] -> [List-of PlayerInterface]
+        [List-of PlayerInterface] -> [List-of PlayerInterface], [Set-of PlayerInterface]
         """
         pass
 

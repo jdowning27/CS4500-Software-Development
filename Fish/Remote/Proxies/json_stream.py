@@ -1,6 +1,14 @@
+import json
+
+
 class JSONStream():
     """
     Wraps read and write streams from sending and receiving JSONs.
+
+    Any multi-digit number sent outside of another JSON element
+    (e.g. parentheses, quotes, brackets),
+    will be misinterpreted as multiple single digit numbers:
+    (e.g. 123 -> 1, 2, 3).
 
     self.__rfile:  File-like for reading.
     self.__wrfile: File-like for writing.
@@ -14,6 +22,8 @@ class JSONStream():
         """
         self.__rfile = rfile
         self.__wfile = wfile
+        self.__decoder = json.JSONDecoder()
+        self.__encoder = json.JSONEncoder()
         pass
 
     def recv_json(self):
@@ -23,7 +33,15 @@ class JSONStream():
 
         Void -> JSON value
         """
-        pass
+        buffer = ""
+        while True:
+            try:
+                buffer += self.__rfile.read(1)
+                if len(buffer) > 0:
+                    print(buffer)
+                return self.__decoder.raw_decode(buffer)[0]
+            except json.decoder.JSONDecodeError:
+                pass
 
     def send_json(self, value):
         """
@@ -31,4 +49,4 @@ class JSONStream():
 
         JSON value -> Void
         """
-        pass
+        self.__wfile.write(self.__encoder.encode(value))

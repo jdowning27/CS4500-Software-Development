@@ -2,6 +2,7 @@ from Fish.Admin.manager_interface import ManagerInterface
 from Fish.Admin.referee import Referee
 from Fish.Common.constants import MIN_PLAYERS, MAX_PLAYERS
 from Fish.Remote.Adapters.extended_referee import ExtendedReferee
+from Fish.Common.constants import TIMEOUT
 from Fish.Common.util import safe_call
 
 """
@@ -37,7 +38,7 @@ and the number of games played in this round is represented by "games_played".
 
 class Manager(ManagerInterface):
 
-    def __init__(self, referee_type=ExtendedReferee, timeout=1):
+    def __init__(self, referee_type=ExtendedReferee, timeout=TIMEOUT):
         """
         Constructor for a Referee who supervises one game.
 
@@ -82,6 +83,7 @@ class Manager(ManagerInterface):
         RoundResult -> void
         """
         kicked_players = round_result["kicked_players"]
+        print("update bracket")
         self.__kick_players(kicked_players)
         self.__games_in_previous_round = round_result["games_played"]
 
@@ -95,6 +97,7 @@ class Manager(ManagerInterface):
                 adds the bad_players to the set of kicked_players
         [Set PlayerInterface] -> void
         """
+        print("kicking", bad_players)
         self.__active_players = self.__active_players.difference(bad_players)
         self.__kicked_players.update(bad_players)
         self.__queue = list(filter(lambda p: p not in bad_players, self.__queue))
@@ -195,6 +198,7 @@ class Manager(ManagerInterface):
             if response is not True:
                 bad_players.add(player)
 
+        print("broadcast start")
         self.__kick_players(bad_players)
 
     def __broadcast_tournament_end(self):
@@ -214,12 +218,13 @@ class Manager(ManagerInterface):
             if response is False:
                 bad_players.add(player)
 
+        print("broadcast end")
         self.__kick_players(bad_players)
 
     def __get_tournament_result(self):
         """
-        Return the list of players who won the tournament.
+        Return the list of players who won the tournament and a set of players who were kicked.
 
-        void -> [List-of PlayerInterface]
+        void -> [List-of PlayerInterface], [Set-of PlayerInterface]
         """
-        return self.__queue
+        return self.__queue, self.__kicked_players

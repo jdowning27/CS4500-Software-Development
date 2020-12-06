@@ -6,3 +6,4 @@ FISH_COLOR = 'blue'
 HOLE_COLOR = 'gray'
 MIN_PLAYERS = 2
 MAX_PLAYERS = 4
+TIMEOUT = 3
