@@ -44,8 +44,10 @@
     * [X] test
 * [X] create JSONSocket that sends an receives JSONs
     * [ ] test
-* [ ] create client that connects to server and creates server proxy / player
-* [ ] create xserver that signs up players and makes the tournament using player proxies
+* [X] create client that connects to server and creates server proxy / player
+* [X] create xserver that signs up players and makes the tournament using player proxies
+* [X] ensure that clients are shutdown properly
+* [ ] make sure default board parameters are correct
 * [ ] create xclient that creates multiple clients
 * [ ] create integration tests
 * [ ] test on khoury servers

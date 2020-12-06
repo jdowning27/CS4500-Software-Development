@@ -1,12 +1,14 @@
 from Fish.Common.action import Action
-"""
-Represents an action by a Player where no move is possible.
-Skip this player's turn, and the game state remains the same.
-"""
+
+
 class Skip(Action):
+    """
+    Represents an action by a Player where no move is possible.
+    Skip this player's turn, and the game state remains the same.
+    """
 
     def __eq__(self, other):
-        return type(other) is Skip  
+        return type(other) is Skip
 
     def __ne__(self, other):
         return type(other) is not Skip
@@ -29,6 +31,6 @@ class Skip(Action):
         moves for this player on the board
         """
         return other
-    
+
     def print_json(self):
         return False

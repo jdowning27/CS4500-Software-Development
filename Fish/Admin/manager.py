@@ -115,7 +115,7 @@ class Manager(ManagerInterface):
             "kicked_players": set(),
             "games_played": len(match_players)
         }
-        board_config = {"row": 5, "col": 3, "fish": 3}
+        board_config = {"row": 5, "col": 5, "fish": 2}
         for players in match_players:
             ref = self.__referee_type(board_config)
             game_result = ref.play_game(players)
@@ -195,7 +195,7 @@ class Manager(ManagerInterface):
         bad_players = set()
         for player in self.__active_players:
             response = safe_call(self.__timeout, player.tournament_start)
-            if response is not True:
+            if response is False:
                 bad_players.add(player)
 
         print("broadcast start")

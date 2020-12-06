@@ -1,4 +1,5 @@
 import json
+import socket
 
 
 class JSONSocket():
@@ -21,6 +22,7 @@ class JSONSocket():
 
         socket -> JSONSocket
         """
+        sock.settimeout(0.1)
         self.__sock = sock
         self.__json_decoder = json.JSONDecoder()
         self.__json_encoder = json.JSONEncoder()
@@ -30,16 +32,21 @@ class JSONSocket():
         Receive a JSON value in python representation from the socket.
         Blocks until a full JSON value is received.
 
-        Void -> JSON value
+        Returns None if the connection has closed.
+
+        Void -> Maybe JSON value
         """
         buffer = ""
         while True:
+            if self.__sock.fileno() == -1:
+                return None
             try:
-                buffer += self.__sock.recv(1).decode()
+                byte = self.__sock.recv(1)
+                buffer += byte.decode()
                 val = self.__json_decoder.raw_decode(buffer)[0]
                 print(val)
                 break
-            except json.decoder.JSONDecodeError:
+            except (json.decoder.JSONDecodeError, socket.timeout):
                 pass
         return val
 

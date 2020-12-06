@@ -10,9 +10,13 @@ def main(port):
     Create a Fish.com server, sign up players, and run a tournament.
     """
     server = FishServer(('localhost', port))
-    if server.run_signup():
-        server.run_tournament()
-    server.shutdown()
+    try:
+        if server.run_signup():
+            server.run_tournament()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.shutdown()
 
 
 if __name__ == '__main__':

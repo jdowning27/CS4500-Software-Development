@@ -69,11 +69,29 @@ def get_max_penguin_count(player_count):
     """
     return 6 - player_count
 
+
 def is_posn(obj):
-    return ( isinstance(obj, tuple) and 
-        len(obj) == 2 and
-        isinstance(obj[0], int) and 
-        isinstance(obj[1], int) )
+    """
+    Test if an object is a Posn (a length 2 list or tuple of ints).
+
+    Object -> Boolean
+    """
+    return (len(obj) == 2 and
+            isinstance(obj[0], int) and
+            isinstance(obj[1], int))
+
+
+def is_json_action(obj):
+    """
+    Test if an object is a json representation of an Action
+    (False or a list of two Posns).
+
+    Object -> Boolean
+    """
+    return (obj is False or
+            (len(obj) == 2 and
+             is_posn(obj[0]) and
+             is_posn(obj[1])))
 
 
 def safe_call(timeout, func, args=[]):
@@ -99,6 +117,7 @@ def safe_call(timeout, func, args=[]):
         try:
             queue.put(func(*args))
         except Exception as exc:
+            print(exc)
             queue.put(False)
 
     queue = Queue()

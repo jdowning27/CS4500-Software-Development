@@ -1,7 +1,9 @@
 from Fish.Remote.Adapters.logical_player_interface import LogicalPlayerInterface
 from Fish.Remote.Proxies.json_socket import JSONSocket
 from Fish.Common.action import Action
-from Fish.Common.util import is_posn
+from Fish.Common.move import Move
+from Fish.Common.skip import Skip
+from Fish.Common.util import is_posn, is_json_action
 
 
 class RemotePlayerProxy(LogicalPlayerInterface):
@@ -53,17 +55,23 @@ class RemotePlayerProxy(LogicalPlayerInterface):
 
     def play_as(self, color):
         error = "Player did not return 'void' to play_as method"
-        self.__send_request("playing-as", [color], self.__resp_is_void, error)
+        self.__send_request("playing-as", [color.value], self.__resp_is_void, error)
 
     def play_with(self, colors):
         error = "Player did not return 'void' to play_with method"
-        self.__send_request("playing-with", [colors], self.__resp_is_void, error)
+        self.__send_request("playing-with", [[color.value for color in colors]],
+                            self.__resp_is_void, error)
 
     def setup(self, state):
-        error = "Player did not return a int, int tuple to setup method"
-        return self.__send_request("setup", [state], is_posn, error)
+        error = "Player did not return an int, int 2-tuple to setup method"
+        return tuple(self.__send_request("setup", [state.print_json()], is_posn, error))
 
     def tt(self, state, actions):
-        def validate(resp): return isinstance(resp, Action)
         error = "Player did not return an Action to tt method"
-        return self.__send_request("take-turn", [state, actions], validate, error)
+        actions = [action.print_json() for action in actions]
+        response = self.__send_request("take-turn", [state.print_json(), actions],
+                                       is_json_action, error)
+        if response is False:
+            return Skip()
+        else:
+            return Move.from_json(response)

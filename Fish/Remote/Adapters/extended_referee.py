@@ -22,6 +22,7 @@ class ExtendedReferee(Referee):
             if safe_call(self._Referee__timeout,
                          self.get_player_with_color(color).play_with,
                          [colors_in_play]) is False:
+                print("with kick", color)
                 self._Referee__kick_player(color)
                 internal_players.remove(player_data)
 

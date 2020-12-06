@@ -46,9 +46,11 @@ class ServerProxy():
     def listen(self):
         while True:
             request = self.__json_sock.recv_json()
+            if request is None:
+                break
             response = self.__handle_request(request)
             self.__json_sock.send_json(response)
-            if request[0] == "end":
+            if request is None or request[0] == "end":
                 break
 
     def __handle_request(self, request):

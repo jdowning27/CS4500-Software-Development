@@ -1,8 +1,8 @@
-"""
-Represents an action in the game tree that leads to the next
-game state.
-"""
 class Action:
+    """
+    Represents an action in the game tree that leads to the next
+    game state.
+    """
 
     def __eq__(self, other):
         pass

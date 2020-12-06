@@ -17,8 +17,8 @@ class FishServer():
     self.player_socks:  A list the player's client sockets
     """
 
-    MIN_PLAYERS = 2  # 5
-    MAX_PLAYERS = 2  # 10
+    MIN_PLAYERS = 5
+    MAX_PLAYERS = 10
     WAITING_PERIOD = 30
     NUM_WAITING_PERIODS = 2
 
@@ -53,7 +53,7 @@ class FishServer():
         if self.lsock in ready_to_read:
             csock, addr = self.lsock.accept()
             json_sock = JSONSocket(csock)
-            print(json_sock.recv_json())  # TODO
+            json_sock.recv_json()   # receive the name of the player, nothing to do with it
             rpp = LegacyToLogicalPlayer(RemotePlayerProxy(json_sock))
             self.players.append(rpp)
             self.player_socks.append(csock)
@@ -98,6 +98,8 @@ class FishServer():
 
         Void -> Void
         """
+        self.lsock.shutdown(socket.SHUT_RDWR)
         self.lsock.close()
         for sock in self.player_socks:
+            sock.shutdown(socket.SHUT_RDWR)
             sock.close()
