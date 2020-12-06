@@ -8,7 +8,7 @@ from Fish.Common.board import Board
 from Fish.Common.move import Move
 from Fish.Remote.Adapters.logical_player_interface import LogicalPlayerInterface
 from Fish.Remote.Proxies.server_proxy import ServerProxy
-from Fish.Remote.Proxies.json_stream import JSONStream
+from Fish.Remote.Proxies.json_sock import JSONSocket
 
 
 class ServerProxyTest(unittest.TestCase):
@@ -18,7 +18,7 @@ class ServerProxyTest(unittest.TestCase):
             [PlayerData(Color.RED), PlayerData(Color.BROWN), PlayerData(Color.WHITE)],
             Board(4, 4))
 
-        self.stream = JSONStream(None, None)
+        self.json_sock = JSONSocket(None, None)
 
         self.player = LogicalPlayerInterface()
 
@@ -33,19 +33,19 @@ class ServerProxyTest(unittest.TestCase):
         self.move = Move((0, 0), (1, 0))
         self.player.tt = MagicMock(return_value=self.move)
 
-        self.server_proxy = ServerProxy(self.player, self.stream)
+        self.server_proxy = ServerProxy(self.player, self.json_sock)
 
     def test_constructor(self):
-        ServerProxy(self.player, self.stream)
+        ServerProxy(self.player, self.json_sock)
         with self.assertRaises(ValueError):
             ServerProxy(self.player, None)
         with self.assertRaises(ValueError):
-            ServerProxy(None, self.stream)
+            ServerProxy(None, self.json_sock)
 
     def test_listen(self):
-        self.stream.send_json = MagicMock()
-        self.stream.recv_json = MagicMock()
-        self.stream.recv_json.side_effect = [
+        self.json_sock.send_json = MagicMock()
+        self.json_sock.recv_json = MagicMock()
+        self.json_sock.recv_json.side_effect = [
             ["start", [True]],
             ["playing-as", ["red"]],
             ["playing-with", [["red", "black"]]],
@@ -54,7 +54,7 @@ class ServerProxyTest(unittest.TestCase):
             ["end", [True]]
         ]
         self.server_proxy.listen()
-        self.stream.send_json.assert_has_calls([
+        self.json_sock.send_json.assert_has_calls([
             call("void"),
             call("void"),
             call("void"),

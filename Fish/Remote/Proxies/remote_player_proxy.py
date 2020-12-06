@@ -34,7 +34,6 @@ class RemotePlayerProxy(LogicalPlayerInterface):
         """
 
         self.__json_sock.send_json([name, args])
-        print(name)
         response = self.__json_sock.recv_json()
 
         if not validate(response):

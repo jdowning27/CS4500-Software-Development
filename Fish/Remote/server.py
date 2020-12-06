@@ -93,6 +93,11 @@ class FishServer():
         print(f"[{len(winners)}, {len(cheaters)}]")
 
     def shutdown(self):
+        """
+        Shutdown the server by closing all sockets.
+
+        Void -> Void
+        """
         self.lsock.close()
         for sock in self.player_socks:
             sock.close()

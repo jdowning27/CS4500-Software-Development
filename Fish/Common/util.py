@@ -98,7 +98,7 @@ def safe_call(timeout, func, args=[]):
         """
         try:
             queue.put(func(*args))
-        except Exception:
+        except Exception as exc:
             queue.put(False)
 
     queue = Queue()
