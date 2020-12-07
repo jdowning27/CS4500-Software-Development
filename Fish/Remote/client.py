@@ -18,7 +18,7 @@ def main(address):
     sock.connect(address)
     sock.sendall(name.encode())
 
-    depth = 2
+    depth = 1
     player = Player(depth)
     adapter = LogicalToLegacyPlayer(player)
     server_proxy = ServerProxy(adapter, JSONSocket(sock))
