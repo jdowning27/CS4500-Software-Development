@@ -5,12 +5,12 @@ Contributors to this project are Jennifer Der, Timothy Haas, Joseph Downing, Har
 The goal of this project was to run a tournament of the game Fish for AI players submitted by hackers.
 The game of fish is based losely off of the board game [Hey, That's My Fish!](https://www.fantasyflightgames.com/en/products/hey-thats-my-fish/).
 
-Jennifer and Timothy are the origional authors designing the game state and origional player and referee interactions.
-Joseph was onboarded by Jennifer after the first programming partner switch. 
-Joseph and Jennifer reworked the player and referee interactions and implemented the tournament manager. 
-Harrison was onboarded by Joseph after the second and final pair programming partner switch. 
+Jennifer and Timothy are the origional authors designing the game state and origional player and referee interactions.  
+Joseph was onboarded by Jennifer after the first programming partner switch.   
+Joseph and Jennifer reworked the player and referee interactions and implemented the tournament manager.   
+Harrison was onboarded by Joseph after the second and final pair programming partner switch.   
 Harrison and Joseph added the Fish/Remote directory containing the adapters and proxies needed to run a game of Fish
-with remote players.
+with remote players.  
 
 ## Repository Directory
 ```
